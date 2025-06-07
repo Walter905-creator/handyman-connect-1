@@ -6,7 +6,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get(\`\${process.env.REACT_APP_API_URL}/api\`)
+      .get(`${process.env.REACT_APP_API_URL}/api`)
       .then((res) => setMessage(res.data.message))
       .catch((err) => setMessage("Error connecting to backend"));
   }, []);
