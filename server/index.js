@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const stripeRoutes = require('./routes/stripe');
 
 dotenv.config();
 
@@ -9,12 +10,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const stripeRoutes = require('./routes/stripe');
-
-app.use('/api/stripe', stripeRoutes);
-
 // other imports
-const stripeRoutes = require('./routes/stripe');
+
 app.use('/api/stripe', stripeRoutes);
 
 // ✅ Checkr webhook route
