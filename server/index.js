@@ -9,6 +9,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const stripeRoutes = require('./routes/stripe');
+
+app.use('/api/stripe', stripeRoutes);
+
+// other imports
+const stripeRoutes = require('./routes/stripe');
+app.use('/api/stripe', stripeRoutes);
+
 // ✅ Checkr webhook route
 app.post('/webhook/checkr', (req, res) => {
   console.log('🔔 Checkr webhook received:', req.body);
