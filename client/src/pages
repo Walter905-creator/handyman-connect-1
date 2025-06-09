@@ -1,0 +1,30 @@
+Terms.js
+import React from "react";
+
+function Terms() {
+  return (
+    <div style={{ padding: "2rem", fontFamily: "sans-serif", lineHeight: "1.6" }}>
+      <h1>Terms and Conditions</h1>
+
+      <h2>🛠️ For Service Providers (Pros)</h2>
+      <p><strong>Effective Date:</strong> June 9, 2025</p>
+      <ul>
+        <li><strong>Eligibility:</strong> You must be at least 18 years old...</li>
+        <li><strong>Background Checks:</strong> By applying, you authorize verification...</li>
+        <li><strong>Payments:</strong> Stripe will process your payouts...</li>
+        <li><strong>Prohibited Conduct:</strong> No fraud, harassment, or false skills...</li>
+      </ul>
+
+      <h2>🏡 For Homeowners (Clients)</h2>
+      <ul>
+        <li><strong>Use of Platform:</strong> Find and hire verified Pros...</li>
+        <li><strong>Payment:</strong> Pay through Stripe. No refunds after work unless agreed...</li>
+        <li><strong>Disclaimers:</strong> We verify background checks but don't guarantee outcomes...</li>
+      </ul>
+
+      <p>By using Handyman Connect, you agree to these terms.</p>
+    </div>
+  );
+}
+
+export default Terms;
