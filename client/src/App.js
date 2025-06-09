@@ -1,3 +1,4 @@
+import Subscribe from "./components/Subscribe"; // adjust the path if needed
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -14,6 +15,7 @@ function App() {
   return (
     <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>🛠️ Handyman Connect</h1>
+      <Subscribe />
       <p>Server message: {message}</p>
     </div>
   );
