@@ -1,5 +1,5 @@
 import React from "react";
-import api from "../api"; // ✅ CORRECT path from /pages folder
+import api from "../api";
 
 export default function Subscribe() {
   const startSubscription = async () => {
