@@ -1,8 +1,8 @@
 import Navbar from './components/Navbar';
 import AIAssistant from "./pages/AIAssistant";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Subscribe from "./components/Subscribe"; // adjust the path if needed
-import Terms from "./pages/Terms"; // make sure this file exists
+import Subscribe from "./components/Subscribe";
+import Terms from "./pages/Terms";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -19,9 +19,10 @@ function App() {
   return (
     <Router>
       <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-           <Navbar />
-  <h1>🛠️ Handyman Connect</h1>
-        <Routes><Route path="/ai" element={<AIAssistant />} />
+        <Navbar />
+        <h1>🛠️ Handyman Connect</h1>
+        <Routes>
+          <Route path="/ai" element={<AIAssistant />} />
           <Route
             path="/"
             element={
