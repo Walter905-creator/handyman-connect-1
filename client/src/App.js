@@ -1,3 +1,4 @@
+import Home from "./pages/Home";
 import Navbar from './components/Navbar';
 import AIAssistant from "./pages/AIAssistant";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -21,18 +22,11 @@ function App() {
         <Navbar />
         <h1>🛠️ Handyman Connect</h1>
         <Routes>
-          <Route path="/ai" element={<AIAssistant />} />
-          <Route
-            path="/"
-            element={
-              <>
-                <Subscribe />
-                <p>Server message: {message}</p>
-              </>
-            }
-          />
-          <Route path="/terms" element={<Terms />} />
-        </Routes>
+  <Route path="/" element={<Home />} />
+  <Route path="/subscribe" element={<Subscribe />} />
+  <Route path="/ai" element={<AIAssistant />} />
+  <Route path="/terms" element={<Terms />} />
+</Routes>
       </div>
     </Router>
   );
