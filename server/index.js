@@ -1,7 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const dotenv = require("dotenv");
+const allowedOrigins = [
+  "https://www.handyman-connect.com",
+  "http://localhost:3000", const dotenv = require("dotenv");
 const stripeRoutes = require('./routes/stripe');
 
 dotenv.config();
