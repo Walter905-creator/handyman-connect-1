@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Subscribe from './pages/Subscribe';
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Terms from "./pages/Terms";
 
 function App() {
   const [message, setMessage] = useState("");
