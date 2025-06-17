@@ -7,7 +7,15 @@ const stripeRoutes = require('./routes/stripe');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+const allowedOrigins = [
+  "https://www.handyman-connect.com", 
+  "http://localhost:3000"             
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(express.json());
 app.use('/api/ai', require('./routes/ai'));
 
