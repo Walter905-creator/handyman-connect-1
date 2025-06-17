@@ -1,31 +1,27 @@
-const express = require('express');
-const Stripe = require('stripe');
+const express = require("express");
 const router = express.Router();
-
+const Stripe = require("stripe");
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-router.post('/create-subscription', async (req, res) => {
+router.post("/create-checkout-session", async (req, res) => {
   try {
-    const { email, paymentMethodId, priceId } = req.body;
-
-    const customer = await stripe.customers.create({
-      email,
-      payment_method: paymentMethodId,
-      invoice_settings: {
-        default_payment_method: paymentMethodId,
-      },
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "subscription",
+      line_items: [
+        {
+          price: process.env.STRIPE_PRICE_ID,
+          quantity: 1,
+        },
+      ],
+      success_url: `${process.env.CLIENT_URL}/success`,
+      cancel_url: `${process.env.CLIENT_URL}/cancel`,
     });
 
-    const subscription = await stripe.subscriptions.create({
-      customer: customer.id,
-      items: [{ price: priceId }],
-      expand: ['latest_invoice.payment_intent'],
-    });
-
-    res.send(subscription);
+    res.json({ url: session.url });
   } catch (err) {
-    console.error('Stripe error:', err);
-    res.status(500).send({ error: err.message });
+    console.error("❌ Stripe error:", err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
