@@ -16,6 +16,8 @@ const allowedOrigins = [
   "http://localhost:3000"             // development
 ];
 
+app.use("/api/notify", require("./routes/notifications"));
+
 app.use(cors({
   origin: allowedOrigins,
   credentials: true,
