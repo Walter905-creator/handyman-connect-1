@@ -1,55 +1,109 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+// client/src/components/TradeServices.js
+import React, { useState } from "react";
 
 const trades = [
-  { name: "Plumbing", icon: "🚰" },
-  { name: "Electrical", icon: "💡" },
-  { name: "Painting", icon: "🎨" },
-  { name: "Cleaning", icon: "🧼" },
-  { name: "Carpentry", icon: "🔨" },
-  { name: "Landscaping", icon: "🌿" },
+  { name: "Plumbing", emoji: "🚰" },
+  { name: "Electrical", emoji: "💡" },
+  { name: "Carpentry", emoji: "🪚" },
+  { name: "Painting", emoji: "🎨" },
+  { name: "HVAC", emoji: "❄️" },
+  { name: "Roofing", emoji: "🏠" }
 ];
 
 export default function TradeServices() {
-  const navigate = useNavigate();
+  const [selectedTrade, setSelectedTrade] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    description: ""
+  });
 
-  const handleClick = (trade) => {
-    navigate(`/request?trade=${encodeURIComponent(trade)}`);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("✅ Job request submitted:", { trade: selectedTrade, ...formData });
+    alert(`Your request for a ${selectedTrade} pro has been submitted!`);
+    setSelectedTrade(null); // reset form
+    setFormData({ name: "", email: "", phone: "", address: "", description: "" });
   };
 
   return (
-    <section style={{ padding: "4rem 2rem", background: "#f9f9f9" }}>
-      <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>What Do You Need Help With?</h2>
-      <div style={{
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        gap: "1.5rem"
-      }}>
-        {trades.map((trade) => (
-          <div
-            key={trade.name}
-            onClick={() => handleClick(trade.name)}
+    <section style={{ padding: "4rem 2rem", backgroundColor: "#fff", textAlign: "center" }}>
+      <h2 style={{ fontSize: "2rem", marginBottom: "2rem" }}>Select a Service</h2>
+
+      {!selectedTrade ? (
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "2rem" }}>
+          {trades.map((trade, idx) => (
+            <button
+              key={idx}
+              style={{
+                fontSize: "1.25rem",
+                padding: "1rem 2rem",
+                borderRadius: "10px",
+                border: "1px solid #ccc",
+                backgroundColor: "#f1f5f9",
+                cursor: "pointer"
+              }}
+              onClick={() => setSelectedTrade(trade.name)}
+            >
+              {trade.emoji} {trade.name}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            maxWidth: "500px",
+            margin: "0 auto",
+            background: "#f9fafb",
+            padding: "2rem",
+            borderRadius: "10px",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
+          }}
+        >
+          <h3 style={{ marginBottom: "1rem" }}>Request a {selectedTrade} Pro</h3>
+
+          {["name", "email", "phone", "address", "description"].map((field) => (
+            <input
+              key={field}
+              type={field === "email" ? "email" : "text"}
+              placeholder={
+                field === "description"
+                  ? "What do you need help with?"
+                  : `Your ${field.charAt(0).toUpperCase() + field.slice(1)}`
+              }
+              value={formData[field]}
+              onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
+              required
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "0.75rem",
+                marginBottom: "1rem",
+                border: "1px solid #ccc",
+                borderRadius: "6px"
+              }}
+            />
+          ))}
+
+          <button
+            type="submit"
             style={{
-              width: 180,
-              height: 180,
-              background: "white",
-              borderRadius: 12,
-              boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              fontSize: "1.2rem",
-              fontWeight: "bold"
+              background: "#1f6feb",
+              color: "white",
+              padding: "0.75rem 2rem",
+              fontSize: "1rem",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer"
             }}
           >
-            <div style={{ fontSize: "2.5rem" }}>{trade.icon}</div>
-            <div style={{ marginTop: "1rem" }}>{trade.name}</div>
-          </div>
-        ))}
-      </div>
+            Submit Request
+          </button>
+        </form>
+      )}
     </section>
   );
 }
