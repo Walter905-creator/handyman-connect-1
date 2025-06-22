@@ -33,6 +33,9 @@ export default function Home() {
         </Link>
       </section>
 
+    <TradeServices /> 
+
+              
       {/* Highlights Section */}
       <section style={{
         backgroundColor: "#f8fafc",
