@@ -20,12 +20,30 @@ export default function TradeServices() {
     description: ""
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("✅ Job request submitted:", { trade: selectedTrade, ...formData });
-    alert(`Your request for a ${selectedTrade} pro has been submitted!`);
-    setSelectedTrade(null); // reset form
-    setFormData({ name: "", email: "", phone: "", address: "", description: "" });
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/notify/text`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ trade: selectedTrade, ...formData })
+      });
+
+      if (response.ok) {
+        alert(`✅ Your request for a ${selectedTrade} pro has been sent via text!`);
+      } else {
+        alert("❌ Failed to send request. Please try again.");
+      }
+
+      setSelectedTrade(null);
+      setFormData({ name: "", email: "", phone: "", address: "", description: "" });
+    } catch (err) {
+      console.error("❌ Text message error:", err);
+      alert("An error occurred while sending your request.");
+    }
   };
 
   return (
