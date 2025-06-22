@@ -5,18 +5,27 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 router.post("/create-checkout-session", async (req, res) => {
   try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "subscription",
-      line_items: [
-        {
-          price: process.env.STRIPE_PRICE_ID,
-          quantity: 1,
-        },
-      ],
-      success_url: `${process.env.CLIENT_URL}/success`,
-      cancel_url: `${process.env.CLIENT_URL}/cancel`,
-    });
+const session = await stripe.checkout.sessions.create({
+  payment_method_types: ["card"],
+  mode: "subscription",
+  line_items: [
+    {
+      price: process.env.STRIPE_FIRST_MONTH_PRICE_ID,
+      quantity: 1,
+    },
+    {
+      price: process.env.STRIPE_MONTHLY_PRICE_ID,
+      quantity: 1,
+    }
+  ],
+  subscription_data: {
+    trial_settings: { end_behavior: { missing_payment_method: 'cancel' } },
+    billing_cycle_anchor: 'now',
+    proration_behavior: 'none'
+  },
+  success_url: `${process.env.CLIENT_URL}/success`,
+  cancel_url: `${process.env.CLIENT_URL}/cancel`,
+});
 
     res.json({ url: session.url });
   } catch (err) {
