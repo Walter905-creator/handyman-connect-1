@@ -3,84 +3,71 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
-    <div style={{ fontFamily: "sans-serif" }}>
+    <div style={{ fontFamily: "Inter, sans-serif" }}>
       {/* Hero Section */}
-      <section style={{ padding: "4rem 2rem", textAlign: "center", background: "#f0f4f8" }}>
-        <h1 style={{ fontSize: "3rem", marginBottom: "1rem", color: "#222" }}>
-          🛠️ Handyman Connect
+      <section style={{
+        background: "#0f172a",
+        color: "white",
+        padding: "6rem 2rem",
+        textAlign: "center"
+      }}>
+        <h1 style={{ fontSize: "3rem", fontWeight: "bold", marginBottom: "1rem" }}>
+          🛠️ Welcome to Handyman Connect
         </h1>
-        <p style={{ fontSize: "1.25rem", color: "#444", maxWidth: "600px", margin: "0 auto 2rem" }}>
-          Connect with verified professionals, plan your projects with AI, and manage everything in one place.
+        <p style={{ fontSize: "1.25rem", maxWidth: "600px", margin: "0 auto 2rem" }}>
+          Your one-stop hub for finding trusted professionals, getting expert help through AI,
+          and managing your home projects effortlessly.
         </p>
-        <Link to="/signup">
+        <Link to="/subscribe">
           <button style={{
-            background: "#1f6feb",
-            color: "white",
-            fontSize: "1rem",
-            padding: "0.75rem 2rem",
-            border: "none",
+            backgroundColor: "#3b82f6",
+            padding: "1rem 2rem",
             borderRadius: "8px",
-            cursor: "pointer"
+            fontSize: "1rem",
+            border: "none",
+            cursor: "pointer",
+            color: "white"
           }}>
             Get Started
           </button>
         </Link>
       </section>
 
-      {/* Features Section */}
-      <section style={{ padding: "4rem 2rem", background: "#fff", textAlign: "center" }}>
-        <h2 style={{ fontSize: "2rem", marginBottom: "2rem", color: "#222" }}>
-          Why Handyman Connect?
+      {/* Highlights Section */}
+      <section style={{
+        backgroundColor: "#f8fafc",
+        padding: "4rem 2rem",
+        textAlign: "center"
+      }}>
+        <h2 style={{ fontSize: "2rem", marginBottom: "2rem", color: "#0f172a" }}>
+          Explore Our Features
         </h2>
         <div style={{
           display: "flex",
           flexWrap: "wrap",
-          justifyContent: "center",
           gap: "2rem",
-          maxWidth: "1000px",
-          margin: "0 auto"
+          justifyContent: "center"
         }}>
           {[
-            {
-              title: "Verified Pros",
-              desc: "All service providers are background-checked through Checkr.",
-              emoji: "✅"
-            },
-            {
-              title: "Smart Planning",
-              desc: "Ask our AI assistant for help with home project ideas and planning.",
-              emoji: "🤖"
-            },
-            {
-              title: "Real-Time Chat",
-              desc: "Message professionals instantly with built-in live chat.",
-              emoji: "💬"
-            },
-            {
-              title: "Secure Payments",
-              desc: "Pay safely using Stripe monthly subscriptions.",
-              emoji: "💳"
-            },
-          ].map((feature, idx) => (
-            <div key={idx} style={{
-              flex: "1 1 200px",
-              background: "#f9fafb",
+            { title: "Verified Pros", emoji: "✅", desc: "Background-checked and reliable tradespeople." },
+            { title: "AI Project Assistant", emoji: "🤖", desc: "Let AI guide your home improvement ideas." },
+            { title: "Live Chat", emoji: "💬", desc: "Chat with pros in real time." },
+            { title: "Secure Payments", emoji: "💳", desc: "Handled by Stripe. Simple & safe." }
+          ].map((f, i) => (
+            <div key={i} style={{
+              backgroundColor: "white",
               padding: "2rem",
               borderRadius: "12px",
-              boxShadow: "0 2px 6px rgba(0,0,0,0.06)"
+              width: "250px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
             }}>
-              <div style={{ fontSize: "2rem" }}>{feature.emoji}</div>
-              <h3 style={{ marginTop: "1rem" }}>{feature.title}</h3>
-              <p style={{ color: "#666", fontSize: "0.95rem" }}>{feature.desc}</p>
+              <div style={{ fontSize: "2rem" }}>{f.emoji}</div>
+              <h3 style={{ marginTop: "1rem", color: "#0f172a" }}>{f.title}</h3>
+              <p style={{ color: "#64748b" }}>{f.desc}</p>
             </div>
           ))}
         </div>
       </section>
-
-      {/* Footer */}
-      <footer style={{ padding: "2rem", background: "#1f2937", color: "white", textAlign: "center" }}>
-        <p>© {new Date().getFullYear()} Handyman Connect. All rights reserved.</p>
-      </footer>
     </div>
   );
 }
