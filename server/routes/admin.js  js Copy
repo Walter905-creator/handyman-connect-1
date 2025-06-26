@@ -1,0 +1,45 @@
+const express = require("express");
+const router = express.Router();
+const Pro = require("../models/Pro"); // your pro schema
+const JobRequest = require("../models/JobRequest"); // assuming you have a job request schema
+
+// Get all pros
+router.get("/pros", async (req, res) => {
+  try {
+    const pros = await Pro.find();
+    res.json(pros);
+  } catch (err) {
+    console.error("❌ Error fetching pros:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Get all job requests
+router.get("/job-requests", async (req, res) => {
+  try {
+    const requests = await JobRequest.find();
+    res.json(requests);
+  } catch (err) {
+    console.error("❌ Error fetching job requests:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Toggle notifications for a Pro
+router.post("/toggle-notifications", async (req, res) => {
+  const { proId, enable } = req.body;
+  try {
+    const pro = await Pro.findById(proId);
+    if (!pro) return res.status(404).json({ error: "Pro not found" });
+
+    pro.notificationsEnabled = enable;
+    await pro.save();
+
+    res.json({ success: true, status: pro.notificationsEnabled });
+  } catch (err) {
+    console.error("❌ Error toggling pro notifications:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+module.exports = router;
