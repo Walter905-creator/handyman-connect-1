@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Pro = require("../models/Pro");
 const JobRequest = require("../models/JobRequest");
-const adminAuth = require("../middleware/adminAuth");  // ✅ Optional: Protect with admin login (if you already added this middleware)
+
 
 // ✅ Get all Pros
 router.get("/pros", adminAuth, async (req, res) => {
