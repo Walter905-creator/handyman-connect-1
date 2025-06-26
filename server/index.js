@@ -17,7 +17,6 @@ const allowedOrigins = [
 ];
 
 app.use('/api/admin', require('./routes/admin'));
-
 app.use("/api/notify", require("./routes/notifications"));
 
 app.use(cors({
