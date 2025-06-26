@@ -1,6 +1,8 @@
-axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("adminToken")}`;
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+
+// ✅ Automatically attach the admin token (from localStorage) to all axios requests
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("adminToken")}`;
 
 export default function AdminDashboard() {
   const [pros, setPros] = useState([]);
@@ -50,6 +52,7 @@ export default function AdminDashboard() {
     <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>🛠️ Admin Dashboard</h1>
 
+      {/* Pros Section */}
       <section style={{ marginBottom: "3rem" }}>
         <h2>Pros</h2>
         {pros.map((pro) => (
@@ -68,6 +71,7 @@ export default function AdminDashboard() {
         ))}
       </section>
 
+      {/* Client Requests Section */}
       <section>
         <h2>Client Job Requests</h2>
         {requests.map((req) => (
