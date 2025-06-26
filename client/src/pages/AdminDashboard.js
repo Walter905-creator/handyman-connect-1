@@ -1,4 +1,4 @@
-// client/src/pages/AdminDashboard.js
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("adminToken")}`;
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
