@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Pro = require("../models/Pro");
 const JobRequest = require("../models/JobRequest");
+const adminAuth = require("../middleware/adminAuth");  // ✅ Optional: Protect with admin login (if you already added this middleware)
 
 // ✅ Get all Pros
-router.get("/pros", async (req, res) => {
+router.get("/pros", adminAuth, async (req, res) => {
   try {
     const pros = await Pro.find();
     res.json(pros);
@@ -15,7 +16,7 @@ router.get("/pros", async (req, res) => {
 });
 
 // ✅ Add a new Pro
-router.post("/pros", async (req, res) => {
+router.post("/pros", adminAuth, async (req, res) => {
   const { name, phone, trade } = req.body;
   try {
     const newPro = new Pro({ name, phone, trade });
@@ -27,8 +28,8 @@ router.post("/pros", async (req, res) => {
   }
 });
 
-// ✅ Toggle SMS notifications for a Pro (from frontend or admin)
-router.put("/pros/:id/toggle", async (req, res) => {
+// ✅ Toggle SMS notifications for a Pro (Enable/Disable)
+router.put("/pros/:id/toggle", adminAuth, async (req, res) => {
   try {
     const pro = await Pro.findById(req.params.id);
     if (!pro) return res.status(404).json({ error: "Pro not found" });
@@ -43,7 +44,7 @@ router.put("/pros/:id/toggle", async (req, res) => {
 });
 
 // ✅ Delete a Pro
-router.delete("/pros/:id", async (req, res) => {
+router.delete("/pros/:id", adminAuth, async (req, res) => {
   try {
     await Pro.findByIdAndDelete(req.params.id);
     res.json({ success: true });
@@ -54,7 +55,7 @@ router.delete("/pros/:id", async (req, res) => {
 });
 
 // ✅ Get all Job Requests
-router.get("/job-requests", async (req, res) => {
+router.get("/job-requests", adminAuth, async (req, res) => {
   try {
     const requests = await JobRequest.find();
     res.json(requests);
@@ -64,8 +65,8 @@ router.get("/job-requests", async (req, res) => {
   }
 });
 
-// ✅ Toggle Notifications (older version - keep for compatibility if needed)
-router.post("/toggle-notifications", async (req, res) => {
+// ✅ Older: Toggle Notifications (Optional legacy endpoint for compatibility)
+router.post("/toggle-notifications", adminAuth, async (req, res) => {
   const { proId, enable } = req.body;
   try {
     const pro = await Pro.findById(proId);
@@ -75,7 +76,7 @@ router.post("/toggle-notifications", async (req, res) => {
     await pro.save();
     res.json({ success: true, status: pro.notificationsEnabled });
   } catch (err) {
-    console.error("❌ Error toggling pro notifications:", err);
+    console.error("❌ Error toggling pro notifications (legacy):", err);
     res.status(500).json({ error: "Server error" });
   }
 });
