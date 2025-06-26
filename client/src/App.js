@@ -1,11 +1,13 @@
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import axios from "axios";
+
 import Home from "./pages/Home";
 import Navbar from './components/Navbar';
 import AIAssistant from "./pages/AIAssistant";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Subscribe from './pages/Subscribe';
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Terms from "./pages/Terms";
+import AdminDashboard from "./pages/AdminDashboard";  // ✅ NEW ADMIN PAGE
 
 function App() {
   const [message, setMessage] = useState("");
@@ -23,11 +25,12 @@ function App() {
         <Navbar />
         <h1>🛠️ Handyman Connect</h1>
         <Routes>
-  <Route path="/" element={<Home />} />
-  <Route path="/subscribe" element={<Subscribe />} />
-  <Route path="/ai" element={<AIAssistant />} />
-  <Route path="/terms" element={<Terms />} />
-</Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/subscribe" element={<Subscribe />} />
+          <Route path="/ai" element={<AIAssistant />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/admin" element={<AdminDashboard />} />  {/* ✅ NEW ADMIN ROUTE */}
+        </Routes>
       </div>
     </Router>
   );
