@@ -7,7 +7,8 @@ import Navbar from "./components/Navbar";
 import AIAssistant from "./pages/AIAssistant";
 import Subscribe from "./pages/Subscribe";
 import Terms from "./pages/Terms";
-import AdminDashboard from "./pages/AdminDashboard";  // ✅ NEW ADMIN PAGE
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminLogin from "./pages/AdminLogin";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -30,7 +31,8 @@ function App() {
           <Route path="/subscribe" element={<Subscribe />} />
           <Route path="/ai" element={<AIAssistant />} />
           <Route path="/terms" element={<Terms />} />
-          <Route path="/admin" element={<AdminDashboard />} />  {/* ✅ Admin Dashboard */}
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
         </Routes>
       </div>
     </Router>

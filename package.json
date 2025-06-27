@@ -1,5 +1,19 @@
 {
+  "name": "handyman-connect",
+  "version": "1.0.0",
+  "description": "A full-stack web application connecting homeowners with verified handyman professionals",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "cd server && npm start",
+    "client:dev": "cd client && npm start",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "build": "cd client && npm run build"
+  },
   "dependencies": {
-    "twilio": "^5.7.1"
-  }
+    "concurrently": "^8.2.2"
+  },
+  "devDependencies": {},
+  "keywords": ["handyman", "connect", "react", "nodejs", "mongodb"],
+  "author": "",
+  "license": "MIT"
 }
