@@ -9,6 +9,7 @@ export default function AdminDashboard() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newPro, setNewPro] = useState({ name: "", phone: "", trade: "" });
+  const [error, setError] = useState("");
 
   const API = process.env.REACT_APP_API_URL || 'https://handyman-connect-1-1.onrender.com';
 
@@ -18,6 +19,7 @@ export default function AdminDashboard() {
 
   const fetchData = async () => {
     try {
+      setError("");
       const proRes = await axios.get(`${API}/api/admin/pros`);
       const reqRes = await axios.get(`${API}/api/admin/job-requests`);
       setPros(proRes.data);
@@ -25,6 +27,17 @@ export default function AdminDashboard() {
       setLoading(false);
     } catch (err) {
       console.error("❌ Error loading admin data:", err);
+      setLoading(false);
+      
+      if (err.response?.data?.message) {
+        setError(`Server Error: ${err.response.data.message}`);
+      } else if (err.response?.status === 503) {
+        setError("Database not connected. Please check environment variables in Render dashboard.");
+      } else if (err.response?.status === 500) {
+        setError("Server configuration issue. Check Render logs and environment variables.");
+      } else {
+        setError("Unable to connect to server. Please check your deployment.");
+      }
     }
   };
 
@@ -59,6 +72,40 @@ export default function AdminDashboard() {
   };
 
   if (loading) return <p>Loading Admin Dashboard...</p>;
+
+  if (error) {
+    return (
+      <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+        <h1>🛠️ Admin Dashboard</h1>
+        <div style={{ 
+          padding: "20px", 
+          backgroundColor: "#f8d7da", 
+          border: "1px solid #f5c6cb", 
+          borderRadius: "5px",
+          marginBottom: "20px"
+        }}>
+          <h3>❌ Configuration Error</h3>
+          <p><strong>Error:</strong> {error}</p>
+          <hr />
+          <h4>🔧 How to Fix:</h4>
+          <ol>
+            <li>Go to your <a href="https://dashboard.render.com" target="_blank" rel="noopener noreferrer">Render Dashboard</a></li>
+            <li>Find your service and click "Environment"</li>
+            <li>Add the missing environment variables</li>
+            <li>Save and wait for redeploy</li>
+          </ol>
+          <p><strong>Test URLs:</strong></p>
+          <ul>
+            <li><a href={`${API}/api/env-check`} target="_blank" rel="noopener noreferrer">Check Environment Variables</a></li>
+            <li><a href={`${API}/api/health`} target="_blank" rel="noopener noreferrer">Check Database Health</a></li>
+          </ul>
+          <button onClick={fetchData} style={{ marginTop: "10px", padding: "8px 16px" }}>
+            🔄 Retry Connection
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>

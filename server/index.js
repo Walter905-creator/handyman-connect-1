@@ -83,6 +83,31 @@ app.get("/api/cors-test", (req, res) => {
   });
 });
 
+// ✅ Environment diagnostic endpoint
+app.get("/api/env-check", (req, res) => {
+  const envStatus = {
+    NODE_ENV: process.env.NODE_ENV || 'not set',
+    MONGO_URI: process.env.MONGO_URI ? 'set ✅' : 'missing ❌',
+    JWT_SECRET: process.env.JWT_SECRET ? 'set ✅' : 'missing ❌',
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL ? 'set ✅' : 'missing ❌',
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ? 'set ✅' : 'missing ❌',
+    CLIENT_URL: process.env.CLIENT_URL || 'not set',
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY ? 'set ✅' : 'missing ❌',
+    TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID ? 'set ✅' : 'missing ❌',
+    TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN ? 'set ✅' : 'missing ❌',
+    TWILIO_PHONE: process.env.TWILIO_PHONE || 'not set',
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY ? 'set ✅' : 'missing ❌',
+    STRIPE_FIRST_MONTH_PRICE_ID: process.env.STRIPE_FIRST_MONTH_PRICE_ID ? 'set ✅' : 'missing ❌',
+    STRIPE_MONTHLY_PRICE_ID: process.env.STRIPE_MONTHLY_PRICE_ID ? 'set ✅' : 'missing ❌'
+  };
+
+  res.json({
+    message: "Environment Variables Status",
+    environment: envStatus,
+    timestamp: new Date().toISOString()
+  });
+});
+
 // ✅ Database health check
 app.get("/api/health", async (req, res) => {
   try {
@@ -122,36 +147,36 @@ app.get("/api/health", async (req, res) => {
 // ✅ MongoDB connection
 if (!process.env.MONGO_URI) {
   console.error("❌ MONGO_URI environment variable is not set!");
-  process.exit(1);
+  console.log("🔧 Running in demo mode without database...");
+} else {
+  console.log("🔍 Connecting to MongoDB...");
+  mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("✅ MongoDB connected successfully");
+    console.log(`📊 Database: ${mongoose.connection.name}`);
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err.message);
+    console.error("❌ Make sure MONGO_URI is set correctly");
+    console.log("🔧 Continuing without database connection...");
+  });
+
+  // Monitor MongoDB connection
+  mongoose.connection.on('error', (err) => {
+    console.error('❌ MongoDB connection error:', err);
+  });
+
+  mongoose.connection.on('disconnected', () => {
+    console.log('⚠️ MongoDB disconnected');
+  });
+
+  mongoose.connection.on('reconnected', () => {
+    console.log('✅ MongoDB reconnected');
+  });
 }
-
-console.log("🔍 Connecting to MongoDB...");
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  console.log("✅ MongoDB connected successfully");
-  console.log(`📊 Database: ${mongoose.connection.name}`);
-})
-.catch((err) => {
-  console.error("❌ MongoDB connection error:", err.message);
-  console.error("❌ Make sure MONGO_URI is set correctly");
-  process.exit(1);
-});
-
-// Monitor MongoDB connection
-mongoose.connection.on('error', (err) => {
-  console.error('❌ MongoDB connection error:', err);
-});
-
-mongoose.connection.on('disconnected', () => {
-  console.log('⚠️ MongoDB disconnected');
-});
-
-mongoose.connection.on('reconnected', () => {
-  console.log('✅ MongoDB reconnected');
-});
 
 // ✅ Socket.io connection handling
 io.on('connection', (socket) => {

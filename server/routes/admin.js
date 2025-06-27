@@ -43,6 +43,16 @@ router.get("/test", async (req, res) => {
 // ✅ Get all Pros
 router.get("/pros", /*adminAuth,*/ async (req, res) => {
   try {
+    // Check if database is connected
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ 
+        error: "Database not connected", 
+        message: "MongoDB connection is not available. Please check MONGO_URI environment variable.",
+        readyState: mongoose.connection.readyState
+      });
+    }
+
     console.log("🔍 Attempting to fetch pros from database...");
     const pros = await Pro.find();
     console.log(`✅ Found ${pros.length} pros in database`);
@@ -100,6 +110,16 @@ router.delete("/pros/:id", /*adminAuth,*/ async (req, res) => {
 // ✅ Get all Job Requests
 router.get("/job-requests", /*adminAuth,*/ async (req, res) => {
   try {
+    // Check if database is connected
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ 
+        error: "Database not connected", 
+        message: "MongoDB connection is not available. Please check MONGO_URI environment variable.",
+        readyState: mongoose.connection.readyState
+      });
+    }
+
     console.log("🔍 Attempting to fetch job requests from database...");
     const requests = await JobRequest.find();
     console.log(`✅ Found ${requests.length} job requests in database`);
