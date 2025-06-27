@@ -83,13 +83,75 @@ app.get("/api/cors-test", (req, res) => {
   });
 });
 
+// ✅ Database health check
+app.get("/api/health", async (req, res) => {
+  try {
+    // Check database connection
+    const dbState = mongoose.connection.readyState;
+    const states = {
+      0: 'disconnected',
+      1: 'connected',
+      2: 'connecting',
+      3: 'disconnecting'
+    };
+    
+    // Try to perform a simple database operation
+    const prosCount = await mongoose.model('Pro').countDocuments();
+    const requestsCount = await mongoose.model('JobRequest').countDocuments();
+    
+    res.json({
+      status: 'healthy',
+      database: states[dbState],
+      collections: {
+        pros: prosCount,
+        jobRequests: requestsCount
+      },
+      environment: process.env.NODE_ENV || 'development',
+      timestamp: new Date().toISOString()
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'unhealthy',
+      error: err.message,
+      database: 'error',
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // ✅ MongoDB connection
+if (!process.env.MONGO_URI) {
+  console.error("❌ MONGO_URI environment variable is not set!");
+  process.exit(1);
+}
+
+console.log("🔍 Connecting to MongoDB...");
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log("✅ MongoDB connected"))
-.catch((err) => console.error("❌ MongoDB error:", err));
+.then(() => {
+  console.log("✅ MongoDB connected successfully");
+  console.log(`📊 Database: ${mongoose.connection.name}`);
+})
+.catch((err) => {
+  console.error("❌ MongoDB connection error:", err.message);
+  console.error("❌ Make sure MONGO_URI is set correctly");
+  process.exit(1);
+});
+
+// Monitor MongoDB connection
+mongoose.connection.on('error', (err) => {
+  console.error('❌ MongoDB connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('⚠️ MongoDB disconnected');
+});
+
+mongoose.connection.on('reconnected', () => {
+  console.log('✅ MongoDB reconnected');
+});
 
 // ✅ Socket.io connection handling
 io.on('connection', (socket) => {

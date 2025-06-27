@@ -4,14 +4,57 @@ const Pro = require("../models/Pro");
 const JobRequest = require("../models/JobRequest");
 // const adminAuth = require("../middleware/adminAuth"); // ✅ Commented out for now
 
+// ✅ Test endpoint for debugging
+router.get("/test", async (req, res) => {
+  try {
+    console.log("🧪 Running admin test...");
+    
+    // Test database connection
+    const mongoose = require('mongoose');
+    const dbState = mongoose.connection.readyState;
+    
+    // Test Pro model
+    const prosCount = await Pro.countDocuments();
+    
+    // Test JobRequest model  
+    const requestsCount = await JobRequest.countDocuments();
+    
+    res.json({
+      message: "Admin routes working!",
+      database: dbState === 1 ? 'connected' : 'not connected',
+      collections: {
+        pros: prosCount,
+        jobRequests: requestsCount
+      },
+      models: {
+        Pro: !!Pro,
+        JobRequest: !!JobRequest
+      }
+    });
+  } catch (err) {
+    console.error("❌ Admin test error:", err);
+    res.status(500).json({ 
+      error: "Test failed", 
+      message: err.message 
+    });
+  }
+});
+
 // ✅ Get all Pros
 router.get("/pros", /*adminAuth,*/ async (req, res) => {
   try {
+    console.log("🔍 Attempting to fetch pros from database...");
     const pros = await Pro.find();
+    console.log(`✅ Found ${pros.length} pros in database`);
     res.json(pros);
   } catch (err) {
-    console.error("❌ Error fetching pros:", err);
-    res.status(500).json({ error: "Server error" });
+    console.error("❌ Error fetching pros:", err.message);
+    console.error("❌ Stack trace:", err.stack);
+    res.status(500).json({ 
+      error: "Database error", 
+      message: err.message,
+      details: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
   }
 });
 
@@ -57,11 +100,18 @@ router.delete("/pros/:id", /*adminAuth,*/ async (req, res) => {
 // ✅ Get all Job Requests
 router.get("/job-requests", /*adminAuth,*/ async (req, res) => {
   try {
+    console.log("🔍 Attempting to fetch job requests from database...");
     const requests = await JobRequest.find();
+    console.log(`✅ Found ${requests.length} job requests in database`);
     res.json(requests);
   } catch (err) {
-    console.error("❌ Error fetching job requests:", err);
-    res.status(500).json({ error: "Server error" });
+    console.error("❌ Error fetching job requests:", err.message);
+    console.error("❌ Stack trace:", err.stack);
+    res.status(500).json({ 
+      error: "Database error", 
+      message: err.message,
+      details: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
   }
 });
 
