@@ -14,8 +14,10 @@ function App() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    const API_URL = process.env.REACT_APP_API_URL || 'https://handyman-connect-1-1.onrender.com';
+    
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api`)
+      .get(`${API_URL}/api`)
       .then((res) => setMessage(res.data.message))
       .catch(() => setMessage("Error connecting to backend"));
   }, []);

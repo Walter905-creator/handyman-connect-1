@@ -3,8 +3,11 @@ import React from "react";
 export default function Subscribe() {
   const handleSubscribe = async (e) => {
     e.preventDefault();
+    
+    const API_URL = process.env.REACT_APP_API_URL || 'https://handyman-connect-1-1.onrender.com';
+    
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/stripe/create-checkout-session`, {
+      const response = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

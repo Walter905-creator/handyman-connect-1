@@ -10,7 +10,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [newPro, setNewPro] = useState({ name: "", phone: "", trade: "" });
 
-  const API = process.env.REACT_APP_API_URL;
+  const API = process.env.REACT_APP_API_URL || 'https://handyman-connect-1-1.onrender.com';
 
   useEffect(() => {
     fetchData();

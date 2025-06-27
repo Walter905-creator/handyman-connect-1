@@ -23,8 +23,10 @@ export default function TradeServices() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const API_URL = process.env.REACT_APP_API_URL || 'https://handyman-connect-1-1.onrender.com';
+
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/notify/text`, {
+      const response = await fetch(`${API_URL}/api/notify/text`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
