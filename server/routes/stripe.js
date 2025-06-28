@@ -15,6 +15,17 @@ if (!process.env.STRIPE_SECRET_KEY) {
   }
 }
 
+// Health check endpoint for Stripe configuration
+router.get("/health", (req, res) => {
+  res.json({
+    stripeConfigured: !!stripe,
+    hasSecretKey: !!process.env.STRIPE_SECRET_KEY,
+    hasMonthlyPriceId: !!process.env.STRIPE_MONTHLY_PRICE_ID,
+    hasClientUrl: !!process.env.CLIENT_URL,
+    secretKeyPrefix: process.env.STRIPE_SECRET_KEY ? process.env.STRIPE_SECRET_KEY.substring(0, 7) + '...' : 'none'
+  });
+});
+
 router.post("/create-checkout-session", async (req, res) => {
   // Check if Stripe is configured
   if (!stripe) {
@@ -25,37 +36,50 @@ router.post("/create-checkout-session", async (req, res) => {
   }
 
   // Validate required environment variables
-  if (!process.env.STRIPE_FIRST_MONTH_PRICE_ID || !process.env.STRIPE_MONTHLY_PRICE_ID || !process.env.CLIENT_URL) {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    console.error('❌ Missing STRIPE_SECRET_KEY');
     return res.status(500).json({ 
       error: 'Payment configuration error', 
-      message: 'Missing required Stripe or client configuration' 
+      message: 'Stripe secret key not configured' 
+    });
+  }
+
+  if (!process.env.STRIPE_MONTHLY_PRICE_ID) {
+    console.error('❌ Missing STRIPE_MONTHLY_PRICE_ID');
+    return res.status(500).json({ 
+      error: 'Payment configuration error', 
+      message: 'Stripe price ID not configured' 
+    });
+  }
+
+  if (!process.env.CLIENT_URL) {
+    console.error('❌ Missing CLIENT_URL');
+    return res.status(500).json({ 
+      error: 'Payment configuration error', 
+      message: 'Client URL not configured' 
     });
   }
 
   try {
-const session = await stripe.checkout.sessions.create({
-  payment_method_types: ["card"],
-  mode: "subscription",
-  line_items: [
-    {
-      price: process.env.STRIPE_FIRST_MONTH_PRICE_ID,
-      quantity: 1,
-    },
-    {
-      price: process.env.STRIPE_MONTHLY_PRICE_ID,
-      quantity: 1,
-    }
-  ],
-  subscription_data: {
-    trial_settings: { end_behavior: { missing_payment_method: 'cancel' } },
-    billing_cycle_anchor: 'now',
-    proration_behavior: 'none'
-  },
-  success_url: `${process.env.CLIENT_URL}/success`,
-  cancel_url: `${process.env.CLIENT_URL}/cancel`,
-});
+    console.log('🔄 Creating Stripe checkout session...');
+    
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "subscription",
+      line_items: [
+        {
+          price: process.env.STRIPE_MONTHLY_PRICE_ID,
+          quantity: 1,
+        }
+      ],
+      success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.CLIENT_URL}/cancel`,
+      allow_promotion_codes: true,
+      billing_address_collection: 'required',
+    });
 
-    res.json({ url: session.url });
+    console.log('✅ Stripe checkout session created:', session.id);
+    res.json({ url: session.url, sessionId: session.id });
   } catch (err) {
     console.error("❌ Stripe error details:", {
       message: err.message,
