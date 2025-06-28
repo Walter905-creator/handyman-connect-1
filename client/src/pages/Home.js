@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import TradeServices from "../components/TradeServices";
+import handymanLogo from "../assets/handyman_logo.png";
 
 export default function Home() {
   return (
@@ -35,12 +36,15 @@ export default function Home() {
             style={{
               background: "linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #1d4ed8 100%)",
               borderRadius: "20px",
-              padding: "1.5rem 2rem",
+              padding: "2rem",
               marginBottom: "1rem",
               boxShadow: "0 10px 25px rgba(59, 130, 246, 0.3)",
               border: "3px solid rgba(255, 255, 255, 0.1)",
               position: "relative",
-              overflow: "hidden"
+              overflow: "hidden",
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem"
             }}
           >
             <div
@@ -54,31 +58,48 @@ export default function Home() {
                 animation: "shimmer 3s infinite"
               }}
             />
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <span 
-                style={{ 
-                  fontSize: "3rem", 
-                  marginRight: "0.5rem",
-                  filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.3))"
-                }}
-              >
-                🛠️
-              </span>
-              <span 
+            <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: "1rem" }}>
+              <img 
+                src={handymanLogo} 
+                alt="Handyman Connect Logo" 
                 style={{
-                  fontSize: "2.5rem",
-                  fontWeight: "800",
-                  background: "linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
-                  letterSpacing: "-0.02em"
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "12px",
+                  filter: "drop-shadow(2px 2px 8px rgba(0,0,0,0.3))"
                 }}
-              >
-                Handyman Connect
-              </span>
+              />
+              <div style={{ textAlign: "left" }}>
+                <span 
+                  style={{
+                    fontSize: "2.5rem",
+                    fontWeight: "800",
+                    background: "linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+                    letterSpacing: "-0.02em",
+                    display: "block"
+                  }}
+                >
+                  Handyman Connect
+                </span>
+              </div>
             </div>
+          </div>
+          <div
+            style={{
+              fontSize: "1.1rem",
+              color: "#1e40af",
+              fontWeight: "700",
+              letterSpacing: "0.05em",
+              textTransform: "uppercase",
+              textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
+              marginBottom: "0.5rem"
+            }}
+          >
+            ONE CONNECTION UNLIMITED SOLUTIONS
           </div>
           <div
             style={{

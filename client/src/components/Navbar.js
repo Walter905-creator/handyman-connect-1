@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import handymanLogo from '../assets/handyman_logo.png';
 
 export default function Navbar() {
   return (
@@ -19,8 +20,28 @@ export default function Navbar() {
         fontSize: '1.2rem',
         fontWeight: 'bold'
       }}>
-        <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>🛠️</span>
-        Handyman Connect
+        <img 
+          src={handymanLogo} 
+          alt="Handyman Connect Logo" 
+          style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "8px",
+            marginRight: "0.75rem"
+          }}
+        />
+        <div>
+          <div>Handyman Connect</div>
+          <div style={{ 
+            fontSize: '0.6rem', 
+            color: '#1e40af', 
+            fontWeight: '600',
+            letterSpacing: '0.05em',
+            marginTop: '-2px'
+          }}>
+            ONE CONNECTION UNLIMITED SOLUTIONS
+          </div>
+        </div>
       </Link>
       
       <div style={{ display: 'flex', gap: '1.5rem' }}>
