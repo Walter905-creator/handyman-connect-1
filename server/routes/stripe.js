@@ -1,17 +1,4 @@
-const express = router.get("/health", (req, res) => {
-  const priceId = process.env.STRIPE_PRICE_ID || process.env.STRIPE_MONTHLY_PRICE_ID;
-  
-  res.json({
-    stripeConfigured: !!stripe,
-    hasSecretKey: !!process.env.STRIPE_SECRET_KEY,
-    hasPriceId: !!process.env.STRIPE_PRICE_ID,
-    hasMonthlyPriceId: !!process.env.STRIPE_MONTHLY_PRICE_ID,
-    hasProductId: !!process.env.STRIPE_PRODUCT_ID,
-    hasClientUrl: !!process.env.CLIENT_URL,
-    resolvedPriceId: priceId ? priceId.substring(0, 8) + '...' : 'none',
-    version: "2.3-product-support"
-  });
-});ess");
+const express = require("express");
 const router = express.Router();
 const Stripe = require("stripe");
 
@@ -37,7 +24,7 @@ router.get("/health", (req, res) => {
     hasMonthlyPriceId: !!process.env.STRIPE_MONTHLY_PRICE_ID,
     hasClientUrl: !!process.env.CLIENT_URL,
     resolvedPriceId: priceId ? priceId.substring(0, 8) + '...' : 'none',
-    version: "3.0-force-deploy-final"
+    version: "3.1-fixed-syntax"
   });
 });
 

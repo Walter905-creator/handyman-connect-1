@@ -12,3 +12,5 @@ services:
         value: 10000
       - key: STRIPE_PRICE_ID
         value: price_1Rf0cZPQ4Cetf7g6ekd8hPLb
+      - key: CLIENT_URL
+        value: https://handyman-connect-1-1.onrender.com
