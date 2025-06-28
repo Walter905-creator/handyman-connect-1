@@ -25,3 +25,12 @@ services:
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
+      # Additional environment variables for full functionality
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_PHONE
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false

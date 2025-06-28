@@ -9,13 +9,18 @@ export default function Subscribe() {
     setLoading(true);
     setError("");
 
+    // Use the correct backend URL - force the new backend
+    const API_URL = process.env.REACT_APP_API_URL || 'https://handyman-connect-backend.onrender.com';
+    console.log('🔗 Using API URL:', API_URL);
+
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/stripe/create-checkout-session`
+        `${API_URL}/api/stripe/create-checkout-session`
       );
       window.location.href = response.data.url;
     } catch (err) {
       console.error("❌ Stripe checkout error:", err);
+      console.error("❌ Attempted URL:", `${API_URL}/api/stripe/create-checkout-session`);
       setError("Something went wrong with payment setup. Please try again.");
     } finally {
       setLoading(false);
