@@ -1,125 +1,83 @@
+// server/routes/stripe.js
 const express = require("express");
 const router = express.Router();
 const Stripe = require("stripe");
 
-// Initialize Stripe with validation
+// Initialize Stripe
 let stripe = null;
 if (!process.env.STRIPE_SECRET_KEY) {
-  console.warn('⚠️ STRIPE_SECRET_KEY not found - payment features will be disabled');
+  console.warn('⚠️ STRIPE_SECRET_KEY not found - Stripe features disabled');
 } else {
   try {
     stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-    console.log('✅ Stripe client initialized');
+    console.log('✅ Stripe initialized');
   } catch (err) {
-    console.error('❌ Failed to initialize Stripe:', err.message);
+    console.error('❌ Stripe init error:', err.message);
   }
 }
 
-// Health check endpoint for Stripe configuration
+// ✅ Stripe Health Check
 router.get("/health", (req, res) => {
   res.json({
     stripeConfigured: !!stripe,
     hasSecretKey: !!process.env.STRIPE_SECRET_KEY,
+    hasFirstMonthPriceId: !!process.env.STRIPE_FIRST_MONTH_PRICE_ID,
     hasMonthlyPriceId: !!process.env.STRIPE_MONTHLY_PRICE_ID,
     hasClientUrl: !!process.env.CLIENT_URL,
-    secretKeyPrefix: process.env.STRIPE_SECRET_KEY ? process.env.STRIPE_SECRET_KEY.substring(0, 7) + '...' : 'none'
+    secretKeyStart: process.env.STRIPE_SECRET_KEY ? process.env.STRIPE_SECRET_KEY.substring(0, 7) + '...' : 'none'
   });
 });
 
+// ✅ Main Checkout - First Month + Monthly Subscription
 router.post("/create-checkout-session", async (req, res) => {
-  // Check if Stripe is configured
-  if (!stripe) {
-    return res.status(503).json({ 
-      error: 'Payment service unavailable', 
-      message: 'Stripe not configured' 
-    });
-  }
+  if (!stripe) return res.status(503).json({ error: "Stripe not configured" });
 
-  // Validate required environment variables
-  if (!process.env.STRIPE_SECRET_KEY) {
-    console.error('❌ Missing STRIPE_SECRET_KEY');
-    return res.status(500).json({ 
-      error: 'Payment configuration error', 
-      message: 'Stripe secret key not configured' 
-    });
-  }
+  const requiredVars = [
+    'STRIPE_FIRST_MONTH_PRICE_ID',
+    'STRIPE_MONTHLY_PRICE_ID',
+    'CLIENT_URL'
+  ];
 
-  if (!process.env.STRIPE_MONTHLY_PRICE_ID) {
-    console.error('❌ Missing STRIPE_MONTHLY_PRICE_ID');
-    return res.status(500).json({ 
-      error: 'Payment configuration error', 
-      message: 'Stripe price ID not configured' 
-    });
-  }
-
-  if (!process.env.CLIENT_URL) {
-    console.error('❌ Missing CLIENT_URL');
-    return res.status(500).json({ 
-      error: 'Payment configuration error', 
-      message: 'Client URL not configured' 
-    });
+  for (let v of requiredVars) {
+    if (!process.env[v]) {
+      console.error(`❌ Missing env var: ${v}`);
+      return res.status(500).json({ error: `Missing ${v}` });
+    }
   }
 
   try {
-    console.log('🔄 Creating Stripe checkout session...');
-    console.log('Price ID:', process.env.STRIPE_MONTHLY_PRICE_ID);
-    console.log('Client URL:', process.env.CLIENT_URL);
-    
+    console.log('✅ Creating subscription checkout session...');
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "subscription",
       line_items: [
-        {
-          price: process.env.STRIPE_MONTHLY_PRICE_ID,
-          quantity: 1,
-        }
+        { price: process.env.STRIPE_FIRST_MONTH_PRICE_ID, quantity: 1 },
+        { price: process.env.STRIPE_MONTHLY_PRICE_ID, quantity: 1 }
       ],
+      subscription_data: {
+        billing_cycle_anchor: 'now',
+        proration_behavior: 'none'
+      },
       success_url: `${process.env.CLIENT_URL}/success`,
       cancel_url: `${process.env.CLIENT_URL}/cancel`,
     });
 
-    console.log('✅ Stripe checkout session created:', session.id);
-    res.json({ url: session.url, sessionId: session.id });
+    console.log('✅ Stripe session created:', session.id);
+    res.json({ url: session.url });
   } catch (err) {
-    console.error("❌ Stripe error details:", {
-      message: err.message,
-      type: err.type,
-      code: err.code,
-      statusCode: err.statusCode
-    });
-    
-    // Handle specific Stripe errors
-    if (err.type === 'StripeInvalidRequestError') {
-      res.status(400).json({ 
-        error: 'Invalid payment request',
-        message: 'Payment configuration error'
-      });
-    } else if (err.type === 'StripeAuthenticationError') {
-      res.status(500).json({ 
-        error: 'Payment service authentication failed',
-        message: 'Invalid Stripe API key'
-      });
-    } else {
-      res.status(500).json({ 
-        error: 'Payment processing failed',
-        message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
-      });
-    }
+    console.error("❌ Stripe subscription error:", err);
+    res.status(500).json({ error: "Stripe subscription creation failed" });
   }
 });
 
-// Simple one-time payment as fallback
+// ✅ Simple One-Time Payment Fallback
 router.post("/create-payment-session", async (req, res) => {
-  if (!stripe) {
-    return res.status(503).json({ 
-      error: 'Payment service unavailable', 
-      message: 'Stripe not configured' 
-    });
-  }
+  if (!stripe) return res.status(503).json({ error: "Stripe not configured" });
 
   try {
-    console.log('🔄 Creating simple payment session...');
-    
+    console.log('✅ Creating simple one-time payment session...');
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -127,10 +85,7 @@ router.post("/create-payment-session", async (req, res) => {
         {
           price_data: {
             currency: 'usd',
-            product_data: {
-              name: 'Handyman Connect Pro Membership',
-              description: 'Monthly access to handyman professional features'
-            },
+            product_data: { name: 'Handyman Connect Pro Membership' },
             unit_amount: 2900, // $29.00 in cents
           },
           quantity: 1,
@@ -140,15 +95,10 @@ router.post("/create-payment-session", async (req, res) => {
       cancel_url: `${process.env.CLIENT_URL}/cancel`,
     });
 
-    console.log('✅ Payment session created:', session.id);
-    res.json({ url: session.url, sessionId: session.id });
-    
+    res.json({ url: session.url });
   } catch (err) {
-    console.error("❌ Payment session error:", err.message);
-    res.status(500).json({ 
-      error: 'Payment processing failed',
-      message: err.message
-    });
+    console.error("❌ One-time payment error:", err);
+    res.status(500).json({ error: "Payment failed" });
   }
 });
 
