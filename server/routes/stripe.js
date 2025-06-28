@@ -17,9 +17,14 @@ if (!process.env.STRIPE_SECRET_KEY) {
 
 // Health check endpoint for Stripe configuration
 router.get("/health", (req, res) => {
+  // Add security headers
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  
   res.json({
     stripeConfigured: !!stripe,
     hasSecretKey: !!process.env.STRIPE_SECRET_KEY,
+    hasFirstMonthPriceId: !!process.env.STRIPE_FIRST_MONTH_PRICE_ID,
     hasMonthlyPriceId: !!process.env.STRIPE_MONTHLY_PRICE_ID,
     hasClientUrl: !!process.env.CLIENT_URL,
     secretKeyPrefix: process.env.STRIPE_SECRET_KEY ? process.env.STRIPE_SECRET_KEY.substring(0, 7) + '...' : 'none'
@@ -44,11 +49,19 @@ router.post("/create-checkout-session", async (req, res) => {
     });
   }
 
+
+  if (!process.env.STRIPE_FIRST_MONTH_PRICE_ID) {
+    console.error('❌ Missing STRIPE_FIRST_MONTH_PRICE_ID');
+    return res.status(500).json({ 
+      error: 'Payment configuration error', 
+      message: 'Stripe first month price ID not configured' 
+    });
+  }
   if (!process.env.STRIPE_MONTHLY_PRICE_ID) {
     console.error('❌ Missing STRIPE_MONTHLY_PRICE_ID');
     return res.status(500).json({ 
       error: 'Payment configuration error', 
-      message: 'Stripe price ID not configured' 
+      message: 'Stripe monthly price ID not configured' 
     });
   }
 
@@ -58,11 +71,10 @@ router.post("/create-checkout-session", async (req, res) => {
       error: 'Payment configuration error', 
       message: 'Client URL not configured' 
     });
-  }
-
-  try {
+  }  try {
     console.log('🔄 Creating Stripe checkout session...');
-    console.log('Price ID:', process.env.STRIPE_MONTHLY_PRICE_ID);
+    console.log('First Month Price ID:', process.env.STRIPE_FIRST_MONTH_PRICE_ID);
+    console.log('Monthly Price ID:', process.env.STRIPE_MONTHLY_PRICE_ID);
     console.log('Client URL:', process.env.CLIENT_URL);
     
     const session = await stripe.checkout.sessions.create({
@@ -70,15 +82,29 @@ router.post("/create-checkout-session", async (req, res) => {
       mode: "subscription",
       line_items: [
         {
-          price: process.env.STRIPE_MONTHLY_PRICE_ID,
+          price: process.env.STRIPE_FIRST_MONTH_PRICE_ID,
           quantity: 1,
         }
       ],
+      subscription_data: {
+        metadata: {
+          source: 'handyman-connect-subscription',
+          billing_cycle: 'first-month-then-monthly'
+        }
+      },
       success_url: `${process.env.CLIENT_URL}/success`,
       cancel_url: `${process.env.CLIENT_URL}/cancel`,
+      metadata: {
+        source: 'handyman-connect-subscription'
+      }
     });
 
     console.log('✅ Stripe checkout session created:', session.id);
+    
+    // Add proper headers for JSON response
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Cache-Control', 'no-cache');
+    
     res.json({ url: session.url, sessionId: session.id });
   } catch (err) {
     console.error("❌ Stripe error details:", {

@@ -19,32 +19,46 @@ export default function Subscribe() {
     
     for (const endpoint of endpoints) {
       try {
-        console.log(`Trying ${endpoint}...`);
+        // Create timeout controller for better error handling
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
         const response = await fetch(`${API_URL}${endpoint}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
-          }
+          },
+          signal: controller.signal
         });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
         
         const data = await response.json();
         
-        if (response.ok && data.url) {
-          console.log('Redirecting to Stripe checkout...');
+        if (data.url) {
+          // Use window.location for better compatibility
           window.location.href = data.url;
           return; // Success, stop trying other endpoints
         } else {
-          console.warn(`${endpoint} failed:`, data.message);
-          // Continue to next endpoint
+          throw new Error(data.message || 'No checkout URL received');
         }
       } catch (error) {
-        console.warn(`${endpoint} error:`, error.message);
-        // Continue to next endpoint
+        if (error.name === 'AbortError') {
+          console.warn(`${endpoint} timed out`);
+        } else {
+          console.warn(`${endpoint} failed:`, error.message);
+        }
+        // Continue to next endpoint only if it's not the last one
+        if (endpoint === endpoints[endpoints.length - 1]) {
+          setError(`Payment system temporarily unavailable: ${error.message}. Please try again in a moment.`);
+        }
       }
     }
     
-    // If we get here, all endpoints failed
-    setError('Unable to create payment session. Please contact support.');
     setLoading(false);
   };
 
