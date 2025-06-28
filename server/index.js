@@ -4,7 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const http = require("http");
 const { Server } = require("socket.io");
-const { generalRateLimit, authRateLimit, aiRateLimit, notificationRateLimit } = require("./middleware/rateLimiter");
+const { generalRateLimit, authRateLimit, aiRateLimit, adminRateLimit } = require("./middleware/rateLimiter");
 const securityHeaders = require("./middleware/security");
 const sanitizeInput = require("./middleware/sanitization");
 const errorHandler = require("./middleware/errorHandler");
@@ -67,9 +67,9 @@ app.use(generalRateLimit);
 app.options('*', cors());
 
 // ✅ Routes with specific rate limiting
-app.use('/api/admin', require('./routes/admin'));
+app.use('/api/admin', adminRateLimit, require('./routes/admin'));
 app.use('/api/auth', authRateLimit, require('./routes/auth'));
-app.use("/api/notify", notificationRateLimit, require("./routes/notifications"));
+app.use("/api/notify", require("./routes/notifications"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
 app.use("/api/ai", aiRateLimit, require("./routes/ai"));         // OpenAI assistant
 

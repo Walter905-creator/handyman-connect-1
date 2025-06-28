@@ -24,6 +24,7 @@ const createRateLimit = (windowMs, max, message) => {
     standardHeaders: true,
     legacyHeaders: false,
     handler: (req, res) => {
+      console.log(`🚦 Rate limit exceeded for ${req.path} from IP: ${req.ip}`);
       res.status(429).json({
         error: 'Too many requests',
         message: message,
@@ -41,26 +42,28 @@ const authRateLimit = createRateLimit(
 );
 
 const generalRateLimit = createRateLimit(
-  15 * 60 * 1000, // 15 minutes
-  100, // limit each IP to 100 requests per windowMs
+  1 * 60 * 1000, // 1 minute
+  100, // limit each IP to 100 requests per minute
   'Too many requests from this IP, please try again later'
 );
 
+// AI rate limiting - more restrictive to protect OpenAI API
 const aiRateLimit = createRateLimit(
-  60 * 1000, // 1 minute
+  1 * 60 * 1000, // 1 minute
   10, // limit each IP to 10 AI requests per minute
-  'Too many AI requests, please wait a moment'
+  'Too many AI requests. Please wait a minute before trying again.'
 );
 
-const notificationRateLimit = createRateLimit(
-  60 * 60 * 1000, // 1 hour
-  20, // limit each IP to 20 job requests per hour
-  'Too many job requests, please wait before submitting another'
+// Admin rate limiting
+const adminRateLimit = createRateLimit(
+  5 * 60 * 1000, // 5 minutes
+  50, // limit each IP to 50 admin requests per 5 minutes
+  'Too many admin requests, please try again later'
 );
 
 module.exports = {
   authRateLimit,
   generalRateLimit,
   aiRateLimit,
-  notificationRateLimit
+  adminRateLimit
 };

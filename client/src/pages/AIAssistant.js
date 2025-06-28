@@ -7,11 +7,23 @@ export default function AIAssistant() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [aiStatus, setAiStatus] = useState(null);
+  const [lastRequestTime, setLastRequestTime] = useState(0);
+  const [cooldownTime, setCooldownTime] = useState(0);
 
   // Check AI service status on component mount
   useEffect(() => {
     checkAIStatus();
   }, []);
+
+  // Cooldown timer
+  useEffect(() => {
+    if (cooldownTime > 0) {
+      const timer = setTimeout(() => {
+        setCooldownTime(cooldownTime - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [cooldownTime]);
 
   const checkAIStatus = async () => {
     try {
@@ -27,16 +39,37 @@ export default function AIAssistant() {
     e.preventDefault();
     if (!input.trim()) return;
 
+    // Prevent rapid requests
+    const now = Date.now();
+    if (now - lastRequestTime < 3000) {
+      setError('Please wait a moment before sending another request.');
+      return;
+    }
+
     setLoading(true);
     setResponse('');
     setError('');
+    setLastRequestTime(now);
 
     try {
       const res = await api.post('/api/ai/ask', { message: input });
-      setResponse(res.data.reply);
+      const data = res.data;
+      
+      setResponse(data.reply);
+      
+      // Show cache status and processing time for debugging
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Response ${data.cached ? 'from cache' : 'from AI'} in ${data.processingTime}ms`);
+      }
+      
     } catch (err) {
       console.error('AI request failed:', err);
-      if (err.response?.data?.message) {
+      if (err.response?.status === 429) {
+        setError('The AI assistant is receiving too many requests right now. Please wait a minute and try again.');
+        setCooldownTime(60); // Start 60 second cooldown
+      } else if (err.response?.status === 408) {
+        setError('Request took too long to process. Please try again with a shorter message.');
+      } else if (err.response?.data?.message) {
         setError(`AI Error: ${err.response.data.message}`);
       } else if (err.response?.status === 503) {
         setError('AI service is currently unavailable. Please check if OpenAI API key is configured.');
@@ -84,18 +117,18 @@ export default function AIAssistant() {
         </div>
         <button 
           type="submit" 
-          disabled={loading || !input.trim() || aiStatus?.status !== 'available'}
+          disabled={loading || !input.trim() || aiStatus?.status !== 'available' || cooldownTime > 0}
           style={{
             padding: '10px 20px',
-            backgroundColor: loading ? '#ccc' : '#007bff',
+            backgroundColor: (loading || cooldownTime > 0) ? '#ccc' : '#007bff',
             color: 'white',
             border: 'none',
             borderRadius: 5,
-            cursor: loading ? 'not-allowed' : 'pointer',
+            cursor: (loading || cooldownTime > 0) ? 'not-allowed' : 'pointer',
             fontSize: 16
           }}
         >
-          {loading ? 'Thinking...' : 'Ask AI Assistant'}
+          {loading ? 'Thinking...' : cooldownTime > 0 ? `Wait ${cooldownTime}s` : 'Ask AI Assistant'}
         </button>
       </form>
 
