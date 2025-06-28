@@ -1,11 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import TradeServices from "../components/TradeServices";
-import handymanLogo from "../assets/handyman_logo.png";
 
 export default function Home() {
   return (
-    <div style={{ fontFamily: "Inter, sans-serif" }}>
+    <>
+      <style>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+          100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+      `}</style>
+      <div style={{ fontFamily: "Inter, sans-serif" }}>
       {/* Hero Section */}
       <section
         style={{
@@ -15,12 +21,77 @@ export default function Home() {
           textAlign: "center",
         }}
       >
-        {/* ✅ Logo */}
-        <img
-          src={handymanLogo}
-          alt="Handyman Connect Logo"
-          style={{ maxWidth: "300px", marginBottom: "1rem" }}
-        />
+        {/* Handyman Connect Logo */}
+        <div 
+          style={{
+            marginBottom: "2rem",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column"
+          }}
+        >
+          <div
+            style={{
+              background: "linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #1d4ed8 100%)",
+              borderRadius: "20px",
+              padding: "1.5rem 2rem",
+              marginBottom: "1rem",
+              boxShadow: "0 10px 25px rgba(59, 130, 246, 0.3)",
+              border: "3px solid rgba(255, 255, 255, 0.1)",
+              position: "relative",
+              overflow: "hidden"
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: "-50%",
+                left: "-50%",
+                width: "200%",
+                height: "200%",
+                background: "linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)",
+                animation: "shimmer 3s infinite"
+              }}
+            />
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <span 
+                style={{ 
+                  fontSize: "3rem", 
+                  marginRight: "0.5rem",
+                  filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.3))"
+                }}
+              >
+                🛠️
+              </span>
+              <span 
+                style={{
+                  fontSize: "2.5rem",
+                  fontWeight: "800",
+                  background: "linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+                  letterSpacing: "-0.02em"
+                }}
+              >
+                Handyman Connect
+              </span>
+            </div>
+          </div>
+          <div
+            style={{
+              fontSize: "0.9rem",
+              color: "#94a3b8",
+              fontWeight: "500",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase"
+            }}
+          >
+            Professional • Trusted • Reliable
+          </div>
+        </div>
 
         <h1
           style={{
@@ -29,7 +100,7 @@ export default function Home() {
             marginBottom: "1rem",
           }}
         >
-          🛠️ Welcome to Handyman Connect
+          Welcome to Handyman Connect
         </h1>
         <p
           style={{
@@ -120,5 +191,6 @@ export default function Home() {
         </div>
       </section>
     </div>
+    </>
   );
 }
