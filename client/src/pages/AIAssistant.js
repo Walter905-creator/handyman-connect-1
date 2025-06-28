@@ -51,32 +51,57 @@ export default function AIAssistant() {
     setError('');
     setLastRequestTime(now);
 
+    const makeRequest = async (retryCount = 0) => {
+      try {
+        const res = await api.post('/api/ai/ask', { message: input });
+        const data = res.data;
+        
+        setResponse(data.reply);
+        
+        // Show cache status and processing time for debugging
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`Response ${data.cached ? 'from cache' : 'from AI'} in ${data.processingTime}ms`);
+        }
+        
+        return data;
+      } catch (err) {
+        console.error('AI request failed:', err);
+        
+        if (err.response?.status === 429) {
+          const retryAfter = err.response?.data?.retryAfter || 60;
+          
+          if (retryCount < 2) { // Allow up to 2 retries
+            console.log(`⏳ Rate limited, retrying in ${retryAfter} seconds... (attempt ${retryCount + 1}/3)`);
+            setError(`Too many requests. Automatically retrying in ${Math.min(retryAfter, 10)} seconds... (${retryCount + 1}/3)`);
+            
+            // Wait and retry (max 10 seconds to avoid long waits)
+            const waitTime = Math.min(retryAfter, 10) * 1000;
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+            return makeRequest(retryCount + 1);
+          } else {
+            setError('The AI assistant is receiving too many requests. Please wait a minute and try again.');
+            setCooldownTime(60); // Start 60 second cooldown
+          }
+        } else if (err.response?.status === 408) {
+          setError('Request took too long to process. Please try again with a shorter message.');
+        } else if (err.response?.data?.message) {
+          setError(`AI Error: ${err.response.data.message}`);
+        } else if (err.response?.status === 503) {
+          setError('AI service is currently unavailable. Please check if OpenAI API key is configured.');
+        } else {
+          setError('Something went wrong with the AI assistant. Please try again.');
+        }
+        
+        throw err;
+      }
+    };
+
     try {
-      const res = await api.post('/api/ai/ask', { message: input });
-      const data = res.data;
-      
-      setResponse(data.reply);
-      
-      // Show cache status and processing time for debugging
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`Response ${data.cached ? 'from cache' : 'from AI'} in ${data.processingTime}ms`);
-      }
-      
+      await makeRequest();
     } catch (err) {
-      console.error('AI request failed:', err);
-      if (err.response?.status === 429) {
-        setError('The AI assistant is receiving too many requests right now. Please wait a minute and try again.');
-        setCooldownTime(60); // Start 60 second cooldown
-      } else if (err.response?.status === 408) {
-        setError('Request took too long to process. Please try again with a shorter message.');
-      } else if (err.response?.data?.message) {
-        setError(`AI Error: ${err.response.data.message}`);
-      } else if (err.response?.status === 503) {
-        setError('AI service is currently unavailable. Please check if OpenAI API key is configured.');
-      } else {
-        setError('Something went wrong with the AI assistant. Please try again.');
-      }
+      // Final error handling already done in makeRequest
     }
+    
     setLoading(false);
   };
 

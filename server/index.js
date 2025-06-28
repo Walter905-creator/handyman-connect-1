@@ -71,7 +71,15 @@ app.use('/api/admin', adminRateLimit, require('./routes/admin'));
 app.use('/api/auth', authRateLimit, require('./routes/auth'));
 app.use("/api/notify", require("./routes/notifications"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
-app.use("/api/ai", aiRateLimit, require("./routes/ai"));         // OpenAI assistant
+
+// Try advanced AI route, fallback to simple version if it fails
+try {
+  app.use("/api/ai", aiRateLimit, require("./routes/ai"));
+  console.log('✅ Advanced AI routes loaded');
+} catch (err) {
+  console.warn('⚠️ Advanced AI routes failed, using fallback:', err.message);
+  app.use("/api/ai", require("./routes/ai-fallback"));
+}
 
 // ✅ Webhook for Checkr
 app.post("/webhook/checkr", (req, res) => {
@@ -84,7 +92,8 @@ app.get("/api", (req, res) => {
   res.json({ 
     message: "Backend is live!", 
     timestamp: new Date().toISOString(),
-    cors: "enabled"
+    cors: "enabled",
+    version: "2.0.0-with-ai-improvements"
   });
 });
 
