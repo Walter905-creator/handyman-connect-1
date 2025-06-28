@@ -1,3 +1,4 @@
+import handymanLogo from "../assets/handyman_logo.png";
 // client/src/pages/Home.js or client/src/components/Home.js
 import TradeServices from "../components/TradeServices";
 import React from "react";
