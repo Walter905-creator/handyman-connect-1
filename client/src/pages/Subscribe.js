@@ -63,14 +63,6 @@ export default function Subscribe() {
               Unlimited access to our network of professional handymen
             </p>
 
-            <ul style={{ textAlign: "left", marginBottom: "2rem", padding: "0 2rem" }}>
-              <li style={{ marginBottom: "0.5rem" }}>✅ 24/7 Service Availability</li>
-              <li style={{ marginBottom: "0.5rem" }}>✅ Verified Professional Network</li>
-              <li style={{ marginBottom: "0.5rem" }}>✅ Priority Booking</li>
-              <li style={{ marginBottom: "0.5rem" }}>✅ Quality Guarantee</li>
-              <li style={{ marginBottom: "0.5rem" }}>✅ Mobile App Access</li>
-            </ul>
-
             {error && (
               <div
                 style={{
