@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "A full-stack web application connecting homeowners with verified handyman professionals",
   "scripts": {
+    "start": "cd server && npm start",
+    "build": "cd server && npm install && cd ../client && npm install && npm run build",
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
     "server:dev": "cd server && npm start",
     "client:dev": "cd client && npm start",
-    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
-    "build": "cd client && npm run build"
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install"
   },
   "dependencies": {
     "concurrently": "^8.2.2"

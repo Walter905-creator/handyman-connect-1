@@ -1,10 +1,5 @@
 // client/src/pages/Home.js or client/src/components/Home.js
-import TradeServices from "../c            {
-              title: "Secure Payments",
-              emoji: "💳",
-              desc: "Handled by Stripe. Simple & safe.",
-            }
-          ].map((f, i) => (s/TradeServices";
+import TradeServices from "../components/TradeServices";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -97,9 +92,7 @@ export default function Home() {
             },
             {
               title: "Secure Payments",
-              emoji: "�",
-              desc: "Handled by Stripe. Simple & safe.",
-            },
+              emoji: "💳",
               desc: "Handled by Stripe. Simple & safe.",
             },
           ].map((f, i) => (

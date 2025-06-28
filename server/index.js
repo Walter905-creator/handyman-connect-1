@@ -9,6 +9,7 @@ const securityHeaders = require("./middleware/security");
 const sanitizeInput = require("./middleware/sanitization");
 const errorHandler = require("./middleware/errorHandler");
 const requestLogger = require("./middleware/logger");
+const path = require("path");
 
 dotenv.config();
 
@@ -50,6 +51,13 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// ✅ Serve static files from React build (production)
+if (process.env.NODE_ENV === 'production') {
+  const buildPath = path.join(__dirname, '../client/build');
+  app.use(express.static(buildPath));
+  console.log(`📁 Serving static files from: ${buildPath}`);
+}
 
 // ✅ Request logging
 app.use(requestLogger);
@@ -189,6 +197,22 @@ if (!process.env.MONGO_URI) {
 
   mongoose.connection.on('reconnected', () => {
     console.log('✅ MongoDB reconnected');
+  });
+}
+
+// ✅ Serve React app for non-API routes (production)
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    // Don't serve React app for API routes
+    if (req.path.startsWith('/api') || req.path.startsWith('/webhook')) {
+      return res.status(404).json({
+        error: 'API endpoint not found',
+        message: `Cannot ${req.method} ${req.originalUrl}`,
+      });
+    }
+    
+    const buildPath = path.join(__dirname, '../client/build');
+    res.sendFile(path.join(buildPath, 'index.html'));
   });
 }
 
