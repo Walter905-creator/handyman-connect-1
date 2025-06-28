@@ -24,7 +24,7 @@ router.get("/health", (req, res) => {
     hasMonthlyPriceId: !!process.env.STRIPE_MONTHLY_PRICE_ID,
     hasClientUrl: !!process.env.CLIENT_URL,
     resolvedPriceId: priceId ? priceId.substring(0, 8) + '...' : 'none',
-    version: "3.1-fixed-syntax"
+    version: "3.2-deployment-fix"
   });
 });
 
