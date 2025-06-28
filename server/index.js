@@ -223,27 +223,6 @@ if (process.env.NODE_ENV === 'production') {
   console.log(`⚠️  Not in production mode. NODE_ENV = ${process.env.NODE_ENV}`);
 }
 
-// ✅ 404 handler for unmatched non-GET routes
-app.use((req, res) => {
-  // Only handle non-GET requests that weren't caught above
-  if (req.method !== 'GET') {
-    res.status(404).json({
-      error: 'Route not found',
-      message: `Cannot ${req.method} ${req.originalUrl}`,
-      availableEndpoints: [
-        'GET /api - Health check',
-        'GET /api/health - Database health',
-        'GET /api/env-check - Environment variables status',
-        'POST /api/auth/login - Admin login',
-        'GET /api/admin/pros - Get professionals (auth required)',
-        'POST /api/notify/text - Submit job request',
-        'POST /api/ai/ask - AI assistant',
-        'POST /api/stripe/create-checkout-session - Create payment session'
-      ]
-    });
-  }
-});
-
 // ✅ Global error handler (must be last middleware)
 app.use(errorHandler);
 
