@@ -18,8 +18,7 @@ router.get("/health", (req, res) => {
   res.json({
     stripeConfigured: !!stripe,
     hasSecretKey: !!process.env.STRIPE_SECRET_KEY,
-    hasFirstMonthPriceId: !!process.env.STRIPE_FIRST_MONTH_PRICE_ID,
-    hasMonthlyPriceId: !!process.env.STRIPE_MONTHLY_PRICE_ID,
+    hasPriceId: !!process.env.STRIPE_PRICE_ID,
     hasClientUrl: !!process.env.CLIENT_URL
   });
 });
@@ -27,11 +26,11 @@ router.get("/health", (req, res) => {
 router.post("/create-checkout-session", async (req, res) => {
   if (!stripe) return res.status(503).json({ error: "Stripe not configured" });
 
-  const requiredVars = ['STRIPE_FIRST_MONTH_PRICE_ID', 'STRIPE_MONTHLY_PRICE_ID', 'CLIENT_URL'];
-  for (let v of requiredVars) {
-    if (!process.env[v]) {
-      return res.status(500).json({ error: 'Payment configuration error', message: `Missing ${v}` });
-    }
+  if (!process.env.STRIPE_PRICE_ID) {
+    return res.status(500).json({ error: 'Payment configuration error', message: 'Missing STRIPE_PRICE_ID' });
+  }
+  if (!process.env.CLIENT_URL) {
+    return res.status(500).json({ error: 'Payment configuration error', message: 'Missing CLIENT_URL' });
   }
 
   try {
@@ -39,8 +38,7 @@ router.post("/create-checkout-session", async (req, res) => {
       payment_method_types: ["card"],
       mode: "subscription",
       line_items: [
-        { price: process.env.STRIPE_FIRST_MONTH_PRICE_ID, quantity: 1 },
-        { price: process.env.STRIPE_MONTHLY_PRICE_ID, quantity: 1 }
+        { price: process.env.STRIPE_PRICE_ID, quantity: 1 }
       ],
       success_url: `${process.env.CLIENT_URL}/success`,
       cancel_url: `${process.env.CLIENT_URL}/cancel`
