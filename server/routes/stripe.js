@@ -62,6 +62,8 @@ router.post("/create-checkout-session", async (req, res) => {
 
   try {
     console.log('🔄 Creating Stripe checkout session...');
+    console.log('Price ID:', process.env.STRIPE_MONTHLY_PRICE_ID);
+    console.log('Client URL:', process.env.CLIENT_URL);
     
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -72,10 +74,8 @@ router.post("/create-checkout-session", async (req, res) => {
           quantity: 1,
         }
       ],
-      success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.CLIENT_URL}/success`,
       cancel_url: `${process.env.CLIENT_URL}/cancel`,
-      allow_promotion_codes: true,
-      billing_address_collection: 'required',
     });
 
     console.log('✅ Stripe checkout session created:', session.id);
@@ -105,6 +105,50 @@ router.post("/create-checkout-session", async (req, res) => {
         message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
       });
     }
+  }
+});
+
+// Simple one-time payment as fallback
+router.post("/create-payment-session", async (req, res) => {
+  if (!stripe) {
+    return res.status(503).json({ 
+      error: 'Payment service unavailable', 
+      message: 'Stripe not configured' 
+    });
+  }
+
+  try {
+    console.log('🔄 Creating simple payment session...');
+    
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Handyman Connect Pro Membership',
+              description: 'Monthly access to handyman professional features'
+            },
+            unit_amount: 2900, // $29.00 in cents
+          },
+          quantity: 1,
+        }
+      ],
+      success_url: `${process.env.CLIENT_URL}/success`,
+      cancel_url: `${process.env.CLIENT_URL}/cancel`,
+    });
+
+    console.log('✅ Payment session created:', session.id);
+    res.json({ url: session.url, sessionId: session.id });
+    
+  } catch (err) {
+    console.error("❌ Payment session error:", err.message);
+    res.status(500).json({ 
+      error: 'Payment processing failed',
+      message: err.message
+    });
   }
 });
 

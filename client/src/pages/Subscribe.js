@@ -11,33 +11,41 @@ export default function Subscribe() {
     
     const API_URL = process.env.REACT_APP_API_URL || 'https://handyman-connect-1-1.onrender.com';
     
-    try {
-      console.log('Creating checkout session...');
-      const response = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
+    // Try subscription first, then fallback to simple payment
+    const endpoints = [
+      '/api/stripe/create-checkout-session',
+      '/api/stripe/create-payment-session'
+    ];
+    
+    for (const endpoint of endpoints) {
+      try {
+        console.log(`Trying ${endpoint}...`);
+        const response = await fetch(`${API_URL}${endpoint}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.url) {
+          console.log('Redirecting to Stripe checkout...');
+          window.location.href = data.url;
+          return; // Success, stop trying other endpoints
+        } else {
+          console.warn(`${endpoint} failed:`, data.message);
+          // Continue to next endpoint
         }
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || `HTTP error! status: ${response.status}`);
+      } catch (error) {
+        console.warn(`${endpoint} error:`, error.message);
+        // Continue to next endpoint
       }
-      
-      if (data.url) {
-        console.log('Redirecting to Stripe checkout...');
-        window.location.href = data.url;
-      } else {
-        throw new Error('No checkout URL received from server');
-      }
-    } catch (error) {
-      console.error("Error creating checkout session:", error);
-      setError(`Failed to start subscription: ${error.message}`);
-    } finally {
-      setLoading(false);
     }
+    
+    // If we get here, all endpoints failed
+    setError('Unable to create payment session. Please contact support.');
+    setLoading(false);
   };
 
   return (
