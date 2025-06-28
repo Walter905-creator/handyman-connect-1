@@ -4,7 +4,7 @@
   "description": "A full-stack web application connecting homeowners with verified handyman professionals",
   "scripts": {
     "start": "cd server && npm start",
-    "build": "cd server && npm install && cd ../client && npm install && npm run build",
+    "build": "cd client && npm install && npm run build && cd ../server && npm install",
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
     "server:dev": "cd server && npm start",
     "client:dev": "cd client && npm start",
