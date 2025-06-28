@@ -4,7 +4,6 @@ import axios from "axios";
 
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
-import AIAssistant from "./pages/AIAssistant";
 import Subscribe from "./pages/Subscribe";
 import Terms from "./pages/Terms";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -31,7 +30,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/subscribe" element={<Subscribe />} />
-          <Route path="/ai" element={<AIAssistant />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/login" element={<AdminLogin />} />

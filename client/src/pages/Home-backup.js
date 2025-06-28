@@ -1,5 +1,10 @@
 // client/src/pages/Home.js or client/src/components/Home.js
-import TradeServices from "../components/TradeServices";
+import TradeServices from "../c            {
+              title: "Secure Payments",
+              emoji: "💳",
+              desc: "Handled by Stripe. Simple & safe.",
+            }
+          ].map((f, i) => (s/TradeServices";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -31,7 +36,8 @@ export default function Home() {
             margin: "0 auto 2rem",
           }}
         >
-          Your one-stop hub for finding trusted professionals and managing your home projects effortlessly.
+          Your one-stop hub for finding trusted professionals, getting expert help through AI,
+          and managing your home projects effortlessly.
         </p>
         <Link to="/subscribe">
           <button
@@ -91,9 +97,11 @@ export default function Home() {
             },
             {
               title: "Secure Payments",
-              emoji: "💳",
+              emoji: "�",
               desc: "Handled by Stripe. Simple & safe.",
-            }
+            },
+              desc: "Handled by Stripe. Simple & safe.",
+            },
           ].map((f, i) => (
             <div
               key={i}

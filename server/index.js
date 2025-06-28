@@ -4,7 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const http = require("http");
 const { Server } = require("socket.io");
-const { generalRateLimit, authRateLimit, aiRateLimit, adminRateLimit } = require("./middleware/rateLimiter");
+const { generalRateLimit, authRateLimit, adminRateLimit } = require("./middleware/rateLimiter");
 const securityHeaders = require("./middleware/security");
 const sanitizeInput = require("./middleware/sanitization");
 const errorHandler = require("./middleware/errorHandler");
@@ -71,15 +71,6 @@ app.use('/api/admin', adminRateLimit, require('./routes/admin'));
 app.use('/api/auth', authRateLimit, require('./routes/auth'));
 app.use("/api/notify", require("./routes/notifications"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
-
-// Try advanced AI route, fallback to simple version if it fails
-try {
-  app.use("/api/ai", aiRateLimit, require("./routes/ai"));
-  console.log('✅ Advanced AI routes loaded');
-} catch (err) {
-  console.warn('⚠️ Advanced AI routes failed, using fallback:', err.message);
-  app.use("/api/ai", require("./routes/ai-fallback"));
-}
 
 // ✅ Webhook for Checkr
 app.post("/webhook/checkr", (req, res) => {
