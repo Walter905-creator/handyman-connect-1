@@ -19,7 +19,8 @@ router.get("/health", (req, res) => {
     stripeConfigured: !!stripe,
     hasSecretKey: !!process.env.STRIPE_SECRET_KEY,
     hasPriceId: !!process.env.STRIPE_PRICE_ID,
-    hasClientUrl: !!process.env.CLIENT_URL
+    hasClientUrl: !!process.env.CLIENT_URL,
+    version: "2.0-single-price"
   });
 });
 
