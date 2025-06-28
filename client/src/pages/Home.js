@@ -1,8 +1,7 @@
-import handymanLogo from "../assets/handyman_logo.png";
-// client/src/pages/Home.js or client/src/components/Home.js
-import TradeServices from "../components/TradeServices";
 import React from "react";
 import { Link } from "react-router-dom";
+import TradeServices from "../components/TradeServices";
+import handymanLogo from "../assets/handyman_logo.png";
 
 export default function Home() {
   return (
@@ -16,6 +15,13 @@ export default function Home() {
           textAlign: "center",
         }}
       >
+        {/* ✅ Logo */}
+        <img
+          src={handymanLogo}
+          alt="Handyman Connect Logo"
+          style={{ maxWidth: "300px", marginBottom: "1rem" }}
+        />
+
         <h1
           style={{
             fontSize: "3rem",
@@ -94,7 +100,7 @@ export default function Home() {
               title: "Secure Payments",
               emoji: "💳",
               desc: "Handled by Stripe. Simple & safe.",
-            }
+            },
           ].map((f, i) => (
             <div
               key={i}
