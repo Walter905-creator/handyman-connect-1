@@ -57,6 +57,8 @@ if (process.env.NODE_ENV === 'production') {
   const buildPath = path.join(__dirname, '../client/build');
   app.use(express.static(buildPath));
   console.log(`📁 Serving static files from: ${buildPath}`);
+  console.log(`🌍 NODE_ENV = ${process.env.NODE_ENV}`);
+  console.log(`📦 Build directory exists: ${require('fs').existsSync(buildPath)}`);
 }
 
 // ✅ Request logging
@@ -203,6 +205,7 @@ if (!process.env.MONGO_URI) {
 // ✅ Serve React app for non-API routes (production)
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
+    console.log(`🔍 Serving frontend for path: ${req.path}`);
     // Don't serve React app for API routes
     if (req.path.startsWith('/api') || req.path.startsWith('/webhook')) {
       return res.status(404).json({
@@ -212,8 +215,12 @@ if (process.env.NODE_ENV === 'production') {
     }
     
     const buildPath = path.join(__dirname, '../client/build');
-    res.sendFile(path.join(buildPath, 'index.html'));
+    const indexPath = path.join(buildPath, 'index.html');
+    console.log(`📄 Serving index.html from: ${indexPath}`);
+    res.sendFile(indexPath);
   });
+} else {
+  console.log(`⚠️  Not in production mode. NODE_ENV = ${process.env.NODE_ENV}`);
 }
 
 // ✅ 404 handler for unmatched routes
