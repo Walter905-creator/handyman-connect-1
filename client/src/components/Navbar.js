@@ -30,18 +30,7 @@ export default function Navbar() {
             marginRight: "0.75rem"
           }}
         />
-        <div>
-          <div>Handyman Connect</div>
-          <div style={{ 
-            fontSize: '0.6rem', 
-            color: '#1e40af', 
-            fontWeight: '600',
-            letterSpacing: '0.05em',
-            marginTop: '-2px'
-          }}>
-            ONE CONNECTION UNLIMITED SOLUTIONS
-          </div>
-        </div>
+        Handyman Connect
       </Link>
       
       <div style={{ display: 'flex', gap: '1.5rem' }}>

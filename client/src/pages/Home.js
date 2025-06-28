@@ -22,97 +22,11 @@ export default function Home() {
           textAlign: "center",
         }}
       >
-        {/* Handyman Connect Logo */}
-        <div 
-          style={{
-            marginBottom: "2rem",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column"
-          }}
-        >
-          <div
-            style={{
-              background: "linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #1d4ed8 100%)",
-              borderRadius: "20px",
-              padding: "2rem",
-              marginBottom: "1rem",
-              boxShadow: "0 10px 25px rgba(59, 130, 246, 0.3)",
-              border: "3px solid rgba(255, 255, 255, 0.1)",
-              position: "relative",
-              overflow: "hidden",
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem"
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                top: "-50%",
-                left: "-50%",
-                width: "200%",
-                height: "200%",
-                background: "linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)",
-                animation: "shimmer 3s infinite"
-              }}
-            />
-            <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: "1rem" }}>
-              <img 
-                src={handymanLogo} 
-                alt="Handyman Connect Logo" 
-                style={{
-                  width: "80px",
-                  height: "80px",
-                  borderRadius: "12px",
-                  filter: "drop-shadow(2px 2px 8px rgba(0,0,0,0.3))"
-                }}
-              />
-              <div style={{ textAlign: "left" }}>
-                <span 
-                  style={{
-                    fontSize: "2.5rem",
-                    fontWeight: "800",
-                    background: "linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
-                    letterSpacing: "-0.02em",
-                    display: "block"
-                  }}
-                >
-                  Handyman Connect
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            style={{
-              fontSize: "1.1rem",
-              color: "#1e40af",
-              fontWeight: "700",
-              letterSpacing: "0.05em",
-              textTransform: "uppercase",
-              textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
-              marginBottom: "0.5rem"
-            }}
-          >
-            ONE CONNECTION UNLIMITED SOLUTIONS
-          </div>
-          <div
-            style={{
-              fontSize: "0.9rem",
-              color: "#94a3b8",
-              fontWeight: "500",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase"
-            }}
-          >
-            Professional • Trusted • Reliable
-          </div>
-        </div>
+        <img 
+          src={handymanLogo} 
+          alt="Handyman Connect Logo" 
+          style={{ maxWidth: "300px", marginBottom: "1rem" }}
+        />
 
         <h1
           style={{
