@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Pro = require("../models/Pro");
 const JobRequest = require("../models/JobRequest");
-// const adminAuth = require("../middleware/adminAuth"); // ✅ Commented out for now
+const adminAuth = require("../middleware/adminAuth"); // ✅ Re-enabled for production security
 
-// ✅ Test endpoint for debugging
+// ✅ Test endpoint for debugging - kept public for troubleshooting
 router.get("/test", async (req, res) => {
   try {
     console.log("🧪 Running admin test...");
@@ -41,7 +41,7 @@ router.get("/test", async (req, res) => {
 });
 
 // ✅ Get all Pros
-router.get("/pros", /*adminAuth,*/ async (req, res) => {
+router.get("/pros", adminAuth, async (req, res) => {
   try {
     // Check if database is connected
     const mongoose = require('mongoose');
@@ -69,7 +69,7 @@ router.get("/pros", /*adminAuth,*/ async (req, res) => {
 });
 
 // ✅ Add a new Pro
-router.post("/pros", /*adminAuth,*/ async (req, res) => {
+router.post("/pros", adminAuth, async (req, res) => {
   const { name, phone, trade } = req.body;
   try {
     const newPro = new Pro({ name, phone, trade });
@@ -82,7 +82,7 @@ router.post("/pros", /*adminAuth,*/ async (req, res) => {
 });
 
 // ✅ Toggle SMS notifications for a Pro
-router.put("/pros/:id/toggle", /*adminAuth,*/ async (req, res) => {
+router.put("/pros/:id/toggle", adminAuth, async (req, res) => {
   try {
     const pro = await Pro.findById(req.params.id);
     if (!pro) return res.status(404).json({ error: "Pro not found" });
@@ -97,7 +97,7 @@ router.put("/pros/:id/toggle", /*adminAuth,*/ async (req, res) => {
 });
 
 // ✅ Delete a Pro
-router.delete("/pros/:id", /*adminAuth,*/ async (req, res) => {
+router.delete("/pros/:id", adminAuth, async (req, res) => {
   try {
     await Pro.findByIdAndDelete(req.params.id);
     res.json({ success: true });
@@ -108,7 +108,7 @@ router.delete("/pros/:id", /*adminAuth,*/ async (req, res) => {
 });
 
 // ✅ Get all Job Requests
-router.get("/job-requests", /*adminAuth,*/ async (req, res) => {
+router.get("/job-requests", adminAuth, async (req, res) => {
   try {
     // Check if database is connected
     const mongoose = require('mongoose');
@@ -136,7 +136,7 @@ router.get("/job-requests", /*adminAuth,*/ async (req, res) => {
 });
 
 // ✅ Legacy toggle endpoint (optional)
-router.post("/toggle-notifications", /*adminAuth,*/ async (req, res) => {
+router.post("/toggle-notifications", adminAuth, async (req, res) => {
   const { proId, enable } = req.body;
   try {
     const pro = await Pro.findById(proId);

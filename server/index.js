@@ -4,11 +4,13 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const http = require("http");
 const { Server } = require("socket.io");
+const { generalRateLimit, authRateLimit, aiRateLimit, notificationRateLimit } = require("./middleware/rateLimiter");
+const securityHeaders = require("./middleware/security");
+const sanitizeInput = require("./middleware/sanitization");
+const errorHandler = require("./middleware/errorHandler");
+const requestLogger = require("./middleware/logger");
 
 dotenv.config();
-
-const stripeRoutes = require("./routes/stripe");
-const aiRoutes = require("./routes/ai");
 
 const app = express();
 const server = http.createServer(app);
@@ -49,15 +51,27 @@ app.use(cors({
 
 app.use(express.json());
 
+// ✅ Request logging
+app.use(requestLogger);
+
+// ✅ Apply security headers
+app.use(securityHeaders);
+
+// ✅ Apply input sanitization
+app.use(sanitizeInput);
+
+// ✅ Apply rate limiting
+app.use(generalRateLimit);
+
 // ✅ Handle preflight requests for all routes
 app.options('*', cors());
 
-// ✅ Routes
+// ✅ Routes with specific rate limiting
 app.use('/api/admin', require('./routes/admin'));
-app.use('/api/auth', require('./routes/auth'));
-app.use("/api/notify", require("./routes/notifications"));
-app.use("/api/stripe", stripeRoutes); // Stripe subscription
-app.use("/api/ai", aiRoutes);         // OpenAI assistant
+app.use('/api/auth', authRateLimit, require('./routes/auth'));
+app.use("/api/notify", notificationRateLimit, require("./routes/notifications"));
+app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
+app.use("/api/ai", aiRateLimit, require("./routes/ai"));         // OpenAI assistant
 
 // ✅ Webhook for Checkr
 app.post("/webhook/checkr", (req, res) => {
@@ -177,6 +191,27 @@ if (!process.env.MONGO_URI) {
     console.log('✅ MongoDB reconnected');
   });
 }
+
+// ✅ 404 handler for unmatched routes
+app.use('*', (req, res) => {
+  res.status(404).json({
+    error: 'Route not found',
+    message: `Cannot ${req.method} ${req.originalUrl}`,
+    availableEndpoints: [
+      'GET /api - Health check',
+      'GET /api/health - Database health',
+      'GET /api/env-check - Environment variables status',
+      'POST /api/auth/login - Admin login',
+      'GET /api/admin/pros - Get professionals (auth required)',
+      'POST /api/notify/text - Submit job request',
+      'POST /api/ai/ask - AI assistant',
+      'POST /api/stripe/create-checkout-session - Create payment session'
+    ]
+  });
+});
+
+// ✅ Global error handler (must be last middleware)
+app.use(errorHandler);
 
 // ✅ Socket.io connection handling
 io.on('connection', (socket) => {
