@@ -28,7 +28,8 @@ const io = new Server(server, {
 // ✅ Allow cross-origin requests from frontend (production & dev)
 const allowedOrigins = [
   "https://www.handyman-connect.com", // production domain
-  "https://handyman-connect-1-1.onrender.com", // your render backend URL
+  "https://handyman-connect-frontend.onrender.com", // new frontend static site
+  "https://handyman-connect-1-1.onrender.com", // old combined service (backup)
   "http://localhost:3000",             // development
   "http://localhost:10000"             // local server
 ];
