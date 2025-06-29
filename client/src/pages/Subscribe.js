@@ -9,9 +9,30 @@ export default function Subscribe() {
     setLoading(true);
     setError("");
 
-    // Use the correct backend URL - force the new backend
-    const API_URL = process.env.REACT_APP_API_URL || 'https://handyman-connect-backend.onrender.com';
-    console.log('🔗 Using API URL:', API_URL);
+    // NUCLEAR CACHE BUST v7.0 - FORCE CORRECT BACKEND URL
+    const API_URL = process.env.REACT_APP_API_URL;
+    const CACHE_BUST = '?nuclear=' + Date.now();
+    console.log('🚀 NUCLEAR DEPLOYMENT v7.0 - FORCED CORRECT URL!');
+    console.log('🔗 Using API URL (v7.0):', API_URL);
+    console.log('� MUST BE: https://handyman-connect-1-ftz8.onrender.com');
+    console.log('❌ OLD URL: https://handyman-connect-1-1.onrender.com (ELIMINATED)');
+    console.log('🚨 If you still see old URL, deployment cache issue!');
+    console.log('🔥 Nuclear Cache Bust ID:', CACHE_BUST);
+    console.log('📦 Build Version:', process.env.REACT_APP_VERSION);
+
+    if (!API_URL) {
+      console.error('❌ REACT_APP_API_URL environment variable is not set!');
+      setError("Configuration error. Please contact support.");
+      setLoading(false);
+      return;
+    }
+
+    if (API_URL.includes('handyman-connect-1-1.onrender.com')) {
+      console.error('🚨 CRITICAL: Still using old URL! Deployment failed!');
+      setError("Critical deployment error. Old backend URL detected.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.post(
