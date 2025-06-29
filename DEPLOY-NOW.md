@@ -39,10 +39,35 @@ Your architecture is **Vercel (Frontend) → Render (Backend)**:
 - `MONGO_URI` = `[your MongoDB connection]`
 - `JWT_SECRET` = `[random string]`
 
-### Step 4: CORS Configuration
-The backend needs to allow requests from Vercel:
-- Add `www.handyman-connect.com` to CORS allowed origins
-- Add `handyman-connect.com` to CORS allowed origins
+### Step 4: CORS Configuration ✅ FIXED
+The backend now allows requests from Vercel:
+- ✅ `www.handyman-connect.com` (primary domain)
+- ✅ `handyman-connect.com` (without www)
+- ✅ Added CORS debugging logs
+- ✅ Committed and pushed to GitHub
+
+---
+
+## 🚨 CORS FIX APPLIED ✅
+
+### What I Just Fixed:
+- ✅ **Updated CORS origins** to include both `www.handyman-connect.com` and `handyman-connect.com`
+- ✅ **Added debugging logs** to track which origins are being allowed/blocked
+- ✅ **Committed and pushed** the fix to GitHub
+
+### Next Step: Deploy to Render
+1. **Go to Render Dashboard**: https://dashboard.render.com
+2. **Find service**: `handyman-connect-1-ftz8`
+3. **Manual Deploy**: Click "Manual Deploy"
+4. **Clear Cache**: Select "Clear build cache and deploy"
+5. **Wait**: 5-10 minutes for deployment
+6. **Check logs**: Look for CORS debug messages
+
+### After Deploy - Test:
+- ✅ Visit: https://www.handyman-connect.com/subscribe
+- ✅ Open DevTools → Console
+- ✅ Click "Join Now" button
+- ✅ Should work without CORS errors
 
 ---
 
@@ -135,8 +160,9 @@ npm install && cd client && npm install && npm run build && cd ../server && npm 
 4. **Build Command**: `npm install`
 5. **Start Command**: `node index.js`
 6. **Environment**: Add all backend env vars (NODE_ENV, PORT, STRIPE keys, etc.)
-7. **Deploy** → Test direct API endpoint
-8. **Vercel automatically works** via proxy in `vercel.json`
+7. **Deploy with Cache Clear** → Manual Deploy → Clear Cache and Deploy
+8. **Verify CORS logs** → Check build logs for origin requests
+9. **Test API endpoint** → Should work without CORS errors
 
 **Key Point**: Fix the Render backend - Vercel frontend is already correct! 🚀
 
