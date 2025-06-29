@@ -218,6 +218,34 @@ Visit: https://handyman-connect-backend.onrender.com/api
 
 ---
 
+## 🎯 FRONTEND API URL FIX ✅ APPLIED
+
+**The issue was**: Frontend was hardcoded to call the OLD backend URL!
+
+### What I Just Fixed:
+- ✅ **Updated client/.env**: `REACT_APP_API_URL=https://handyman-connect-backend.onrender.com`
+- ✅ **Updated client/.env.production**: Same new URL
+- ✅ **Updated client/src/api.js**: Fallback URL updated
+- ✅ **Rebuilt frontend**: New build has correct backend URL
+- ✅ **Committed and pushed**: All changes are in GitHub
+
+### Frontend Now Uses New Backend:
+- ✅ Environment variables point to `handyman-connect-backend.onrender.com`
+- ✅ Built JS files contain new backend URL (verified)
+- ✅ Version bumped to v8.0.0 with cache bust
+
+### Next: Vercel Auto-Deploy
+Vercel should automatically detect the GitHub push and redeploy with the new build.
+**Check**: https://vercel.com/dashboard → handyman-connect project → Deployments
+
+### Test After Vercel Redeploys:
+1. ✅ Visit: https://www.handyman-connect.com/subscribe
+2. ✅ Open DevTools → Console  
+3. ✅ Should see: "🔗 Using API URL: https://handyman-connect-backend.onrender.com"
+4. ✅ Click "Join Now" → Should work without CORS errors
+
+---
+
 ## 🔧 FINAL STEPS TO COMPLETE DEPLOYMENT
 
 ### Step 1: Update Vercel Proxy (CRITICAL)
