@@ -27,8 +27,10 @@ const io = new Server(server, {
 
 // ✅ Allow cross-origin requests from frontend (production & dev)
 const allowedOrigins = [
-  "https://www.handyman-connect.com", // production domain
-  "https://handyman-connect-frontend.onrender.com", // new frontend static site
+  "https://www.handyman-connect.com", // production domain (Vercel)
+  "https://handyman-connect.com", // production domain without www
+  "https://handyman-connect-1-ftz8.onrender.com", // Render backend (for direct testing)
+  "https://handyman-connect-frontend.onrender.com", // backup frontend
   "https://handyman-connect-1-1.onrender.com", // old combined service (backup)
   "http://localhost:3000",             // development
   "http://localhost:10000"             // local server
@@ -37,12 +39,20 @@ const allowedOrigins = [
 // ✅ Apply CORS middleware BEFORE routes
 app.use(cors({
   origin: function (origin, callback) {
+    console.log(`🔗 CORS check for origin: ${origin}`);
+    
     // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
+    if (!origin) {
+      console.log('✅ CORS: Allowing request with no origin');
+      return callback(null, true);
+    }
     
     if (allowedOrigins.indexOf(origin) !== -1) {
+      console.log(`✅ CORS: Allowing origin: ${origin}`);
       callback(null, true);
     } else {
+      console.log(`❌ CORS: Blocking origin: ${origin}`);
+      console.log(`📋 Allowed origins: ${allowedOrigins.join(', ')}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
