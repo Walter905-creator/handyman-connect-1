@@ -30,6 +30,8 @@ Your architecture is **Vercel (Frontend) → Render (Backend)**:
 - **Build Command**: `npm install`
 - **Start Command**: `node index.js`
 
+⚠️ **CRITICAL**: Do NOT include any `cd client` commands in build/start commands when Root Directory is `server`!
+
 ### Step 3: Environment Variables (Render)
 **Required for backend:**
 - `NODE_ENV` = `production`
@@ -130,11 +132,12 @@ Visit: https://www.handyman-connect.com/api
 2. Create new **Web Service** with the settings above
 3. Connect to same GitHub repo
 
-### Issue 2: "Module not found" errors
-**Solution**: Build command must install dependencies for BOTH client and server:
-```bash
-npm install && cd client && npm install && npm run build && cd ../server && npm install
-```
+### Issue 2: "Module not found" or "No such file or directory" errors
+**Problem**: Build command references directories that don't exist in the Root Directory
+**Solution**: When Root Directory is `server`, build commands run FROM the server folder
+- ✅ **Correct**: `npm install` (installs server dependencies)
+- ❌ **Wrong**: `cd client && npm install` (client folder doesn't exist in server/)
+- ❌ **Wrong**: `npm install && cd client && ...` (tries to cd to non-existent client)
 
 ### Issue 3: Server won't start  
 **Solution**: Check these environment variables are set:
@@ -142,11 +145,48 @@ npm install && cd client && npm install && npm run build && cd ../server && npm 
 - `PORT=10000`
 - All Stripe keys if using subscription features
 
-### Issue 4: Still getting 404 on /api
+### Issue 4: Build fails with "cd: client: No such file or directory"
+**Problem**: Build/Start commands reference `client` directory but Root Directory is `server`
 **Solution**: 
-1. Check build logs show "Server running on port 10000"
-2. Verify Start Command is exactly: `cd server && node index.js`
-3. Make sure service type is Web Service (not Static Site)
+1. Root Directory = `server` means build runs FROM server folder
+2. Build Command should be: `npm install` (NOT `cd client && ...`)
+3. Start Command should be: `node index.js` (NOT `cd server && ...`)
+4. Remove any references to `client` in build/start commands
+
+---
+
+## 🚨 BUILD ERROR FIX
+
+### Current Error: `cd: client: No such file or directory`
+
+**Problem**: Your Render service has incorrect build/start commands that reference `client` directory, but since Root Directory is `server`, there's no `client` folder available.
+
+### Immediate Fix:
+1. **Go to Render Dashboard**: https://dashboard.render.com
+2. **Find service**: `handyman-connect-1-ftz8`
+3. **Check current settings** - look for any commands with `cd client`
+4. **Update to these EXACT settings**:
+
+```
+Root Directory: server
+Build Command: npm install
+Start Command: node index.js
+```
+
+### ❌ Remove These if Present:
+- ❌ `npm install && cd client && npm install && npm run build && cd ../server && npm install`
+- ❌ `cd server && node index.js`
+- ❌ Any command containing `cd client`
+
+### ✅ Correct Settings:
+- ✅ **Root Directory**: `server` (this puts you IN the server folder)
+- ✅ **Build Command**: `npm install` (installs server dependencies only)
+- ✅ **Start Command**: `node index.js` (runs from server folder)
+
+### After Fixing Settings:
+1. **Manual Deploy** → Clear build cache and deploy
+2. **Watch build logs** for successful npm install
+3. **Look for**: "Server running on port 10000"
 
 ---
 
