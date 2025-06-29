@@ -278,3 +278,27 @@ After updating Vercel proxy:
 - ✅ https://www.handyman-connect.com/subscribe → Subscribe button should work
 
 ---
+
+## 🎯 VERCEL PROJECT VERIFICATION ✅
+
+**CRITICAL**: Ensure you're using the correct Vercel project!
+
+### Your Correct Project:
+- **Project**: `handyman-connect-1` 
+- **URL**: https://vercel.com/walters-projects-b292b340/handyman-connect-1
+- **Live Site**: https://www.handyman-connect.com
+
+### Required Settings Check:
+1. **Build Command**: `cd client && npm install && npm run build`
+2. **Output Directory**: `client/build`
+3. **Backend Proxy**: Points to `handyman-connect-backend.onrender.com`
+4. **Domain**: `www.handyman-connect.com` connected
+
+### After Vercel Fixes:
+✅ Both `vercel.json` files now use correct backend URL
+✅ Configuration guide created: `VERCEL-PROJECT-SETUP.md`
+✅ Ready for fresh deployment
+
+**Next Step**: Go to Vercel dashboard and **Redeploy** the project!
+
+---
