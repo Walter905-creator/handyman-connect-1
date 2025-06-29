@@ -134,7 +134,7 @@ npm install && cd client && npm install && npm run build && cd ../server && npm 
 3. **Root Directory**: `server`
 4. **Build Command**: `npm install`
 5. **Start Command**: `node index.js`
-6. **Environment**: Add all backend env vars
+6. **Environment**: Add all backend env vars (NODE_ENV, PORT, STRIPE keys, etc.)
 7. **Deploy** → Test direct API endpoint
 8. **Vercel automatically works** via proxy in `vercel.json`
 
