@@ -79,7 +79,7 @@ Your Vercel frontend is correct. The `vercel.json` properly routes API calls:
 ```json
 {
   "source": "/api/(.*)",
-  "destination": "https://handyman-connect-1-ftz8.onrender.com/api/$1"
+  "destination": "https://handyman-connect-1.onrender.com/api/$1"
 }
 ```
 
@@ -155,60 +155,93 @@ Visit: https://www.handyman-connect.com/api
 
 ---
 
-## 🚨 BUILD ERROR FIX
+## 🚨 CRITICAL ISSUE FOUND IN YOUR RENDER DASHBOARD ❌
 
-### Current Error: `cd: client: No such file or directory`
+**I can see from your dashboard that the service is configured WRONG:**
 
-**Problem**: Your Render service has incorrect build/start commands that reference `client` directory, but since Root Directory is `server`, there's no `client` folder available.
+- ❌ **Service Type**: Static Site (should be Web Service)
+- ❌ **Root Directory**: `client` (should be `server`)
+- ❌ **Purpose**: Trying to serve frontend (should serve backend API)
 
-### Immediate Fix:
-1. **Go to Render Dashboard**: https://dashboard.render.com
-2. **Find service**: `handyman-connect-1-ftz8`
-3. **Check current settings** - look for any commands with `cd client`
-4. **Update to these EXACT settings**:
-
-```
-Root Directory: server
-Build Command: npm install
-Start Command: node index.js
-```
-
-### ❌ Remove These if Present:
-- ❌ `npm install && cd client && npm install && npm run build && cd ../server && npm install`
-- ❌ `cd server && node index.js`
-- ❌ Any command containing `cd client`
-
-### ✅ Correct Settings:
-- ✅ **Root Directory**: `server` (this puts you IN the server folder)
-- ✅ **Build Command**: `npm install` (installs server dependencies only)
-- ✅ **Start Command**: `node index.js` (runs from server folder)
-
-### After Fixing Settings:
-1. **Manual Deploy** → Clear build cache and deploy
-2. **Watch build logs** for successful npm install
-3. **Look for**: "Server running on port 10000"
+**This explains why the API returns 404 - Static Sites can't run Express servers!**
 
 ---
 
-## ⚡ TL;DR - THE REAL FIX
+## ✅ SOLUTION: CREATE NEW WEB SERVICE
 
-**Your architecture**: Vercel (frontend) → Render (backend)
+### Option 1: Delete and Recreate (RECOMMENDED)
+1. **Delete current service** `handyman-connect-1-ftz8` (it's the wrong type)
+2. **Create NEW Web Service** with these settings:
+   - **Type**: Web Service (Node.js)
+   - **Repository**: Same GitHub repo
+   - **Root Directory**: `server`
+   - **Build Command**: `npm install`
+   - **Start Command**: `node index.js`
 
-1. **Render Dashboard** → Service `handyman-connect-1-ftz8`
-2. **Make it a Web Service** (not Static Site)
-3. **Root Directory**: `server`
-4. **Build Command**: `npm install`
-5. **Start Command**: `node index.js`
-6. **Environment**: Add all backend env vars (NODE_ENV, PORT, STRIPE keys, etc.)
-7. **Deploy with Cache Clear** → Manual Deploy → Clear Cache and Deploy
-8. **Verify CORS logs** → Check build logs for origin requests
-9. **Test API endpoint** → Should work without CORS errors
-
-**Key Point**: Fix the Render backend - Vercel frontend is already correct! 🚀
+### Option 2: Check if Conversion is Possible
+Some Render plans allow converting Static Site → Web Service, but this is often not available.
 
 ---
 
-## 📞 Need Help?
-- Check Render build/runtime logs for specific errors
-- The code is correct - this is a service configuration issue
-- See `RENDER-DEPLOYMENT.md` for comprehensive guide
+## 📋 EXACT STEPS TO FIX
+
+### Step 1: Create New Web Service
+1. **Render Dashboard** → **New** → **Web Service**
+2. **Connect GitHub** → Select `Walter905-creator/handyman-connect-1`
+3. **Configure**:
+
+```
+   Name: handyman-connect-backend
+   Environment: Node
+   Root Directory: server
+   Build Command: npm install
+   Start Command: node index.js
+   ```
+
+4. **Add Environment Variables**:
+   ```
+   NODE_ENV=production
+   PORT=10000
+   STRIPE_SECRET_KEY=[your key]
+   STRIPE_PRICE_ID=price_1Rf0cZPQ4Cetf7g6ekd8hPLb
+   MONGO_URI=[your MongoDB connection]
+   JWT_SECRET=[random string]
+   ```
+
+### Step 2: Update Vercel
+After new backend is deployed, update `vercel.json`:
+```json
+{
+  "source": "/api/(.*)",
+  "destination": "https://handyman-connect-backend.onrender.com/api/$1"
+}
+```
+
+### Step 3: Delete Old Service
+Once new service works, delete the old Static Site `handyman-connect-1-ftz8`
+
+---
+
+## 🎯 WHY THE CURRENT SETUP DOESN'T WORK
+
+**Static Site vs Web Service:**
+- ✅ **Static Site**: Serves HTML/CSS/JS files (good for frontend)
+- ❌ **Static Site**: Cannot run Node.js servers (bad for backend)
+- ✅ **Web Service**: Runs Node.js Express servers (perfect for backend API)
+
+**Your Current Config:**
+- Static Site trying to serve from `client` directory
+- But `client` is frontend code, not backend
+- No Express server can run = no `/api` endpoints = 404 errors
+
+---
+
+## 🚀 AFTER CREATING NEW WEB SERVICE
+
+**Expected Results:**
+- ✅ https://handyman-connect-backend.onrender.com/api → Returns JSON
+- ✅ Express server runs properly
+- ✅ CORS allows Vercel requests
+- ✅ Subscribe button works
+
+---
