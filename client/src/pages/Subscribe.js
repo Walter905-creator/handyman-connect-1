@@ -1,3 +1,4 @@
+// client/src/pages/Subscribe.js
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -5,34 +6,12 @@ export default function Subscribe() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const handleSubscribe = async () => {
     setLoading(true);
     setError("");
-
-    // NUCLEAR CACHE BUST v7.0 - FORCE CORRECT BACKEND URL
-    const API_URL = process.env.REACT_APP_API_URL;
-    const CACHE_BUST = '?nuclear=' + Date.now();
-    console.log('🚀 NUCLEAR DEPLOYMENT v7.0 - FORCED CORRECT URL!');
-    console.log('🔗 Using API URL (v7.0):', API_URL);
-    console.log('� MUST BE: https://handyman-connect-1-ftz8.onrender.com');
-    console.log('❌ OLD URL: https://handyman-connect-1-1.onrender.com (ELIMINATED)');
-    console.log('🚨 If you still see old URL, deployment cache issue!');
-    console.log('🔥 Nuclear Cache Bust ID:', CACHE_BUST);
-    console.log('📦 Build Version:', process.env.REACT_APP_VERSION);
-
-    if (!API_URL) {
-      console.error('❌ REACT_APP_API_URL environment variable is not set!');
-      setError("Configuration error. Please contact support.");
-      setLoading(false);
-      return;
-    }
-
-    if (API_URL.includes('handyman-connect-1-1.onrender.com')) {
-      console.error('🚨 CRITICAL: Still using old URL! Deployment failed!');
-      setError("Critical deployment error. Old backend URL detected.");
-      setLoading(false);
-      return;
-    }
+    console.log('🔗 Using API URL:', API_URL);
 
     try {
       const response = await axios.post(
@@ -49,80 +28,49 @@ export default function Subscribe() {
   };
 
   return (
-    <div style={{ fontFamily: "Inter, sans-serif" }}>
-      {/* Header */}
-      <section
+    <section style={{ padding: "4rem 2rem", textAlign: "center", fontFamily: "Inter, sans-serif" }}>
+      <h2 style={{ fontSize: "2rem", marginBottom: "1rem" }}>Join Handyman Connect as a Pro</h2>
+      <p style={{ fontSize: "1.1rem", marginBottom: "1rem" }}>
+        Get unlimited leads and access to exclusive pro tools.
+      </p>
+
+      <h3 style={{ marginBottom: "1rem" }}>Pricing:</h3>
+      <p style={{ fontSize: "1.2rem", fontWeight: "bold", marginBottom: "2rem" }}>
+        $59.99/month - Unlimited Leads
+      </p>
+
+      {error && (
+        <div style={{
+          backgroundColor: "#f8d7da",
+          color: "#721c24",
+          padding: "1rem",
+          borderRadius: "8px",
+          marginBottom: "1rem",
+          border: "1px solid #f5c6cb"
+        }}>
+          {error}
+        </div>
+      )}
+
+      <button
+        onClick={handleSubscribe}
+        disabled={loading}
         style={{
-          background: "#0f172a",
+          backgroundColor: loading ? "#6c757d" : "#1f6feb",
           color: "white",
-          padding: "4rem 2rem",
-          textAlign: "center",
+          padding: "1rem 2rem",
+          border: "none",
+          borderRadius: "8px",
+          cursor: loading ? "not-allowed" : "pointer",
+          fontSize: "1rem"
         }}
       >
-        <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", marginBottom: "1rem" }}>
-          Subscribe to Handyman Connect Pro
-        </h1>
-        <p style={{ fontSize: "1.2rem", color: "#94a3b8" }}>
-          Get unlimited access to professional handyman services
-        </p>
-      </section>
+        {loading ? "Processing..." : "Join Now"}
+      </button>
 
-      {/* Subscription Plans */}
-      <section style={{ padding: "4rem 2rem", background: "#f8fafc" }}>
-        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              padding: "3rem",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              textAlign: "center",
-            }}
-          >
-            <h2 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "1rem" }}>
-              Pro Membership
-            </h2>
-            <div style={{ fontSize: "3rem", fontWeight: "bold", color: "#3b82f6", marginBottom: "1rem" }}>
-              $59.99/month
-            </div>
-            <p style={{ color: "#64748b", marginBottom: "2rem" }}>
-              Unlimited access to our network of professional handymen
-            </p>
-
-            {error && (
-              <div
-                style={{
-                  color: "#dc2626",
-                  background: "#fef2f2",
-                  padding: "1rem",
-                  borderRadius: "8px",
-                  marginBottom: "1rem",
-                }}
-              >
-                {error}
-              </div>
-            )}
-
-            <button
-              onClick={handleSubscribe}
-              disabled={loading}
-              style={{
-                background: loading ? "#9ca3af" : "#3b82f6",
-                color: "white",
-                padding: "1rem 2rem",
-                fontSize: "1.1rem",
-                fontWeight: "bold",
-                border: "none",
-                borderRadius: "8px",
-                cursor: loading ? "not-allowed" : "pointer",
-                transition: "background 0.3s ease",
-              }}
-            >
-              {loading ? "Processing..." : "Subscribe Now"}
-            </button>
-          </div>
-        </div>
-      </section>
-    </div>
+      <p style={{ marginTop: "1rem", fontSize: "0.9rem", color: "#6c757d" }}>
+        You'll be redirected to Stripe for secure payment.
+      </p>
+    </section>
   );
 }
