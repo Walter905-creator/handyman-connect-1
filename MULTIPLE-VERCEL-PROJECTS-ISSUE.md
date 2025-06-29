@@ -12,7 +12,7 @@ This is causing **massive deployment conflicts** and confusion about which URLs 
 ### 🎯 **WHICH PROJECT IS LIVE?**
 
 Based on your earlier error logs, I suspect `handyman-connect-1-f6ry` is the one that's actually live at `www.handyman-connect.com` because:
-- The error showed `handyman-connect-1-f6ry-git-main-walters-projects-b292b340.vercel.app`
+- The error showed a deployment URL matching this pattern
 - This matches the naming pattern
 
 ### 🔍 **IMMEDIATE DIAGNOSIS:**
