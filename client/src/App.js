@@ -25,7 +25,7 @@ function App() {
     <Router>
       <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
         <Navbar />
-        <h1>🛠️ Handyman Connect</h1>
+        <h1>� Fixlo</h1>
 
         <Routes>
           <Route path="/" element={<Home />} />

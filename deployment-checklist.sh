@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Handyman Connect - Pre-Deployment Checklist
-echo "🔍 Pre-Deployment Checklist for Handyman Connect"
+# Fixlo - Pre-Deployment Checklist
+echo "🔍 Pre-Deployment Checklist for Fixlo"
 echo "================================================"
 
 # Check if required files exist

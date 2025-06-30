@@ -24,7 +24,7 @@ export default function Home() {
       >
         <img 
           src={handymanLogo} 
-          alt="Handyman Connect Logo" 
+          alt="Fixlo Logo" 
           style={{ maxWidth: "300px", marginBottom: "1rem" }}
         />
 
@@ -35,7 +35,7 @@ export default function Home() {
             marginBottom: "1rem",
           }}
         >
-          Welcome to Handyman Connect
+          Welcome to Fixlo
         </h1>
         <p
           style={{
@@ -58,7 +58,7 @@ export default function Home() {
               color: "white",
             }}
           >
-            Join Handyman Connect as a Pro
+            Join Fixlo as a Pro
           </button>
         </Link>
       </section>

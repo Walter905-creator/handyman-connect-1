@@ -9,7 +9,7 @@ function Terms() {
 <ul>
   <li><strong>Eligibility:</strong> You must be at least 18 years old and authorized to work in your region.</li>
   <li><strong>Background Checks:</strong> By applying, you authorize verification of your identity and history.</li>
-  <li><strong>Payments:</strong> Stripe handles all payouts. Handyman Connect takes a small service fee.</li>
+  <li><strong>Payments:</strong> Stripe handles all payouts. Fixlo takes a small service fee.</li>
   <li><strong>Conduct:</strong> No fraudulent claims, harassment, or impersonation is allowed.</li>
 </ul>
 
@@ -21,7 +21,7 @@ function Terms() {
   <li><strong>Disclaimers:</strong> We verify basic identity and background info, but cannot guarantee service outcomes.</li>
 </ul>
 
-<p>By using Handyman Connect, you agree to these terms.</p>
+<p>By using Fixlo, you agree to these terms.</p>
     </div>
   );
 }

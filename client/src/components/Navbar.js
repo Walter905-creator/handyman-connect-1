@@ -22,7 +22,7 @@ export default function Navbar() {
       }}>
         <img 
           src={handymanLogo} 
-          alt="Handyman Connect Logo" 
+          alt="Fixlo Logo" 
           style={{
             width: "40px",
             height: "40px",
@@ -30,7 +30,7 @@ export default function Navbar() {
             marginRight: "0.75rem"
           }}
         />
-        Handyman Connect
+        Fixlo
       </Link>
       
       <div style={{ display: 'flex', gap: '1.5rem' }}>

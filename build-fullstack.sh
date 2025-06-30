@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting Handyman Connect Full Build..."
+echo "🚀 Starting Fixlo Full Build..."
 
 # Install root dependencies
 echo "📦 Installing root dependencies..."

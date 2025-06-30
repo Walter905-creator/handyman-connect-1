@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Testing Handyman Connect Server Deployment..."
+echo "🚀 Testing Fixlo Server Deployment..."
 
 # Test if server starts
 cd /workspaces/handyman-connect-1/server

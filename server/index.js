@@ -18,22 +18,27 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      "https://www.handyman-connect.com",
+      "https://www.fixloapp.com",
+      "https://fixloapp.com",
       "http://localhost:3000"
     ],
     methods: ["GET", "POST"]
   }
 });
 
-// ✅ Allow cross-origin requests from frontend (production & dev)
+// ✅ Allow cross-origin requests from frontend and mobile app
 const allowedOrigins = [
-  "https://www.handyman-connect.com", // production domain (Vercel)
-  "https://handyman-connect.com", // production domain without www
-  "https://handyman-connect-1-ftz8.onrender.com", // Render backend (for direct testing)
-  "https://handyman-connect-frontend.onrender.com", // backup frontend
-  "https://handyman-connect-1-1.onrender.com", // old combined service (backup)
+  "https://www.fixloapp.com", // production domain
+  "https://fixloapp.com", // production domain without www
+  "https://handyman-connect-1-ftz8.onrender.com", // Legacy Render backend (for transition)
+  "https://handyman-connect-frontend.onrender.com", // Legacy backup frontend
+  "https://fixlo-backend.onrender.com", // Current backend
   "http://localhost:3000",             // development
-  "http://localhost:10000"             // local server
+  "http://localhost:10000",            // local server
+  "exp://localhost:8081",              // Expo development server
+  "exp://localhost:19000",             // Expo development server (alternative port)
+  "exp://localhost:19001",             // Expo development server (alternative port)
+  "exp://localhost:19002"              // Expo development server (alternative port)
 ];
 
 // ✅ Apply CORS middleware BEFORE routes

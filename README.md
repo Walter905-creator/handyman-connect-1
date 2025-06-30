@@ -1,4 +1,4 @@
-# 🛠️ Handyman Connect
+# � Fixlo
 
 A full-stack web application connecting homeowners with verified handyman professionals.
 

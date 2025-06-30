@@ -1,20 +1,20 @@
 #!/bin/bash
 # 🚀 Deploy Script - Fix Render Backend Service
 
-echo "🎯 HANDYMAN CONNECT - RENDER BACKEND DEPLOYMENT"
+echo "🎯 FIXLO - RENDER BACKEND DEPLOYMENT"
 echo "=================================================="
 
 echo ""
 echo "📋 DEPLOYMENT CHECKLIST:"
 echo "1. ✅ Code is ready (all files committed)"
 echo "2. 🔄 Need to configure Render service"
-echo "3. 🎨 Vercel frontend is already working"
+echo "3. 🎨 Frontend deployment ready"
 echo ""
 
 echo "🔧 WHAT YOU NEED TO DO NOW:"
 echo ""
 echo "1. Go to: https://dashboard.render.com"
-echo "2. Find service: handyman-connect-1-ftz8"
+echo "2. Create/Update service: fixlo-backend"
 echo "3. Configure it as WEB SERVICE with these settings:"
 echo ""
 echo "   📦 Service Type: Web Service (Node.js)"

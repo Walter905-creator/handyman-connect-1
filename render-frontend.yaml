@@ -1,12 +1,12 @@
 services:
   - type: static_site
-    name: handyman-connect-frontend
+    name: fixlo-frontend
     buildCommand: npm install && npm run build
     staticPublishPath: ./build
     rootDir: client
     envVars:
       - key: REACT_APP_API_URL
-        value: https://handyman-connect-backend.onrender.com
+        value: https://fixlo-backend.onrender.com
     routes:
       - type: rewrite
         source: /*

@@ -33,7 +33,7 @@ cd client && npm install
 Go to: https://vercel.com/walters-projects-b292b340/handyman-connect-1/settings/environment-variables
 
 **Add if needed**:
-- `REACT_APP_API_URL` = `https://handyman-connect-backend.onrender.com`
+- `REACT_APP_API_URL` = `https://fixlo-backend.onrender.com`
 
 ### 3. **Domains**
 Go to: https://vercel.com/walters-projects-b292b340/handyman-connect-1/settings/domains
@@ -58,7 +58,7 @@ Go to: https://vercel.com/walters-projects-b292b340/handyman-connect-1/settings/
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://handyman-connect-backend.onrender.com/api/$1"
+      "destination": "https://fixlo-backend.onrender.com/api/$1"
     },
     {
       "source": "/(.*)",

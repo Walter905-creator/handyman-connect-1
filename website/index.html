@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixlo - Connect with Trusted Home Repair Professionals</title>
+    <meta name="description" content="Fixlo connects homeowners with verified professional contractors. Get quotes for plumbing, electrical, HVAC, and more. Download the app today!">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .features {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: #2c3e50;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .pricing {
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .pricing h2 {
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: #2c3e50;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .pricing-card.featured {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer h4 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+        
+        .footer a {
+            color: #bdc3c7;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+        
+        .footer a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #34495e;
+            color: #bdc3c7;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="container">
+            <h1>🔧 Fixlo</h1>
+            <p>Connect with trusted home repair professionals instantly. Get your projects done right, on time, every time.</p>
+            <div class="cta-buttons">
+                <a href="#download" class="btn btn-primary">Download App</a>
+                <a href="#pricing" class="btn btn-secondary">View Pricing</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2>Why Choose Fixlo?</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <div class="feature-icon">✅</div>
+                    <h3>Verified Professionals</h3>
+                    <p>All contractors are background-checked and verified for quality and reliability.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💬</div>
+                    <h3>Instant Notifications</h3>
+                    <p>Get notified immediately when professionals respond to your job requests.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💳</div>
+                    <h3>Secure Payments</h3>
+                    <p>Safe and secure payment processing through Stripe for all transactions.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile First</h3>
+                    <p>Designed for your phone - request services on the go, anywhere, anytime.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🏠</div>
+                    <h3>All Home Services</h3>
+                    <p>Plumbing, electrical, HVAC, carpentry, painting, and more all in one app.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Fast Response</h3>
+                    <p>Get quotes and responses from multiple professionals within minutes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2>Simple Pricing</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Homeowners</h3>
+                    <div class="price">Free</div>
+                    <p>Submit unlimited job requests and connect with professionals at no cost.</p>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Professionals</h3>
+                    <div class="price">$59.99<span style="font-size: 1rem; color: #7f8c8d;">/month</span></div>
+                    <p>Receive job notifications, connect with homeowners, and grow your business.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <h4>🔧 Fixlo</h4>
+                    <p>Connecting homeowners with trusted professionals nationwide.</p>
+                </div>
+                <div>
+                    <h4>For Homeowners</h4>
+                    <a href="#download">Download App</a>
+                    <a href="/how-it-works">How It Works</a>
+                    <a href="/support">Support</a>
+                </div>
+                <div>
+                    <h4>For Professionals</h4>
+                    <a href="#pricing">Pricing</a>
+                    <a href="/pro-signup">Sign Up</a>
+                    <a href="/pro-support">Pro Support</a>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <a href="/privacy">Privacy Policy</a>
+                    <a href="/terms">Terms of Service</a>
+                    <a href="/contact">Contact Us</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Fixlo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

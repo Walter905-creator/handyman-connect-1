@@ -29,7 +29,7 @@ export default function Subscribe() {
 
   return (
     <section style={{ padding: "4rem 2rem", textAlign: "center", fontFamily: "Inter, sans-serif" }}>
-      <h2 style={{ fontSize: "2rem", marginBottom: "1rem" }}>Join Handyman Connect as a Pro</h2>
+      <h2 style={{ fontSize: "2rem", marginBottom: "1rem" }}>Join Fixlo as a Pro</h2>
       <p style={{ fontSize: "1.1rem", marginBottom: "1rem" }}>
         Get unlimited leads and access to exclusive pro tools.
       </p>

@@ -27,7 +27,7 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "apiUrl": "https://handyman-connect-backend.onrender.com"
+      "apiUrl": "https://fixlo-backend.onrender.com"
     }
   }
 }
