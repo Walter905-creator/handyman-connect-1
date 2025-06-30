@@ -17,13 +17,25 @@ const proSchema = new mongoose.Schema({
     type: String, 
     required: [true, 'Trade is required'],
     enum: {
-      values: ['Plumbing', 'Electrical', 'Carpentry', 'Painting', 'HVAC', 'Roofing'],
-      message: 'Trade must be one of: Plumbing, Electrical, Carpentry, Painting, HVAC, Roofing'
+      values: ['Plumbing', 'Electrical', 'Carpentry', 'Painting', 'HVAC', 'Roofing', 'General'],
+      message: '{VALUE} is not a valid trade'
     }
+  },
+  expoPushToken: {
+    type: String,
+    default: null
   },
   wantsNotifications: { 
     type: Boolean, 
     default: true 
+  },
+  tempId: {
+    type: String,
+    default: null
+  },
+  verified: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true  // Adds createdAt and updatedAt fields
@@ -32,5 +44,6 @@ const proSchema = new mongoose.Schema({
 // Create indexes for better performance
 proSchema.index({ trade: 1, wantsNotifications: 1 });
 proSchema.index({ phone: 1 });
+proSchema.index({ expoPushToken: 1 });
 
 module.exports = mongoose.model("Pro", proSchema);

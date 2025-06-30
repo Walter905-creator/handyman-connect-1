@@ -90,7 +90,7 @@ app.options('*', cors());
 // ✅ Routes with specific rate limiting
 app.use('/api/admin', adminRateLimit, require('./routes/admin'));
 app.use('/api/auth', authRateLimit, require('./routes/auth'));
-app.use("/api/notify", require("./routes/notifications"));
+app.use("/api/notify", require("./routes/notify"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
 
 // ✅ Webhook for Checkr
