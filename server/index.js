@@ -20,6 +20,7 @@ const io = new Server(server, {
     origin: [
       "https://www.fixloapp.com",
       "https://fixloapp.com",
+      "https://handyman-connect-1-f6jj.vercel.app",
       "http://localhost:3000"
     ],
     methods: ["GET", "POST"]
@@ -30,6 +31,7 @@ const io = new Server(server, {
 const allowedOrigins = [
   "https://www.fixloapp.com", // production domain
   "https://fixloapp.com", // production domain without www
+  "https://handyman-connect-1-f6jj.vercel.app", // Current Vercel deployment
   "https://handyman-connect-1-ftz8.onrender.com", // Legacy Render backend (for transition)
   "https://handyman-connect-frontend.onrender.com", // Legacy backup frontend
   "https://fixlo-backend.onrender.com", // Current backend
