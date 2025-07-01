@@ -20,6 +20,8 @@ const io = new Server(server, {
     origin: [
       "https://www.fixloapp.com",
       "https://fixloapp.com",
+      "https://www.handyman-connect.com",
+      "https://handyman-connect.com", 
       "https://handyman-connect-1-f6jj.vercel.app",
       "http://localhost:3000"
     ],
@@ -31,6 +33,8 @@ const io = new Server(server, {
 const allowedOrigins = [
   "https://www.fixloapp.com", // production domain
   "https://fixloapp.com", // production domain without www
+  "https://www.handyman-connect.com", // current frontend domain  
+  "https://handyman-connect.com", // current frontend domain without www
   "https://handyman-connect-1-f6jj.vercel.app", // Current Vercel deployment
   "https://handyman-connect-1-ftz8.onrender.com", // Legacy Render backend (for transition)
   "https://handyman-connect-frontend.onrender.com", // Legacy backup frontend
