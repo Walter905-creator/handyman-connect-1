@@ -234,69 +234,6 @@
             margin-bottom: 15px;
             color: #2c3e50;
         }
-
-        .handyman-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            text-align: center;
-        }
-
-        .handyman-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .handyman-subtitle {
-            font-size: 1.3rem;
-            margin-bottom: 40px;
-            opacity: 0.9;
-        }
-
-        .handyman-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 60px;
-        }
-
-        .handyman-buttons .btn {
-            min-width: 180px;
-        }
-
-        .handyman-buttons .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid white;
-        }
-
-        .handyman-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .handyman-feature {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px 20px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
-
-        .handyman-feature h4 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .handyman-feature p {
-            font-size: 1rem;
-            opacity: 0.9;
-            line-height: 1.5;
-        }
         
         .pricing {
             padding: 80px 0;
@@ -380,29 +317,6 @@
             border-top: 1px solid #34495e;
             color: #bdc3c7;
         }
-
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 15px;
-        }
-
-        .footer-logo .logo-icon {
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
         
         @media (max-width: 768px) {
             .hero h1 {
@@ -445,8 +359,9 @@
             
             <div class="cta-buttons">
                 <a href="#download" class="btn btn-primary">Download App</a>
+                <a href="#handyman-signup" class="btn btn-handyman">🔧 Join as Handyman</a>
+                <a href="#contractor-signup" class="btn btn-handyman">🏗️ Join as Contractor</a>
                 <a href="#pricing" class="btn btn-secondary">View Pricing</a>
-                <a href="#handyman" class="btn btn-handyman">Join Fixlo as a Pro</a>
             </div>
 
             <div class="service-selector">
@@ -501,33 +416,44 @@
         </div>
     </section>
 
-    <section class="handyman-section" id="handyman">
+    <section class="handyman-section" id="handyman-signup" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 80px 0; text-align: center;">
         <div class="container">
-            <h2>Join as a Professional</h2>
-            <p class="handyman-subtitle">Grow your business with Fixlo - Connect with customers in your area</p>
+            <h2 style="font-size: 2.5rem; margin-bottom: 30px;">Join Fixlo as a Professional</h2>
+            <p style="font-size: 1.3rem; margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto;">
+                Grow your business by connecting with homeowners in your area. Get paid faster and build your reputation on our trusted platform.
+            </p>
             
-            <div class="handyman-buttons">
-                <a href="#signup-pro" class="btn btn-handyman">Start as a Pro</a>
-                <a href="#pro-benefits" class="btn btn-secondary">Learn Benefits</a>
-                <a href="#download-pro" class="btn btn-primary">Download Pro App</a>
+            <div class="handyman-buttons" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px;">
+                <a href="#handyman-signup" class="btn" style="background: #ff6b6b; color: white; font-size: 1.2rem; padding: 18px 35px;">
+                    🔧 Sign Up as Handyman
+                </a>
+                <a href="#contractor-signup" class="btn" style="background: #667eea; color: white; font-size: 1.2rem; padding: 18px 35px;">
+                    🏗️ Join as Contractor
+                </a>
+                <a href="#plumber-signup" class="btn" style="background: #4ecdc4; color: white; font-size: 1.2rem; padding: 18px 35px;">
+                    🚰 Plumber Registration
+                </a>
+                <a href="#electrician-signup" class="btn" style="background: #ffe66d; color: #333; font-size: 1.2rem; padding: 18px 35px;">
+                    💡 Electrician Sign Up
+                </a>
             </div>
-
-            <div class="handyman-features">
-                <div class="handyman-feature">
-                    <h4>🔧 Get More Jobs</h4>
-                    <p>Access a steady stream of service requests from local homeowners</p>
+            
+            <div class="pro-benefits" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 60px;">
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; backdrop-filter: blur(10px);">
+                    <h4 style="font-size: 1.5rem; margin-bottom: 15px;">💰 Earn More</h4>
+                    <p>Set your own rates and get paid directly through our secure platform</p>
                 </div>
-                <div class="handyman-feature">
-                    <h4>💰 Higher Earnings</h4>
-                    <p>Set your own rates and keep more of what you earn with low platform fees</p>
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; backdrop-filter: blur(10px);">
+                    <h4 style="font-size: 1.5rem; margin-bottom: 15px;">📱 Easy Management</h4>
+                    <p>Manage all your jobs, schedules, and client communication in one app</p>
                 </div>
-                <div class="handyman-feature">
-                    <h4>📱 Easy Management</h4>
-                    <p>Manage jobs, communicate with clients, and track payments all in one app</p>
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; backdrop-filter: blur(10px);">
+                    <h4 style="font-size: 1.5rem; margin-bottom: 15px;">⭐ Build Reputation</h4>
+                    <p>Get reviews and ratings to build your professional reputation</p>
                 </div>
-                <div class="handyman-feature">
-                    <h4>⭐ Build Your Reputation</h4>
-                    <p>Collect reviews and ratings to grow your professional reputation</p>
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; backdrop-filter: blur(10px);">
+                    <h4 style="font-size: 1.5rem; margin-bottom: 15px;">🎯 Local Jobs</h4>
+                    <p>Get matched with jobs in your area automatically</p>
                 </div>
             </div>
         </div>
@@ -555,9 +481,9 @@
         <div class="container">
             <div class="footer-content">
                 <div>
-                    <div class="footer-logo">
+                    <div class="logo" style="margin-bottom: 15px;">
                         <div class="logo-icon">F</div>
-                        <span>Fixlo</span>
+                        Fixlo
                     </div>
                     <p>Connecting homeowners with trusted professionals nationwide.</p>
                 </div>

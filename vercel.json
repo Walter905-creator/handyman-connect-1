@@ -1,4 +1,16 @@
 {
+  "version": 2,
+  "public": true,
+  "outputDirectory": "./docs",
+  "buildCommand": "",
+  "installCommand": "",
+  "framework": null,
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://fixlo-backend.onrender.com/api/$1"
+    }
+  ]
 }
