@@ -34,7 +34,7 @@ const allowedOrigins = [
   "https://fixloapp.com", // production domain without www
   "https://fixloapp-git-main-walters-projects-b292b340.vercel.app", // Vercel deployment
   "https://fixloapp-dkx54608c-walters-projects-b292b340.vercel.app", // Alternative Vercel URL
-  "https://fixlo-backend.onrender.com", // Current Fixlo backend
+  "https://handyman-connect-backend.onrender.com", // Current backend
   "http://localhost:3000",             // development
   "http://localhost:10000",            // local server
   "exp://localhost:8081",              // Expo development server
