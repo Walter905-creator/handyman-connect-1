@@ -112,7 +112,7 @@ app.get("/api", (req, res) => {
     message: "Fixlo Backend API is live!", 
     timestamp: new Date().toISOString(),
     cors: "enabled",
-    version: "2.0.0-fixlo-production"
+    version: "2.1.0-fixlo-static-site"
   });
 });
 
@@ -260,4 +260,5 @@ server.listen(PORT, () => {
   console.log(`📅 Started at: ${new Date().toISOString()}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 CORS enabled for Fixlo domains: ${JSON.stringify(allowedOrigins)}`);
+  console.log(`✅ Fixlo Backend v2.1.0 - Updated for static site deployment`);
 });
