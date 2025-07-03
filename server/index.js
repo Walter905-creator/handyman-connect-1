@@ -84,16 +84,36 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // ✅ Request logging
-app.use(requestLogger);
+try {
+  app.use(requestLogger);
+  console.log('✅ Request logger middleware loaded');
+} catch (error) {
+  console.error('❌ Request logger middleware failed:', error.message);
+}
 
 // ✅ Apply security headers
-app.use(securityHeaders);
+try {
+  app.use(securityHeaders);
+  console.log('✅ Security headers middleware loaded');
+} catch (error) {
+  console.error('❌ Security headers middleware failed:', error.message);
+}
 
 // ✅ Apply input sanitization
-app.use(sanitizeInput);
+try {
+  app.use(sanitizeInput);
+  console.log('✅ Input sanitization middleware loaded');
+} catch (error) {
+  console.error('❌ Input sanitization middleware failed:', error.message);
+}
 
 // ✅ Apply rate limiting
-app.use(generalRateLimit);
+try {
+  app.use(generalRateLimit);
+  console.log('✅ Rate limiting middleware loaded');
+} catch (error) {
+  console.error('❌ Rate limiting middleware failed:', error.message);
+}
 
 // ✅ Handle preflight requests for all routes
 app.options('*', cors());
