@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://fixlo-backend.onrender.com/api/$1"
-    }
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "privacy.html", "use": "@vercel/static" },
+    { "src": "terms.html", "use": "@vercel/static" }
   ],
-  "cleanUrls": true,
-  "trailingSlash": false
+  "routes": [
+    { "src": "/api/(.*)", "dest": "https://fixlo-backend.onrender.com/api/$1" },
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/privacy", "dest": "/privacy.html" },
+    { "src": "/terms", "dest": "/terms.html" }
+  ]
 }
