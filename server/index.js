@@ -20,8 +20,10 @@ const io = new Server(server, {
     origin: [
       "https://www.fixloapp.com",
       "https://fixloapp.com",
+      "https://api.fixloapp.com",
       "https://fixloapp-git-main-walters-projects-b292b340.vercel.app",
       "https://fixloapp-dkx54608c-walters-projects-b292b340.vercel.app",
+      "https://fixlo-backend.onrender.com",
       "http://localhost:3000"
     ],
     methods: ["GET", "POST"]
@@ -32,9 +34,11 @@ const io = new Server(server, {
 const allowedOrigins = [
   "https://www.fixloapp.com", // main production domain
   "https://fixloapp.com", // production domain without www
+  "https://api.fixloapp.com", // API subdomain
   "https://fixloapp-git-main-walters-projects-b292b340.vercel.app", // Vercel deployment
   "https://fixloapp-dkx54608c-walters-projects-b292b340.vercel.app", // Alternative Vercel URL
-  "https://handyman-connect-backend.onrender.com", // Current backend
+  "https://fixlo-backend.onrender.com", // New Fixlo backend
+  "https://handyman-connect-backend.onrender.com", // Legacy backend (temporary)
   "http://localhost:3000",             // development
   "http://localhost:10000",            // local server
   "exp://localhost:8081",              // Expo development server
@@ -112,7 +116,8 @@ app.get("/api", (req, res) => {
     message: "Fixlo Backend API is live!", 
     timestamp: new Date().toISOString(),
     cors: "enabled",
-    version: "2.1.0-fixlo-static-site"
+    version: "2.2.0-fixlo-professional-backend",
+    architecture: "static-frontend-api-backend"
   });
 });
 
@@ -260,5 +265,5 @@ server.listen(PORT, () => {
   console.log(`📅 Started at: ${new Date().toISOString()}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 CORS enabled for Fixlo domains: ${JSON.stringify(allowedOrigins)}`);
-  console.log(`✅ Fixlo Backend v2.1.0 - Updated for static site deployment`);
+  console.log(`✅ Fixlo Backend v2.2.0 - Professional architecture ready`);
 });
