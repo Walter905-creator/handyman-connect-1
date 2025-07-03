@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "buildCommand": "",
+  "installCommand": "",
   "builds": [
     {
       "src": "index.html",
@@ -9,7 +11,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "https://fixloapp-backend.onrender.com/api/$1"
+      "dest": "https://handyman-connect-backend.onrender.com/api/$1"
     },
     {
       "src": "/(.*)",
