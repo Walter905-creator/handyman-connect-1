@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "https://handyman-connect-backend.onrender.com/api/$1"
+      "dest": "https://fixloapp-backend.onrender.com/api/$1"
     },
     {
       "src": "/(.*)",
