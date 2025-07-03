@@ -29,7 +29,7 @@ services:
       - key: PORT
         value: 10000
       - key: CLIENT_URL
-        value: https://handyman-connect-1-ftz8.onrender.com
+        value: https://fixloapp.com
       - key: STRIPE_PRICE_ID
         value: price_1Rf0cZPQ4Cetf7g6ekd8hPLb
       - key: STRIPE_SECRET_KEY
