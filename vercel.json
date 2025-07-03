@@ -1,24 +1,11 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "docs/**/*",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "https://fixlo-backend.onrender.com/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/docs/$1"
+      "source": "/api/(.*)",
+      "destination": "https://fixlo-backend.onrender.com/api/$1"
     }
   ],
   "cleanUrls": true,
-  "trailingSlash": false,
-  "functions": {},
-  "buildCommand": "",
-  "outputDirectory": "docs"
+  "trailingSlash": false
 }

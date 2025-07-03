@@ -11,12 +11,13 @@ _client-backup/
 _server-backup/
 deployment-archive/
 fixlo-app/
-static/
 public/
+build/
 package.json
 package-lock.json
 *.md
 *.sh
 *.yaml
 package*.json.backup
+render*.yaml
 .DS_Store
