@@ -1,4 +1,4 @@
-# 🚀 Deployment Guide for Handyman Connect
+# 🚀 Deployment Guide for Fixlo
 
 ## Quick Deploy to Render.com
 

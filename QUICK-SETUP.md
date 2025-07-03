@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🔧 Handyman Connect - Quick Setup Guide"
+echo "🔧 Fixlo - Quick Setup Guide"
 echo "========================================"
 echo ""
 echo "❌ You're getting 500 errors because environment variables are missing."

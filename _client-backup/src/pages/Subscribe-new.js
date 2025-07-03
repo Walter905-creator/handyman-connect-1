@@ -34,7 +34,7 @@ export default function Subscribe() {
         }}
       >
         <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", marginBottom: "1rem" }}>
-          Subscribe to Handyman Connect Pro
+          Subscribe to Fixlo Pro
         </h1>
         <p style={{ fontSize: "1.2rem", color: "#94a3b8" }}>
           Get unlimited access to professional handyman services
