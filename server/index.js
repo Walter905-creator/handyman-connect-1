@@ -138,20 +138,25 @@ app.get("/api/env-check", (req, res) => {
     JWT_SECRET: process.env.JWT_SECRET ? 'set ✅' : 'missing ❌',
     ADMIN_EMAIL: process.env.ADMIN_EMAIL ? 'set ✅' : 'missing ❌',
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ? 'set ✅' : 'missing ❌',
-    CLIENT_URL: process.env.CLIENT_URL || 'not set',
+    CLIENT_URL: process.env.CLIENT_URL || 'not set ❌ (required for Stripe)',
     OPENAI_API_KEY: process.env.OPENAI_API_KEY ? 'set ✅' : 'missing ❌',
     TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID ? 'set ✅' : 'missing ❌',
     TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN ? 'set ✅' : 'missing ❌',
     TWILIO_PHONE: process.env.TWILIO_PHONE || 'not set',
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY ? 'set ✅' : 'missing ❌',
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY ? 'set ✅' : 'missing ❌ (required for payments)',
     STRIPE_FIRST_MONTH_PRICE_ID: process.env.STRIPE_FIRST_MONTH_PRICE_ID ? 'set ✅' : 'missing ❌',
-    STRIPE_MONTHLY_PRICE_ID: process.env.STRIPE_MONTHLY_PRICE_ID ? 'set ✅' : 'missing ❌'
+    STRIPE_MONTHLY_PRICE_ID: process.env.STRIPE_MONTHLY_PRICE_ID ? 'set ✅' : 'missing ❌',
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET ? 'set ✅' : 'missing (optional)'
   };
 
   res.json({
     message: "Fixlo Environment Variables Status",
     environment: envStatus,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    stripeStatus: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not configured',
+    paymentReady: process.env.STRIPE_SECRET_KEY && process.env.CLIENT_URL && 
+                  (process.env.STRIPE_FIRST_MONTH_PRICE_ID || process.env.STRIPE_MONTHLY_PRICE_ID) ? 
+                  'ready ✅' : 'not ready ❌'
   });
 });
 

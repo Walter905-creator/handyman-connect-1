@@ -1,5 +1,19 @@
 {
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://fixlo-backend.onrender.com/api/$1" }
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "https://fixlo-backend.onrender.com/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
   ]
 }
