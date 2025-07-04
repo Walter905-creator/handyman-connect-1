@@ -270,5 +270,5 @@ server.listen(PORT, () => {
   console.log(`📅 Started at: ${new Date().toISOString()}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 CORS enabled for Fixlo domains: ${JSON.stringify(allowedOrigins)}`);
-  console.log(`✅ Fixlo Backend v2.2.0 - Professional architecture ready`);
+  console.log(`✅ Fixlo Backend v2.3.0 - API-only mode - No frontend serving`);
 });
