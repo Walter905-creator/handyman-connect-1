@@ -1,3 +1,5 @@
+// Fixlo Backend API - v2.3.0 - API-ONLY MODE (No frontend serving)
+// Last updated: 2025-07-04 - Removed all client/build references
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
