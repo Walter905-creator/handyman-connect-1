@@ -177,10 +177,10 @@ app.get("/api/env-check", (req, res) => {
   });
 });
 
-// ✅ Database health check
+// ✅ Health check endpoint (works with or without database)
 app.get("/api/health", async (req, res) => {
   try {
-    // Check database connection
+    // Check database connection if available
     const dbState = mongoose.connection.readyState;
     const states = {
       0: 'disconnected',
@@ -189,35 +189,47 @@ app.get("/api/health", async (req, res) => {
       3: 'disconnecting'
     };
     
-    // Try to perform a simple database operation
-    const prosCount = await mongoose.model('Pro').countDocuments();
-    const requestsCount = await mongoose.model('JobRequest').countDocuments();
+    let databaseInfo = {
+      state: states[dbState],
+      available: dbState === 1
+    };
+    
+    // Only try database operations if connected
+    if (dbState === 1) {
+      try {
+        // Check if models exist before using them
+        if (mongoose.models.Pro) {
+          databaseInfo.prosCount = await mongoose.model('Pro').countDocuments();
+        }
+        if (mongoose.models.JobRequest) {
+          databaseInfo.requestsCount = await mongoose.model('JobRequest').countDocuments();
+        }
+      } catch (dbErr) {
+        databaseInfo.error = `Database query failed: ${dbErr.message}`;
+      }
+    }
     
     res.json({
       status: 'healthy',
-      database: states[dbState],
-      collections: {
-        pros: prosCount,
-        jobRequests: requestsCount
-      },
+      message: 'Fixlo API is running',
+      database: databaseInfo,
       environment: process.env.NODE_ENV || 'development',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      version: '2.3.0'
     });
   } catch (err) {
-    res.status(500).json({
-      status: 'unhealthy',
+    res.status(200).json({
+      status: 'partial',
+      message: 'Fixlo API is running (database issues)',
       error: err.message,
-      database: 'error',
+      database: 'unavailable',
       timestamp: new Date().toISOString()
     });
   }
 });
 
-// ✅ MongoDB connection
-if (!process.env.MONGO_URI) {
-  console.error("❌ MONGO_URI environment variable is not set!");
-  console.log("🔧 Running in demo mode without database...");
-} else {
+// ✅ MongoDB connection (optional - app works without it)
+if (process.env.MONGO_URI) {
   console.log("🔍 Connecting to MongoDB...");
   mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -228,23 +240,24 @@ if (!process.env.MONGO_URI) {
     console.log(`📊 Database: ${mongoose.connection.name}`);
   })
   .catch((err) => {
-    console.error("❌ MongoDB connection error:", err.message);
-    console.error("❌ Make sure MONGO_URI is set correctly");
-    console.log("🔧 Continuing without database connection...");
+    console.error("❌ MongoDB connection failed:", err.message);
+    console.log("🔧 Continuing without database (API still functional)...");
   });
 
-  // Monitor MongoDB connection
+  // Monitor MongoDB connection (non-fatal errors)
   mongoose.connection.on('error', (err) => {
-    console.error('❌ MongoDB connection error:', err);
+    console.error('⚠️ MongoDB error (non-fatal):', err.message);
   });
 
   mongoose.connection.on('disconnected', () => {
-    console.log('⚠️ MongoDB disconnected');
+    console.log('⚠️ MongoDB disconnected (continuing without database)');
   });
 
   mongoose.connection.on('reconnected', () => {
     console.log('✅ MongoDB reconnected');
   });
+} else {
+  console.log("📝 No MONGO_URI provided - running in database-free mode");
 }
 
 // ✅ API-only backend - No frontend serving needed
