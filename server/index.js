@@ -73,14 +73,10 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ Serve static files from React build (production)
-if (process.env.NODE_ENV === 'production') {
-  const buildPath = path.join(__dirname, '../client/build');
-  app.use(express.static(buildPath));
-  console.log(`📁 Serving static files from: ${buildPath}`);
-  console.log(`🌍 NODE_ENV = ${process.env.NODE_ENV}`);
-  console.log(`📦 Build directory exists: ${require('fs').existsSync(buildPath)}`);
-}
+// ✅ Backend is API-only - Frontend served by Vercel
+console.log(`🌍 NODE_ENV = ${process.env.NODE_ENV}`);
+console.log(`� Fixlo backend running in API-only mode`);
+console.log(`📱 Frontend served by Vercel at: https://fixloapp.com`);
 
 // ✅ Request logging
 try {
@@ -249,26 +245,9 @@ if (!process.env.MONGO_URI) {
   });
 }
 
-// ✅ Serve React app for non-API routes (production)
-if (process.env.NODE_ENV === 'production') {
-  app.get('*', (req, res) => {
-    console.log(`🔍 Serving frontend for path: ${req.path}`);
-    // Don't serve React app for API routes
-    if (req.path.startsWith('/api') || req.path.startsWith('/webhook')) {
-      return res.status(404).json({
-        error: 'API endpoint not found',
-        message: `Cannot ${req.method} ${req.originalUrl}`,
-      });
-    }
-    
-    const buildPath = path.join(__dirname, '../client/build');
-    const indexPath = path.join(buildPath, 'index.html');
-    console.log(`📄 Serving index.html from: ${indexPath}`);
-    res.sendFile(indexPath);
-  });
-} else {
-  console.log(`⚠️  Not in production mode. NODE_ENV = ${process.env.NODE_ENV}`);
-}
+// ✅ API-only backend - No frontend serving needed
+// Frontend is served by Vercel at https://fixloapp.com
+console.log(`� Fixlo backend running in API-only mode`);
 
 // ✅ Global error handler (must be last middleware)
 app.use(errorHandler);
