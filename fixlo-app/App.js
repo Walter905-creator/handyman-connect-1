@@ -12,8 +12,12 @@ const Stack = createNativeStackNavigator();
 function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Text style={styles.logoText}>Fixlo</Text>
+        <Text style={styles.logoSubtext}>🔧 Home Repair Professionals</Text>
+      </View>
       <Text style={styles.title}>Welcome to Fixlo</Text>
-      <Text style={styles.subtitle}>One Connection. Unlimited Solutions.</Text>
+      <Text style={styles.subtitle}>Connect with trusted professionals in your area</Text>
 
       <TouchableOpacity
         style={styles.button}
@@ -83,6 +87,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
+    padding: 20,
+    backgroundColor: '#667eea',
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  logoText: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 5,
+  },
+  logoSubtext: {
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.9)',
+    textAlign: 'center',
   },
   title: {
     fontSize: 36,
