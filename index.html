@@ -373,6 +373,8 @@
                     <a href="#painting" class="service-btn">🎨 Painting</a>
                     <a href="#hvac" class="service-btn">❄️ HVAC</a>
                     <a href="#roofing" class="service-btn">🏠 Roofing</a>
+                    <a href="#cleaning" class="service-btn">🧹 House Cleaning</a>
+                    <a href="#junk-removal" class="service-btn">🗑️ Junk Removal</a>
                 </div>
             </div>
         </div>
@@ -405,7 +407,7 @@
                 <div class="feature">
                     <div class="feature-icon">🏠</div>
                     <h3>All Home Services</h3>
-                    <p>Plumbing, electrical, HVAC, carpentry, painting, and more all in one app.</p>
+                    <p>Plumbing, electrical, HVAC, carpentry, painting, house cleaning, junk removal, and more all in one app.</p>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">⚡</div>
@@ -509,5 +511,105 @@
             </div>
         </div>
     </footer>
+    <script>
+        // Service button functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle service button clicks
+            const serviceButtons = document.querySelectorAll('.service-btn');
+            serviceButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const service = this.textContent.trim();
+                    alert(`Service selected: ${service}\n\nDownload the Fixlo app to request ${service} services!`);
+                    // Redirect to app download or show modal
+                    window.location.href = '#download';
+                });
+            });
+
+            // Handle download app button
+            const downloadBtn = document.querySelector('a[href="#download"]');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Check if mobile device
+                    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                    
+                    if (isMobile) {
+                        // For mobile, show app store links
+                        alert('Fixlo App Coming Soon!\n\nWe\'re launching on iOS App Store and Google Play Store.\n\nFor now, you can request services through our website.');
+                    } else {
+                        // For desktop, show QR code or mobile-first message
+                        alert('Fixlo is Mobile-First!\n\nScan QR code with your phone or visit fixloapp.com on mobile to get started.\n\nApp launching soon on App Store and Google Play!');
+                    }
+                });
+            }
+
+            // Handle professional signup buttons
+            const proSignupButtons = document.querySelectorAll('a[href*="signup"], a[href*="contractor"], a[href*="handyman"], a[href*="plumber"], a[href*="electrician"]');
+            proSignupButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const buttonText = this.textContent.trim();
+                    alert(`${buttonText}\n\nProfessional onboarding coming soon!\n\nEmail us at professionals@fixloapp.com to get early access and join our network.`);
+                });
+            });
+
+            // Handle pricing/subscribe button
+            const pricingBtn = document.querySelector('a[href="#pricing"]');
+            if (pricingBtn) {
+                pricingBtn.addEventListener('click', function(e) {
+                    // Allow normal scroll to pricing section
+                    // No preventDefault here
+                });
+            }
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#download' || href.includes('signup') || href.includes('contractor') || href.includes('handyman')) {
+                        return; // Let custom handlers take care of these
+                    }
+                    
+                    const target = document.querySelector(href);
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add loading animation for buttons
+            const allButtons = document.querySelectorAll('.btn');
+            allButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Add loading state
+                    const originalText = this.textContent;
+                    this.style.opacity = '0.7';
+                    this.textContent = 'Loading...';
+                    
+                    setTimeout(() => {
+                        this.style.opacity = '1';
+                        this.textContent = originalText;
+                    }, 1000);
+                });
+            });
+        });
+
+        // Add some interactive features
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.background = 'white';
+                header.style.backdropFilter = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
