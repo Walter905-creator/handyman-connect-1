@@ -8,6 +8,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "fixlo-logo.png",
+      "use": "@vercel/static"
+    },
+    {
       "src": "fixlo-logo.svg",
       "use": "@vercel/static"
     }
