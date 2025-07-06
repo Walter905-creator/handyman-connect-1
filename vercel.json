@@ -6,6 +6,10 @@
     {
       "src": "index.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "fixlo-logo.svg",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
