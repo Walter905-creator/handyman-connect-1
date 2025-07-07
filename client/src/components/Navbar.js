@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import fixloLogo from '../assets/fixlo-icon.svg';
+import fixloLogo from '../assets/logo.png';
 
 export default function Navbar() {
   return (
@@ -24,9 +24,8 @@ export default function Navbar() {
           src={fixloLogo} 
           alt="Fixlo Logo" 
           style={{
-            width: "40px",
             height: "40px",
-            borderRadius: "8px",
+            width: "auto",
             marginRight: "0.75rem"
           }}
         />

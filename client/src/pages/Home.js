@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import TradeServices from "../components/TradeServices";
-import fixloLogo from "../assets/fixlo-logo.svg";
+import fixloLogo from "../assets/logo.png";
 
 export default function Home() {
   return (
