@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import fixloLogo from '../assets/logo.png';
+import fixloLogo from '../assets/fixlo-logo.svg';
 
 export default function Navbar() {
   return (
@@ -34,8 +34,11 @@ export default function Navbar() {
       
       <div style={{ display: 'flex', gap: '1.5rem' }}>
         <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>Home</Link>
-        <Link to="/terms" style={{ color: 'white', textDecoration: 'none' }}>Terms</Link>
-        <Link to="/subscribe" style={{ color: 'white', textDecoration: 'none' }}>Subscribe</Link>
+        <Link to="/how-it-works" style={{ color: 'white', textDecoration: 'none' }}>How It Works</Link>
+        <Link to="/pricing" style={{ color: 'white', textDecoration: 'none' }}>Pricing</Link>
+        <Link to="/signup" style={{ color: 'white', textDecoration: 'none' }}>Sign Up</Link>
+        <Link to="/download" style={{ color: 'white', textDecoration: 'none' }}>Download App</Link>
+        <Link to="/support" style={{ color: 'white', textDecoration: 'none' }}>Support</Link>
       </div>
     </nav>
   );
