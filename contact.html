@@ -18,6 +18,12 @@
     </style>
 </head>
 <body>
+    <!-- Twilio Sample Messages for verification purposes:
+         1. "You are now subscribed to Fixlo alerts. Reply STOP to unsubscribe."
+         2. "You have successfully been unsubscribed. Reply START to resubscribe."
+         3. "Reply STOP to unsubscribe. Msg & Data rates may apply. For help, contact support@fixloapp.com"
+    -->
+    
     <div class="hero">
         <div class="container">
             <h1>📞 Contact Us</h1>
@@ -43,6 +49,12 @@
                     <div class="form-group">
                         <textarea placeholder="Your Message" rows="5" required></textarea>
                     </div>
+                    
+                    <!-- Twilio SMS Opt-in Disclaimer -->
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 8px; text-align: left;" aria-label="SMS opt-in terms and messaging disclaimer">
+                        By submitting this form, you consent to receive SMS messages from Fixlo about your request or account. Message and data rates may apply. Reply STOP to unsubscribe. View our <a href="/privacy.html" target="_blank" style="color: #667eea;">Privacy Policy</a>.
+                    </p>
+                    
                     <div style="text-align: center;">
                         <button type="submit" class="btn">Send Message</button>
                     </div>
@@ -54,6 +66,11 @@
                 <p>📧 Email: support@fixloapp.com</p>
                 <p>📞 Phone: (555) 123-FIXLO</p>
                 <p>⏰ Hours: Mon-Fri 8AM-8PM EST</p>
+                
+                <!-- Twilio SMS Terms Disclaimer -->
+                <p style="font-size: 0.85rem; color: #777; margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px;">
+                    Fixlo uses SMS notifications to provide service updates and important alerts. By subscribing or submitting a form with your phone number, you agree to receive messages from Fixlo. Reply STOP to unsubscribe or HELP for help. Msg & Data rates may apply.
+                </p>
             </div>
         </div>
     </div>

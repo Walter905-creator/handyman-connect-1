@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './SignUp.css';
 
+/*
+Twilio Sample Messages for verification purposes:
+1. "You are now subscribed to Fixlo alerts. Reply STOP to unsubscribe."
+2. "You have successfully been unsubscribed. Reply START to resubscribe."
+3. "Reply STOP to unsubscribe. Msg & Data rates may apply. For help, contact support@fixloapp.com"
+*/
+
 const SignUp = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -189,6 +196,19 @@ const SignUp = () => {
             minLength="6"
           />
         </div>
+
+        {/* Twilio SMS Opt-in Disclaimer */}
+        <p style={{ 
+          fontSize: '0.9rem', 
+          color: '#666', 
+          marginTop: '12px',
+          textAlign: 'left',
+          lineHeight: '1.4'
+        }} aria-label="SMS opt-in terms and messaging disclaimer">
+          By submitting this form, you consent to receive SMS messages from Fixlo about your request or account. 
+          Message and data rates may apply. Reply STOP to unsubscribe. View our{' '}
+          <a href="/privacy" target="_blank" style={{ color: '#667eea' }}>Privacy Policy</a>.
+        </p>
 
         {message && (
           <div className={`message ${message.includes('successful') ? 'success' : 'error'}`}>
