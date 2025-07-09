@@ -99,3 +99,5 @@ cd fixlo-app && npx expo start
 5. ✅ **Old Branding** → All "Handyman Connect" references removed
 
 The Fixlo app is now ready for professional deployment! 🎉
+
+For more information about QR code generation, visit [QR Code Generator](https://qr-code-generator.com).
