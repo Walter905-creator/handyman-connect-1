@@ -6,10 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fixlo - Connect with Trusted Home Repair Professionals</title>
     <meta name="description" content="Fixlo connects homeowners with verified professional contractors. Get quotes for plumbing, electrical, HVAC, and more. Download the app today!">
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
     <style>
         * {
             margin: 0;
@@ -198,6 +194,89 @@
             transform: translateY(-2px);
         }
         
+        .how-it-works {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 700;
+        }
+        
+        .how-it-works-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 60px;
+            color: #666;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .how-it-works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .how-it-works-step {
+            text-align: center;
+            padding: 32px 24px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .how-it-works-step:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+        
+        .step-icon-container {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .step-icon-container.blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .step-icon-container.green {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .step-icon-container.purple {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+        
+        .how-it-works-step h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1f2937;
+        }
+        
+        .how-it-works-step p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+        
         .features {
             padding: 80px 0;
             background: white;
@@ -376,7 +455,12 @@
                     <a href="#plumbing" class="service-btn">🚰 Plumbing</a>
                     <a href="#electrical" class="service-btn">💡 Electrical</a>
                     <a href="#carpentry" class="service-btn">🪚 Carpentry</a>
-                    <a href="#painting" class="service-btn">🎨 Painting</a>
+                    <a href="#painting" class="service-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 24px; height: 24px; display: inline-block; margin-right: 8px; vertical-align: middle;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42" />
+                        </svg>
+                        Painting
+                    </a>
                     <a href="#hvac" class="service-btn">❄️ HVAC</a>
                     <a href="#roofing" class="service-btn">🏠 Roofing</a>
                     <a href="#landscaping" class="service-btn">🌿 Landscaping</a>
@@ -387,39 +471,33 @@
         </div>
     </section>
 
-    <!-- How Fixlo Works Section -->
-    <section class="py-20 bg-gray-50" id="how-it-works">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">🛠️ How Fixlo Works</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    Fixlo is your one-stop connection to trusted professionals. Here's how it works:
-                </p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div class="w-16 h-16 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span class="text-3xl">📋</span>
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <h2>🛠️ How Fixlo Works</h2>
+            <p class="how-it-works-subtitle">
+                Fixlo is your one-stop connection to trusted professionals. Here's how it works:
+            </p>
+            <div class="how-it-works-grid">
+                <div class="how-it-works-step">
+                    <div class="step-icon-container blue">
+                        <span>📋</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">1. Submit a Request</h3>
-                    <p class="text-gray-600">Choose your service, describe your needs, and provide your location.</p>
+                    <h3>1. Submit a Request</h3>
+                    <p>Choose your service, describe your needs, and provide your location.</p>
                 </div>
-                
-                <div class="text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div class="w-16 h-16 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center">
-                        <span class="text-3xl">🔔</span>
+                <div class="how-it-works-step">
+                    <div class="step-icon-container green">
+                        <span>🔔</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">2. Get Matched Instantly</h3>
-                    <p class="text-gray-600">We'll notify qualified professionals near you immediately.</p>
+                    <h3>2. Get Matched Instantly</h3>
+                    <p>We'll notify qualified professionals near you immediately.</p>
                 </div>
-                
-                <div class="text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div class="w-16 h-16 mx-auto mb-6 bg-purple-100 rounded-full flex items-center justify-center">
-                        <span class="text-3xl">📞</span>
+                <div class="how-it-works-step">
+                    <div class="step-icon-container purple">
+                        <span>📞</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">3. Connect & Hire</h3>
-                    <p class="text-gray-600">Pros will contact you directly. Review, compare, and hire the right one!</p>
+                    <h3>3. Connect & Hire</h3>
+                    <p>Pros will contact you directly. Review, compare, and hire the right one!</p>
                 </div>
             </div>
         </div>
