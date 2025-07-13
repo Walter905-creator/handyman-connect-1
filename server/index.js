@@ -15,10 +15,10 @@ const path = require("path");
 
 dotenv.config();
 
-// List of allowed frontend URLs
+// ✅ Define allowed origins (for production and local dev)
 const allowedOrigins = [
-  'https://fixloapp.com',
   'https://www.fixloapp.com',
+  'https://fixloapp.com',
   'http://localhost:3000'
 ];
 
@@ -32,20 +32,21 @@ const io = new Server(server, {
   }
 });
 
-// Apply CORS configuration
+// ✅ Enable CORS for those origins
 app.use(cors({
   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error('CORS policy does not allow this origin'));
     }
   },
-  methods: ['GET', 'POST', 'OPTIONS'],
-  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// ✅ Make sure preflight OPTIONS requests are handled
+// ✅ Preflight requests handler
 app.options('*', cors());
 
 app.use(express.json());
