@@ -32,12 +32,13 @@ const io = new Server(server, {
   }
 });
 
-// ✅ CORS Configuration - Allow requests from Fixlo frontend
-const allowedOrigins = ['https://www.fixloapp.com', 'https://fixloapp.com', 'http://localhost:3000'];
+// ✅ CORS configuration to allow frontend on fixloapp.com
+const allowedOrigins = ['https://www.fixloapp.com'];
 
 app.use(cors({
   origin: function (origin, callback) {
     console.log(`🔗 CORS check for origin: ${origin}`);
+    // Allow requests with no origin (like curl or mobile apps) or from allowed domains
     if (!origin || allowedOrigins.includes(origin)) {
       console.log(`✅ CORS: Allowing origin: ${origin}`);
       callback(null, true);
@@ -46,8 +47,11 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true,
+  credentials: true
 }));
+
+// Optional: Handle preflight requests
+app.options('*', cors());
 
 app.use(express.json());
 
@@ -88,9 +92,6 @@ try {
   console.error('❌ Rate limiting middleware failed:', error.message);
 }
 
-// ✅ Handle preflight requests for all routes
-app.options('*', cors());
-
 // ✅ Routes with specific rate limiting
 app.use('/api/admin', adminRateLimit, require('./routes/admin'));
 app.use('/api/auth', authRateLimit, require('./routes/auth'));
@@ -98,7 +99,7 @@ app.use("/api/notify", require("./routes/notify"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
 
 // ✅ Professional Signup Endpoint
-app.post("/api/pro-signup", express.json(), (req, res) => {
+app.post("/api/pro-signup", (req, res) => {
   console.log("🔧 Professional signup request:", req.body);
   
   const { name, email, phone, role } = req.body;
@@ -121,7 +122,7 @@ app.post("/api/pro-signup", express.json(), (req, res) => {
 });
 
 // ✅ Homeowner Lead Endpoint
-app.post("/api/homeowner-lead", express.json(), (req, res) => {
+app.post("/api/homeowner-lead", (req, res) => {
   console.log("🏠 Homeowner lead request:", req.body);
   
   const { name, phone, address, service, description } = req.body;
