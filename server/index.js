@@ -17,7 +17,13 @@ dotenv.config();
 
 // Enable CORS for Fixlo frontend
 const cors = require('cors');
-const allowedOrigins = ['https://www.fixloapp.com'];
+
+// Whitelist only your frontends:
+const allowedOrigins = [
+  "https://fixloapp.com",
+  "https://www.fixloapp.com",
+  "http://localhost:3000", // for dev/testing
+];
 
 const app = express();
 const server = http.createServer(app);
@@ -29,12 +35,22 @@ const io = new Server(server, {
   }
 });
 
+// Apply CORS globally
 app.use(cors({
-  origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true
+  origin: function(origin, callback) {
+    // allow requests with no origin (e.g. mobile apps, curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization'],
 }));
 
+// Preflight support for all routes
 app.options('*', cors());
 
 app.use(express.json());
@@ -151,7 +167,8 @@ app.get("/api/cors-test", (req, res) => {
     message: "Fixlo CORS is working!", 
     origin: req.headers.origin,
     allowedOrigins: allowedOrigins,
-    corsEnabled: true
+    corsEnabled: true,
+    preflightSupported: true
   });
 });
 
@@ -281,7 +298,8 @@ app.get("/", (req, res) => {
     message: "Fixlo Backend is running!", 
     status: "healthy",
     timestamp: new Date().toISOString(),
-    cors: "enabled for www.fixloapp.com and fixloapp.com"
+    cors: "enabled for fixloapp.com, www.fixloapp.com, localhost:3000",
+    preflightSupported: true
   });
 });
 
@@ -301,6 +319,6 @@ server.listen(PORT, () => {
   console.log(`📅 Started at: ${new Date().toISOString()}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 CORS enabled for: ${allowedOrigins.join(', ')}`);
-  console.log(`✅ CORS preflight OPTIONS requests enabled`);
+  console.log(`✅ CORS preflight OPTIONS requests enabled for all routes`);
   console.log(`✅ Fixlo Backend v2.3.0 - API-only mode - No frontend serving`);
 });
