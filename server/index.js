@@ -34,12 +34,10 @@ const io = new Server(server, {
 
 // === FIXLOAPP.COM CORS CONFIGURATION ===
 // Add CORS to allow requests from https://www.fixloapp.com
-// 1. Require and use the cors package
+// 1. Use the cors package already required at the top
 // 2. Allow origin https://www.fixloapp.com only
 // 3. Enable credentials and standard HTTP methods
 // 4. Allow preflight OPTIONS requests
-
-const cors = require('cors');
 
 const allowedOrigins = ['https://www.fixloapp.com'];
 
