@@ -32,25 +32,16 @@ const io = new Server(server, {
   }
 });
 
-// ✅ CORS configuration to allow frontend on fixloapp.com
-const allowedOrigins = ['https://www.fixloapp.com'];
+// ✅ Allow only your frontend domain
+const allowedOrigin = 'https://www.fixloapp.com';
 
 app.use(cors({
-  origin: function (origin, callback) {
-    console.log(`🔗 CORS check for origin: ${origin}`);
-    // Allow requests with no origin (like curl or mobile apps) or from allowed domains
-    if (!origin || allowedOrigins.includes(origin)) {
-      console.log(`✅ CORS: Allowing origin: ${origin}`);
-      callback(null, true);
-    } else {
-      console.log(`❌ CORS: Blocking origin: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
+  origin: allowedOrigin,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
 }));
 
-// Optional: Handle preflight requests
+// Optional: Handle preflight OPTIONS request globally
 app.options('*', cors());
 
 app.use(express.json());
