@@ -1,7 +1,13 @@
 // Vercel Serverless Function for Professional Signup
 export default function handler(req, res) {
-  // Set CORS headers for all requests
-  res.setHeader('Access-Control-Allow-Origin', 'https://www.fixloapp.com');
+  // Get the origin from the request
+  const origin = req.headers.origin;
+  const allowedOrigins = ['https://www.fixloapp.com', 'https://fixloapp.com'];
+  
+  // Set CORS headers for allowed origins
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
