@@ -19,44 +19,17 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [
-      "https://www.fixloapp.com",
-      "https://fixloapp.com",
-      "https://api.fixloapp.com",
-      "https://fixloapp-git-main-walters-projects-b292b340.vercel.app",
-      "https://fixloapp-dkx54608c-walters-projects-b292b340.vercel.app",
-      "https://fixlo-backend.onrender.com",
-      "http://localhost:3000"
-    ],
+    origin: "https://fixloapp.com",
     methods: ["GET", "POST"]
   }
 });
 
-// === FIXLOAPP.COM CORS CONFIGURATION ===
-// Add CORS to allow requests from https://www.fixloapp.com
-// 1. Use the cors package already required at the top
-// 2. Allow origin https://www.fixloapp.com only
-// 3. Enable credentials and standard HTTP methods
-// 4. Allow preflight OPTIONS requests
-
-const allowedOrigins = ['https://www.fixloapp.com'];
-
+// ✅ CORS Configuration - Allow requests from frontend domain
 app.use(cors({
-  origin: function (origin, callback) {
-    console.log(`🔗 CORS check for origin: ${origin}`);
-    if (!origin || allowedOrigins.includes(origin)) {
-      console.log(`✅ CORS: Allowing origin: ${origin}`);
-      callback(null, true);
-    } else {
-      console.log(`❌ CORS: Blocking origin: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
+  origin: 'https://fixloapp.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
 }));
-
-app.options('*', cors()); // Handle preflight requests
 
 app.use(express.json());
 
@@ -171,7 +144,7 @@ app.get("/api/cors-test", (req, res) => {
   res.json({ 
     message: "Fixlo CORS is working!", 
     origin: req.headers.origin,
-    allowedOrigins: allowedOrigins
+    allowedOrigin: "https://fixloapp.com"
   });
 });
 
@@ -320,6 +293,6 @@ server.listen(PORT, () => {
   console.log(`🚀 Fixlo Backend running on port ${PORT}`);
   console.log(`📅 Started at: ${new Date().toISOString()}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 CORS enabled for Fixlo domains: ${JSON.stringify(allowedOrigins)}`);
+  console.log(`🔗 CORS enabled for: https://fixloapp.com`);
   console.log(`✅ Fixlo Backend v2.3.0 - API-only mode - No frontend serving`);
 });
