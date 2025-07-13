@@ -19,18 +19,19 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://fixloapp.com",
+    origin: "https://www.fixloapp.com",
     methods: ["GET", "POST"]
   }
 });
 
-// ✅ CORS Configuration - Allow requests from frontend domain
+// CORS FIX: Allow frontend origin
 app.use(cors({
-  origin: 'https://fixloapp.com',
+  origin: 'https://www.fixloapp.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true,
+  credentials: true
 }));
 
+// Other middlewares
 app.use(express.json());
 
 // ✅ Backend is API-only - Frontend served by Vercel
@@ -144,7 +145,7 @@ app.get("/api/cors-test", (req, res) => {
   res.json({ 
     message: "Fixlo CORS is working!", 
     origin: req.headers.origin,
-    allowedOrigin: "https://fixloapp.com"
+    allowedOrigin: "https://www.fixloapp.com"
   });
 });
 
@@ -293,6 +294,6 @@ server.listen(PORT, () => {
   console.log(`🚀 Fixlo Backend running on port ${PORT}`);
   console.log(`📅 Started at: ${new Date().toISOString()}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 CORS enabled for: https://fixloapp.com`);
+  console.log(`🔗 CORS enabled for: https://www.fixloapp.com`);
   console.log(`✅ Fixlo Backend v2.3.0 - API-only mode - No frontend serving`);
 });
