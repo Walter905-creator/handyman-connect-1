@@ -32,45 +32,21 @@ const io = new Server(server, {
   }
 });
 
-// ✅ Allow cross-origin requests from Fixlo frontend and mobile app
-const allowedOrigins = [
-  "https://www.fixloapp.com", // main production domain
-  "https://fixloapp.com", // production domain without www
-  "https://api.fixloapp.com", // API subdomain
-  "https://fixloapp-git-main-walters-projects-b292b340.vercel.app", // Vercel deployment
-  "https://fixloapp-dkx54608c-walters-projects-b292b340.vercel.app", // Alternative Vercel URL
-  "https://fixlo-backend.onrender.com", // Fixlo backend
-  "http://localhost:3000",             // development
-  "http://localhost:10000",            // local server
-  "exp://localhost:8081",              // Expo development server
-  "exp://localhost:19000",             // Expo development server (alternative port)
-  "exp://localhost:19001",             // Expo development server (alternative port)
-  "exp://localhost:19002"              // Expo development server (alternative port)
-];
+// ✅ CORS Configuration - Allow requests from Fixlo frontend
+const allowedOrigins = ['https://www.fixloapp.com', 'https://fixloapp.com', 'http://localhost:3000'];
 
-// ✅ Apply CORS middleware BEFORE routes
 app.use(cors({
   origin: function (origin, callback) {
     console.log(`🔗 CORS check for origin: ${origin}`);
-    
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) {
-      console.log('✅ CORS: Allowing request with no origin');
-      return callback(null, true);
-    }
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    if (!origin || allowedOrigins.includes(origin)) {
       console.log(`✅ CORS: Allowing origin: ${origin}`);
       callback(null, true);
     } else {
       console.log(`❌ CORS: Blocking origin: ${origin}`);
-      console.log(`📋 Allowed origins: ${allowedOrigins.join(', ')}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
 
 app.use(express.json());
