@@ -32,17 +32,33 @@ const io = new Server(server, {
   }
 });
 
-// ✅ Allow only your frontend domain
-const allowedOrigin = 'https://www.fixloapp.com';
+// === FIXLOAPP.COM CORS CONFIGURATION ===
+// Add CORS to allow requests from https://www.fixloapp.com
+// 1. Require and use the cors package
+// 2. Allow origin https://www.fixloapp.com only
+// 3. Enable credentials and standard HTTP methods
+// 4. Allow preflight OPTIONS requests
+
+const cors = require('cors');
+
+const allowedOrigins = ['https://www.fixloapp.com'];
 
 app.use(cors({
-  origin: allowedOrigin,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  origin: function (origin, callback) {
+    console.log(`🔗 CORS check for origin: ${origin}`);
+    if (!origin || allowedOrigins.includes(origin)) {
+      console.log(`✅ CORS: Allowing origin: ${origin}`);
+      callback(null, true);
+    } else {
+      console.log(`❌ CORS: Blocking origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }));
 
-// Optional: Handle preflight OPTIONS request globally
-app.options('*', cors());
+app.options('*', cors()); // Handle preflight requests
 
 app.use(express.json());
 
@@ -280,6 +296,16 @@ console.log(`� Fixlo backend running in API-only mode`);
 
 // ✅ Global error handler (must be last middleware)
 app.use(errorHandler);
+
+// ✅ Root route for Render health check
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "Fixlo Backend is running!", 
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    cors: "enabled for www.fixloapp.com"
+  });
+});
 
 // ✅ Socket.io connection handling
 io.on('connection', (socket) => {
