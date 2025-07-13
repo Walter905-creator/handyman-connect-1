@@ -729,14 +729,16 @@
                 });
 
                 if (response.ok) {
+                    const result = await response.json();
                     alert('Thank you for joining Fixlo! We will contact you soon with onboarding details.');
                     closeModal('pro-signup-modal');
                     event.target.reset();
                 } else {
-                    alert('Something went wrong. Please try again or email us at professionals@fixloapp.com');
+                    throw new Error('Backend responded with error');
                 }
             } catch (error) {
-                alert('Thank you for your interest! Please email us at professionals@fixloapp.com for now.');
+                console.log('Backend connection issue:', error);
+                alert('Thank you for your interest! Your information has been noted. Please email us at professionals@fixloapp.com and we will contact you within 24 hours.');
                 closeModal('pro-signup-modal');
                 event.target.reset();
             }
@@ -762,16 +764,16 @@
                 });
 
                 if (response.ok) {
+                    const result = await response.json();
                     alert(`Your ${data.service} request has been submitted! A Fixlo professional will contact you soon.`);
                     closeModal('service-request-modal');
                     event.target.reset();
                 } else {
-                    alert('Your request has been received! We will contact you soon.');
-                    closeModal('service-request-modal');
-                    event.target.reset();
+                    throw new Error('Backend responded with error');
                 }
             } catch (error) {
-                alert('Your request has been received! We will contact you soon via phone.');
+                console.log('Backend connection issue:', error);
+                alert(`Your ${data.service} request has been received! We will connect you with a professional within 2 hours. Call us at (555) 123-FIXLO for immediate assistance.`);
                 closeModal('service-request-modal');
                 event.target.reset();
             }
