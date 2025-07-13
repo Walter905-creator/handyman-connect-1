@@ -15,14 +15,11 @@ const path = require("path");
 
 dotenv.config();
 
-// Enable CORS for Fixlo frontend
-const cors = require('cors');
-
-// Whitelist only your frontends:
+// List of allowed frontend URLs
 const allowedOrigins = [
-  "https://fixloapp.com",
-  "https://www.fixloapp.com",
-  "http://localhost:3000", // for dev/testing
+  'https://fixloapp.com',
+  'https://www.fixloapp.com',
+  'http://localhost:3000'
 ];
 
 const app = express();
@@ -35,22 +32,20 @@ const io = new Server(server, {
   }
 });
 
-// Apply CORS globally
+// Apply CORS configuration
 app.use(cors({
   origin: function(origin, callback) {
-    // allow requests with no origin (e.g. mobile apps, curl)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      callback(new Error('CORS not allowed for this origin'));
     }
   },
-  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Preflight support for all routes
+// Important: handle preflight (OPTIONS) requests globally
 app.options('*', cors());
 
 app.use(express.json());
