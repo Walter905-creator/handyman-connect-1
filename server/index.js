@@ -15,10 +15,12 @@ const path = require("path");
 
 dotenv.config();
 
+// Enable CORS for Fixlo frontend
+const cors = require('cors');
+const allowedOrigins = ['https://www.fixloapp.com'];
+
 const app = express();
 const server = http.createServer(app);
-
-const allowedOrigins = ['https://www.fixloapp.com'];
 
 const io = new Server(server, {
   cors: {
