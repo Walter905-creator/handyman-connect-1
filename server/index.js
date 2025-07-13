@@ -34,18 +34,18 @@ const io = new Server(server, {
 
 // Apply CORS configuration
 app.use(cors({
-  origin: function(origin, callback) {
+  origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('CORS not allowed for this origin'));
+      callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true,
 }));
 
-// Important: handle preflight (OPTIONS) requests globally
+// ✅ Make sure preflight OPTIONS requests are handled
 app.options('*', cors());
 
 app.use(express.json());

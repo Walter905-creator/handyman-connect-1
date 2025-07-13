@@ -789,11 +789,11 @@
             <p style="margin-bottom: 25px; color: #666;">Connect with homeowners in your area and grow your business!</p>
             
             <form onsubmit="handleProSignup(event)">
-                <input type="text" name="name" placeholder="Full Name" required autocomplete="name" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                <input type="text" id="pro-name" name="name" placeholder="Full Name" required autocomplete="name" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
                 
-                <input type="email" name="email" placeholder="Email Address" required autocomplete="email" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                <input type="email" id="pro-email" name="email" placeholder="Email Address" required autocomplete="email" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
                 
-                <input type="tel" name="phone" placeholder="Phone Number" required autocomplete="tel" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                <input type="tel" id="pro-phone" name="phone" placeholder="Phone Number" required autocomplete="tel" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
                 
                 <p style="font-size: 12px; color: #777; margin-bottom: 20px;">
                     By submitting, you agree to receive SMS notifications from Fixlo. Reply STOP to unsubscribe. Msg & data rates may apply.
@@ -817,13 +817,13 @@
             <form onsubmit="handleServiceRequest(event)">
                 <input type="hidden" id="selected-service" name="service">
                 
-                <input type="text" name="name" placeholder="Your Name" required autocomplete="name" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                <input type="text" id="customer-name" name="name" placeholder="Your Name" required autocomplete="name" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
                 
-                <input type="tel" name="phone" placeholder="Phone Number" required autocomplete="tel" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                <input type="tel" id="customer-phone" name="phone" placeholder="Phone Number" required autocomplete="tel" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
                 
-                <input type="text" name="address" placeholder="Service Address" required autocomplete="street-address" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                <input type="text" id="service-address" name="address" placeholder="Service Address" required autocomplete="street-address" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
                 
-                <textarea name="description" placeholder="Describe your project (optional)" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; height: 80px; resize: vertical;"></textarea>
+                <textarea id="project-description" name="description" placeholder="Describe your project (optional)" autocomplete="off" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; height: 80px; resize: vertical;"></textarea>
                 
                 <p style="font-size: 12px; color: #777; margin-bottom: 20px;">
                     By submitting, you agree to receive SMS notifications from Fixlo professionals. Reply STOP to unsubscribe. Msg & data rates may apply.
