@@ -121,6 +121,52 @@ app.use('/api/auth', authRateLimit, require('./routes/auth'));
 app.use("/api/notify", require("./routes/notify"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
 
+// ✅ Professional Signup Endpoint
+app.post("/api/pro-signup", express.json(), (req, res) => {
+  console.log("🔧 Professional signup request:", req.body);
+  
+  const { name, email, phone, role } = req.body;
+  
+  if (!name || !email || !phone) {
+    return res.status(400).json({ 
+      success: false, 
+      message: "Name, email, and phone are required" 
+    });
+  }
+  
+  // TODO: Save to database and send notifications
+  console.log(`📝 New professional signup: ${name} (${email}) - ${phone}`);
+  
+  res.json({ 
+    success: true, 
+    message: "Professional signup received successfully!",
+    data: { name, email, phone, role }
+  });
+});
+
+// ✅ Homeowner Lead Endpoint
+app.post("/api/homeowner-lead", express.json(), (req, res) => {
+  console.log("🏠 Homeowner lead request:", req.body);
+  
+  const { name, phone, address, service, description } = req.body;
+  
+  if (!name || !phone || !service) {
+    return res.status(400).json({ 
+      success: false, 
+      message: "Name, phone, and service are required" 
+    });
+  }
+  
+  // TODO: Save to database and notify professionals
+  console.log(`📞 New homeowner lead: ${name} (${phone}) needs ${service} at ${address}`);
+  
+  res.json({ 
+    success: true, 
+    message: "Service request received successfully!",
+    data: { name, phone, address, service, description }
+  });
+});
+
 // ✅ Webhook for Checkr (background checks for Fixlo professionals)
 app.post("/webhook/checkr", (req, res) => {
   console.log("🔔 Fixlo Checkr webhook received:", req.body);
