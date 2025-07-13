@@ -17,15 +17,24 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
+
+const allowedOrigins = ['https://www.fixloapp.com', 'https://fixloapp.com'];
+
 const io = new Server(server, {
   cors: {
-    origin: ['https://www.fixloapp.com', 'https://fixloapp.com', 'http://localhost:3000'],
+    origin: allowedOrigins,
     methods: ["GET", "POST"]
   }
 });
 
 app.use(cors({
-  origin: ['https://www.fixloapp.com', 'https://fixloapp.com', 'http://localhost:3000'],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
@@ -143,7 +152,7 @@ app.get("/api/cors-test", (req, res) => {
   res.json({ 
     message: "Fixlo CORS is working!", 
     origin: req.headers.origin,
-    allowedOrigins: ['https://www.fixloapp.com', 'https://fixloapp.com', 'http://localhost:3000']
+    allowedOrigins: allowedOrigins
   });
 });
 
@@ -292,6 +301,6 @@ server.listen(PORT, () => {
   console.log(`🚀 Fixlo Backend running on port ${PORT}`);
   console.log(`📅 Started at: ${new Date().toISOString()}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 CORS enabled for: https://www.fixloapp.com, https://fixloapp.com, http://localhost:3000`);
+  console.log(`🔗 CORS enabled for: ${allowedOrigins.join(', ')}`);
   console.log(`✅ Fixlo Backend v2.3.0 - API-only mode - No frontend serving`);
 });
