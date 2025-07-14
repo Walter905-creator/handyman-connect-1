@@ -722,11 +722,22 @@
             };
 
             try {
-                const response = await fetch('https://fixloapp.com/api/pro-signup', {
+                // Try the main endpoint first
+                let response = await fetch('https://fixloapp.com/api/pro-signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
+
+                // If that fails, try the direct backend
+                if (!response.ok) {
+                    console.log('Trying direct backend...');
+                    response = await fetch('https://fixloapp.onrender.com/api/pro-signup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                }
 
                 if (response.ok) {
                     const result = await response.json();
@@ -757,11 +768,22 @@
             };
 
             try {
-                const response = await fetch('https://fixloapp.com/api/homeowner-lead', {
+                // Try the main endpoint first
+                let response = await fetch('https://fixloapp.com/api/homeowner-lead', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
+
+                // If that fails, try the direct backend
+                if (!response.ok) {
+                    console.log('Trying direct backend...');
+                    response = await fetch('https://fixloapp.onrender.com/api/homeowner-lead', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                }
 
                 if (response.ok) {
                     const result = await response.json();

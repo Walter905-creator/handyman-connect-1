@@ -31,6 +31,10 @@ const server = http.createServer(app);
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     const allowedOrigin = req.headers.origin || 'https://www.fixloapp.com';
+    
+    // Log the OPTIONS request for debugging
+    console.log(`🔍 OPTIONS request: ${req.path} from origin: ${allowedOrigin}`);
+    
     res
       .header('Access-Control-Allow-Origin', allowedOrigin)
       .header('Access-Control-Allow-Methods', 'POST, OPTIONS, GET, PUT, DELETE')
@@ -131,6 +135,29 @@ app.post("/api/pro-signup", (req, res) => {
   });
 });
 
+// ✅ Backup Proxy Endpoint (in case of CORS issues)
+app.post("/api/pro-signup-proxy", (req, res) => {
+  console.log("🔧 Proxy professional signup request:", req.body);
+  
+  const { name, email, phone, role } = req.body;
+  
+  if (!name || !email || !phone) {
+    return res.status(400).json({ 
+      success: false, 
+      message: "Name, email, and phone are required" 
+    });
+  }
+  
+  // TODO: Save to database and send notifications
+  console.log(`📝 New professional signup (proxy): ${name} (${email}) - ${phone}`);
+  
+  res.json({ 
+    success: true, 
+    message: "Professional signup received successfully! (via proxy)",
+    data: { name, email, phone, role }
+  });
+});
+
 // ✅ Homeowner Lead Endpoint
 app.post("/api/homeowner-lead", (req, res) => {
   console.log("🏠 Homeowner lead request:", req.body);
@@ -150,6 +177,29 @@ app.post("/api/homeowner-lead", (req, res) => {
   res.json({ 
     success: true, 
     message: "Service request received successfully!",
+    data: { name, phone, address, service, description }
+  });
+});
+
+// ✅ Backup Proxy Endpoint for Homeowner Leads
+app.post("/api/homeowner-lead-proxy", (req, res) => {
+  console.log("🏠 Proxy homeowner lead request:", req.body);
+  
+  const { name, phone, address, service, description } = req.body;
+  
+  if (!name || !phone || !service) {
+    return res.status(400).json({ 
+      success: false, 
+      message: "Name, phone, and service are required" 
+    });
+  }
+  
+  // TODO: Save to database and notify professionals
+  console.log(`📞 New homeowner lead (proxy): ${name} (${phone}) needs ${service} at ${address}`);
+  
+  res.json({ 
+    success: true, 
+    message: "Service request received successfully! (via proxy)",
     data: { name, phone, address, service, description }
   });
 });
