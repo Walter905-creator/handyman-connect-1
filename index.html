@@ -693,6 +693,40 @@
             }
         });
 
+        // ✅ API Configuration - Dynamically determine the correct API URL
+        const API_CONFIG = {
+            // Get the current domain and ensure API calls match
+            getApiUrl: function() {
+                const currentDomain = window.location.origin;
+                console.log('🔍 Current domain:', currentDomain);
+                
+                // If we're on www.fixloapp.com, use same domain for API (via Vercel proxy)
+                if (currentDomain === 'https://www.fixloapp.com') {
+                    console.log('✅ Using same-domain API via Vercel proxy');
+                    return 'https://www.fixloapp.com';
+                }
+                
+                // If we're on fixloapp.com, use same domain for API (via Vercel proxy)  
+                if (currentDomain === 'https://fixloapp.com') {
+                    console.log('✅ Using same-domain API via Vercel proxy');
+                    return 'https://fixloapp.com';
+                }
+                
+                // For localhost or other domains, use direct backend
+                console.log('✅ Using direct backend for non-production domain');
+                return 'https://fixloapp.onrender.com';
+            },
+            
+            // Get the direct backend URL for fallback
+            getBackendUrl: function() {
+                return 'https://fixloapp.onrender.com';
+            }
+        };
+
+        console.log('🔧 API Configuration initialized');
+        console.log('📍 Primary API URL:', API_CONFIG.getApiUrl());
+        console.log('🔄 Fallback API URL:', API_CONFIG.getBackendUrl());
+
         // Show Professional Signup Form
         function showProSignupForm() {
             document.getElementById('pro-signup-modal').style.display = 'flex';
@@ -722,8 +756,11 @@
             };
 
             try {
-                // Try the main endpoint first
-                let response = await fetch('https://fixloapp.com/api/pro-signup', {
+                // Try the same-domain endpoint first (no CORS preflight needed)
+                const primaryApiUrl = API_CONFIG.getApiUrl();
+                console.log(`🔧 Trying primary API: ${primaryApiUrl}/api/pro-signup`);
+                
+                let response = await fetch(`${primaryApiUrl}/api/pro-signup`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -731,8 +768,10 @@
 
                 // If that fails, try the direct backend
                 if (!response.ok) {
-                    console.log('Trying direct backend...');
-                    response = await fetch('https://fixloapp.onrender.com/api/pro-signup', {
+                    const backendUrl = API_CONFIG.getBackendUrl();
+                    console.log(`🔄 Trying direct backend: ${backendUrl}/api/pro-signup`);
+                    
+                    response = await fetch(`${backendUrl}/api/pro-signup`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(data)
@@ -768,8 +807,11 @@
             };
 
             try {
-                // Try the main endpoint first
-                let response = await fetch('https://fixloapp.com/api/homeowner-lead', {
+                // Try the same-domain endpoint first (no CORS preflight needed)
+                const primaryApiUrl = API_CONFIG.getApiUrl();
+                console.log(`🏠 Trying primary API: ${primaryApiUrl}/api/homeowner-lead`);
+                
+                let response = await fetch(`${primaryApiUrl}/api/homeowner-lead`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -777,8 +819,10 @@
 
                 // If that fails, try the direct backend
                 if (!response.ok) {
-                    console.log('Trying direct backend...');
-                    response = await fetch('https://fixloapp.onrender.com/api/homeowner-lead', {
+                    const backendUrl = API_CONFIG.getBackendUrl();
+                    console.log(`🔄 Trying direct backend: ${backendUrl}/api/homeowner-lead`);
+                    
+                    response = await fetch(`${backendUrl}/api/homeowner-lead`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(data)
