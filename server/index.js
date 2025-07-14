@@ -16,11 +16,13 @@ const path = require("path");
 dotenv.config();
 
 // ✅ Define allowed origins (for production and local dev)
-const allowedOrigins = [
-  'https://www.fixloapp.com',
-  'https://fixloapp.com',
-  'http://localhost:3000'
-];
+const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS 
+  ? process.env.CORS_ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+  : [
+    'https://www.fixloapp.com',
+    'https://fixloapp.com',
+    'http://localhost:3000'
+  ];
 
 const app = express();
 const server = http.createServer(app);
