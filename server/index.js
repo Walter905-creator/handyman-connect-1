@@ -24,21 +24,41 @@ const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS
     'http://localhost:3000'
   ];
 
+console.log('🔍 CORS Configuration:');
+console.log('📋 Allowed Origins:', allowedOrigins);
+console.log('🌐 Environment CORS_ALLOWED_ORIGINS:', process.env.CORS_ALLOWED_ORIGINS || 'not set (using defaults)');
+
 const app = express();
 const server = http.createServer(app);
 
 // ✅ EARLY OPTIONS HANDLER - Bypass ALL middleware to prevent redirects
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
-    const allowedOrigin = req.headers.origin || 'https://www.fixloapp.com';
+    const requestOrigin = req.headers.origin;
+    console.log(`🔍 Early OPTIONS handler: ${req.path} from origin: "${requestOrigin || 'null'}"`);
     
-    // Log the OPTIONS request for debugging
-    console.log(`🔍 OPTIONS request: ${req.path} from origin: ${allowedOrigin}`);
+    // Determine allowed origin
+    let allowedOrigin;
+    if (!requestOrigin) {
+      // No origin - use default
+      allowedOrigin = 'https://www.fixloapp.com';
+      console.log('✅ No origin - using default: https://www.fixloapp.com');
+    } else if (allowedOrigins.includes(requestOrigin)) {
+      // Origin is allowed - use it
+      allowedOrigin = requestOrigin;
+      console.log(`✅ Origin "${requestOrigin}" is allowed`);
+    } else {
+      // Origin not allowed - deny
+      console.log(`❌ Origin "${requestOrigin}" is not allowed`);
+      console.log(`📋 Allowed origins: ${allowedOrigins.join(', ')}`);
+      return res.status(403).json({ error: 'CORS policy violation' });
+    }
     
     res
       .header('Access-Control-Allow-Origin', allowedOrigin)
-      .header('Access-Control-Allow-Methods', 'POST, OPTIONS, GET, PUT, DELETE')
-      .header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+      .header('Access-Control-Allow-Methods', 'POST, OPTIONS, GET, PUT, DELETE, HEAD')
+      .header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin')
+      .header('Access-Control-Allow-Credentials', 'true')
       .header('Access-Control-Max-Age', '86400')
       .sendStatus(204);
     return;
@@ -56,18 +76,114 @@ const io = new Server(server, {
 // ✅ Enable CORS for regular requests (after OPTIONS bypass)
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+    console.log(`🔍 CORS Origin check: "${origin || 'null'}"`);
+    console.log(`📋 Checking against allowed origins: ${JSON.stringify(allowedOrigins)}`);
+    
+    // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+    if (!origin) {
+      console.log('✅ No origin provided - allowing request (server-to-server)');
+      return callback(null, true);
+    }
+    
+    // Check if origin is in allowed list
+    if (allowedOrigins.includes(origin)) {
+      console.log(`✅ Origin "${origin}" is allowed`);
+      return callback(null, true);
     } else {
-      callback(new Error('CORS policy does not allow this origin'));
+      console.log(`❌ Origin "${origin}" is NOT allowed`);
+      console.log(`📋 Allowed origins: ${allowedOrigins.join(', ')}`);
+      return callback(new Error(`CORS policy does not allow origin: ${origin}`));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'],
+  allowedHeaders: [
+    'Accept',
+    'Accept-Language', 
+    'Content-Language',
+    'Content-Type',
+    'Origin',
+    'Authorization',
+    'X-Requested-With',
+    'Access-Control-Request-Method',
+    'Access-Control-Request-Headers'
+  ],
+  exposedHeaders: ['Access-Control-Allow-Origin', 'Access-Control-Allow-Credentials']
 }));
 
 app.use(express.json());
+
+// ✅ EXPLICIT OPTIONS HANDLERS - Before any other routes to prevent redirects
+app.options('/api/pro-signup', (req, res) => {
+  const requestOrigin = req.headers.origin;
+  console.log(`🎯 Explicit OPTIONS /api/pro-signup from origin: "${requestOrigin || 'null'}"`);
+  
+  // Validate origin
+  let allowedOrigin;
+  if (!requestOrigin) {
+    allowedOrigin = 'https://www.fixloapp.com';
+  } else if (allowedOrigins.includes(requestOrigin)) {
+    allowedOrigin = requestOrigin;
+  } else {
+    console.log(`❌ Origin "${requestOrigin}" not allowed for /api/pro-signup`);
+    return res.status(403).json({ error: 'CORS policy violation' });
+  }
+  
+  res.header('Access-Control-Allow-Origin', allowedOrigin);
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Max-Age', '86400');
+  res.sendStatus(204);
+});
+
+app.options('/api/homeowner-lead', (req, res) => {
+  const requestOrigin = req.headers.origin;
+  console.log(`🎯 Explicit OPTIONS /api/homeowner-lead from origin: "${requestOrigin || 'null'}"`);
+  
+  // Validate origin
+  let allowedOrigin;
+  if (!requestOrigin) {
+    allowedOrigin = 'https://www.fixloapp.com';
+  } else if (allowedOrigins.includes(requestOrigin)) {
+    allowedOrigin = requestOrigin;
+  } else {
+    console.log(`❌ Origin "${requestOrigin}" not allowed for /api/homeowner-lead`);
+    return res.status(403).json({ error: 'CORS policy violation' });
+  }
+  
+  res.header('Access-Control-Allow-Origin', allowedOrigin);
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Max-Age', '86400');
+  res.sendStatus(204);
+});
+
+// ✅ Catch-all OPTIONS handler for any /api/* path
+app.options('/api/*', (req, res) => {
+  const requestOrigin = req.headers.origin;
+  console.log(`🎯 Catch-all OPTIONS ${req.path} from origin: "${requestOrigin || 'null'}"`);
+  
+  // Validate origin
+  let allowedOrigin;
+  if (!requestOrigin) {
+    allowedOrigin = 'https://www.fixloapp.com';
+  } else if (allowedOrigins.includes(requestOrigin)) {
+    allowedOrigin = requestOrigin;
+  } else {
+    console.log(`❌ Origin "${requestOrigin}" not allowed for ${req.path}`);
+    return res.status(403).json({ error: 'CORS policy violation' });
+  }
+  
+  res.header('Access-Control-Allow-Origin', allowedOrigin);
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS, GET, PUT, DELETE, HEAD');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Max-Age', '86400');
+  res.sendStatus(204);
+});
 
 // ✅ Backend is API-only - Frontend served by Vercel
 console.log(`🌍 NODE_ENV = ${process.env.NODE_ENV}`);
@@ -81,6 +197,20 @@ try {
 } catch (error) {
   console.error('❌ Request logger middleware failed:', error.message);
 }
+
+// ✅ Path normalization check - Prevent trailing slash redirects
+app.use((req, res, next) => {
+  // Log all API requests for debugging
+  if (req.path.startsWith('/api/')) {
+    console.log(`🔍 API Request: ${req.method} ${req.path} from ${req.headers.origin || 'unknown'}`);
+    
+    // Check for trailing slash issues that might cause redirects
+    if (req.path.endsWith('/') && req.path !== '/api/') {
+      console.log(`⚠️  Potential trailing slash issue: ${req.path}`);
+    }
+  }
+  next();
+});
 
 // ✅ Apply security headers
 try {
@@ -223,12 +353,17 @@ app.get("/api", (req, res) => {
 
 // ✅ CORS test endpoint
 app.get("/api/cors-test", (req, res) => {
+  const requestOrigin = req.headers.origin;
+  console.log(`🧪 CORS test request from origin: "${requestOrigin || 'null'}"`);
+  
   res.json({ 
     message: "Fixlo CORS is working!", 
-    origin: req.headers.origin,
+    requestOrigin: requestOrigin,
     allowedOrigins: allowedOrigins,
     corsEnabled: true,
-    preflightSupported: true
+    preflightSupported: true,
+    originAllowed: !requestOrigin || allowedOrigins.includes(requestOrigin),
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -378,7 +513,11 @@ server.listen(PORT, () => {
   console.log(`🚀 Fixlo Backend running on port ${PORT}`);
   console.log(`📅 Started at: ${new Date().toISOString()}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 CORS enabled for: ${allowedOrigins.join(', ')}`);
+  console.log(`\n🔗 CORS Configuration:`);
+  console.log(`📋 Allowed Origins: ${allowedOrigins.join(', ')}`);
+  console.log(`🌐 Environment Variable: ${process.env.CORS_ALLOWED_ORIGINS || 'not set (using defaults)'}`);
+  console.log(`✅ Both www.fixloapp.com and fixloapp.com are allowed`);
   console.log(`✅ CORS preflight OPTIONS requests enabled for all routes`);
   console.log(`✅ Fixlo Backend v2.3.0 - API-only mode - No frontend serving`);
+  console.log(`\n🧪 Test CORS with: curl -H "Origin: https://www.fixloapp.com" -X OPTIONS https://fixloapp.onrender.com/api/cors-test`);
 });
