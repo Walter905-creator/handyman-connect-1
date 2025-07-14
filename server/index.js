@@ -34,6 +34,21 @@ const io = new Server(server, {
   }
 });
 
+// ✅ Handle OPTIONS requests FIRST (before any other middleware)
+app.options('*', cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy does not allow this origin'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
+}));
+
 // ✅ Enable CORS for those origins
 app.use(cors({
   origin: function (origin, callback) {
@@ -47,9 +62,6 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
-// ✅ Preflight requests handler
-app.options('*', cors());
 
 app.use(express.json());
 
@@ -96,8 +108,28 @@ app.use('/api/auth', authRateLimit, require('./routes/auth'));
 app.use("/api/notify", require("./routes/notify"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
 
+// ✅ Explicit OPTIONS handlers for API endpoints (prevent redirects)
+app.options('/api/pro-signup', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || 'https://www.fixloapp.com');
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.status(200).end();
+});
+
+app.options('/api/homeowner-lead', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || 'https://www.fixloapp.com');
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.status(200).end();
+});
+
 // ✅ Professional Signup Endpoint
 app.post("/api/pro-signup", (req, res) => {
+  // Set CORS headers explicitly
+  res.header('Access-Control-Allow-Origin', req.headers.origin || 'https://www.fixloapp.com');
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
   console.log("🔧 Professional signup request:", req.body);
   
   const { name, email, phone, role } = req.body;
@@ -121,6 +153,11 @@ app.post("/api/pro-signup", (req, res) => {
 
 // ✅ Homeowner Lead Endpoint
 app.post("/api/homeowner-lead", (req, res) => {
+  // Set CORS headers explicitly
+  res.header('Access-Control-Allow-Origin', req.headers.origin || 'https://www.fixloapp.com');
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
   console.log("🏠 Homeowner lead request:", req.body);
   
   const { name, phone, address, service, description } = req.body;
