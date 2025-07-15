@@ -16,6 +16,7 @@ const path = require("path");
 // Import models and services
 const Pro = require("./models/Pro");
 const geocodingService = require("./utils/geocoding");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 dotenv.config();
 
@@ -115,6 +116,9 @@ app.use(cors({
   ],
   exposedHeaders: ['Access-Control-Allow-Origin', 'Access-Control-Allow-Credentials']
 }));
+
+// ✅ Raw body parsing for Stripe webhooks (must come before express.json)
+app.use('/webhook/stripe', express.raw({ type: 'application/json' }));
 
 app.use(express.json());
 
@@ -246,7 +250,7 @@ app.use('/api/auth', authRateLimit, require('./routes/auth'));
 app.use("/api/notify", require("./routes/notify"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
 
-// ✅ Professional Signup Endpoint
+// ✅ Professional Signup Endpoint (with Stripe Payment Integration)
 app.post("/api/pro-signup", async (req, res) => {
   console.log("🔧 Professional signup request:", req.body);
   
@@ -272,12 +276,30 @@ app.post("/api/pro-signup", async (req, res) => {
   }
 
   try {
-    // Check if professional already exists
-    const existingPro = await Pro.findOne({ email: email.toLowerCase() });
-    if (existingPro) {
+    // Normalize trade value for consistent checking
+    const tradeNormalized = trade.trim().toLowerCase();
+    
+    // Check for existing professional with same email AND trade
+    const existingSameTrade = await Pro.findOne({ 
+      email: email.toLowerCase(),
+      trade: tradeNormalized
+    });
+    
+    if (existingSameTrade) {
+      console.log(`❌ Duplicate professional signup attempt: ${email} already registered for ${trade}`);
       return res.status(409).json({
         success: false,
-        message: "A professional with this email already exists"
+        message: `You already signed up for ${trade}. Please choose a different trade or contact support.`
+      });
+    }
+    
+    // Check for duplicate phone number across all trades (still prevent phone duplication)
+    const existingPhone = await Pro.findOne({ phone: phone.trim() });
+    if (existingPhone) {
+      console.log(`❌ Duplicate phone number: ${phone} already registered`);
+      return res.status(409).json({
+        success: false,
+        message: "This phone number is already registered. Please use a different phone number or contact support."
       });
     }
 
@@ -293,49 +315,102 @@ app.post("/api/pro-signup", async (req, res) => {
       });
     }
 
-    // Create new professional
+    // Create new professional (but don't mark as active until payment)
     const newPro = new Pro({
       name: name.trim(),
       email: email.toLowerCase().trim(),
       phone: phone.trim(),
-      trade: trade,
+      trade: tradeNormalized, // Use normalized trade value
       location: {
         type: 'Point',
         coordinates: geoResult.coordinates,
         address: geoResult.address
       },
-      dob: birthDate
+      dob: birthDate,
+      isActive: false, // Will be activated after payment
+      paymentStatus: 'pending'
     });
 
     // Save to database
     await newPro.save();
-    console.log(`✅ New professional saved: ${name} (${email}) - ${trade} in ${location}`);
+    console.log(`✅ New professional saved (pending payment): ${name} (${email}) - ${trade} in ${location}`);
 
-    // TODO: Send welcome email and SMS notifications
-    // TODO: Trigger background check process
+    // Create Stripe Checkout session
+    if (!process.env.STRIPE_SECRET_KEY) {
+      console.error('❌ Stripe secret key not configured');
+      return res.status(500).json({
+        success: false,
+        message: "Payment system not configured. Please contact support."
+      });
+    }
+
+    const MONTHLY_PRICE_ID = process.env.STRIPE_MONTHLY_PRICE_ID;
+    if (!MONTHLY_PRICE_ID) {
+      console.error('❌ Stripe monthly price ID not configured');
+      return res.status(500).json({
+        success: false,
+        message: "Payment pricing not configured. Please contact support."
+      });
+    }
+
+    console.log(`💳 Creating Stripe checkout session for ${email}`);
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        price: MONTHLY_PRICE_ID,
+        quantity: 1,
+      }],
+      mode: 'subscription',
+      customer_email: email,
+      metadata: {
+        professional_id: newPro._id.toString(),
+        professional_name: name,
+        professional_trade: tradeNormalized, // Use normalized trade value
+        professional_location: location
+      },
+      success_url: `${process.env.CLIENT_URL || 'https://www.fixloapp.com'}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.CLIENT_URL || 'https://www.fixloapp.com'}/payment-cancel?professional_id=${newPro._id}`,
+      allow_promotion_codes: true,
+      billing_address_collection: 'required'
+    });
+
+    console.log(`✅ Stripe checkout session created: ${session.id}`);
     
+    // Update professional record with Stripe session ID
+    newPro.stripeSessionId = session.id;
+    await newPro.save();
+
     res.json({ 
       success: true, 
-      message: "Professional signup received successfully! Welcome to Fixlo!",
+      message: "Professional registration created! Please complete payment to activate your account.",
       data: {
         id: newPro._id,
         name: newPro.name,
         email: newPro.email,
-        phone: newPro.phone,
-        trade: newPro.trade,
+        trade: tradeNormalized, // Use normalized trade value
         location: newPro.location.address,
-        joinedDate: newPro.joinedDate
-      }
+        paymentStatus: 'pending'
+      },
+      paymentUrl: session.url
     });
 
   } catch (error) {
-    console.error('❌ Error saving professional:', error);
+    console.error('❌ Error in professional signup:', error);
     
     // Handle specific MongoDB errors
     if (error.code === 11000) {
       return res.status(409).json({
         success: false,
-        message: "A professional with this email already exists"
+        message: "This email and trade combination is already registered"
+      });
+    }
+    
+    // Handle Stripe errors
+    if (error.type === 'StripeError') {
+      console.error('❌ Stripe error:', error.message);
+      return res.status(400).json({
+        success: false,
+        message: "Payment system error. Please try again later."
       });
     }
     
@@ -372,8 +447,17 @@ app.post("/api/route-lead", async (req, res) => {
       });
     }
 
-    // Find nearby professionals (within 30 miles)
-    const matchedPros = await Pro.findNearbyPros(trade, geoResult.coordinates, 30);
+    // Find nearby professionals (within 30 miles) - ONLY ACTIVE PROFESSIONALS
+    const matchedPros = await Pro.find({
+      trade,
+      isActive: true, // Only include professionals with active subscriptions
+      location: {
+        $nearSphere: {
+          $geometry: { type: "Point", coordinates: geoResult.coordinates },
+          $maxDistance: 30 * 1609.34 // 30 miles in meters
+        }
+      }
+    });
     
     if (matchedPros.length === 0) {
       console.log(`❌ No ${trade} professionals found within 30 miles of ${location}`);
@@ -617,8 +701,17 @@ async function findMatchingProfessionals(service, location) {
       return { success: false, message: "Could not determine location" };
     }
 
-    // Find nearby professionals
-    const matchedPros = await Pro.findNearbyPros(trade, geoResult.coordinates, 30);
+    // Find nearby professionals - ONLY ACTIVE PROFESSIONALS
+    const matchedPros = await Pro.find({
+      trade,
+      isActive: true, // Only include professionals with active subscriptions
+      location: {
+        $nearSphere: {
+          $geometry: { type: "Point", coordinates: geoResult.coordinates },
+          $maxDistance: 30 * 1609.34 // 30 miles in meters
+        }
+      }
+    });
     
     return {
       success: true,
@@ -714,7 +807,7 @@ app.get("/api/env-check", (req, res) => {
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY ? 'set ✅' : 'missing ❌ (required for payments)',
     STRIPE_FIRST_MONTH_PRICE_ID: process.env.STRIPE_FIRST_MONTH_PRICE_ID ? 'set ✅' : 'missing ❌',
     STRIPE_MONTHLY_PRICE_ID: process.env.STRIPE_MONTHLY_PRICE_ID ? 'set ✅' : 'missing ❌',
-    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET ? 'set ✅' : 'missing (optional)'
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET ? 'set ✅' : 'missing ❌ (required for webhooks)'
   };
 
   res.json({
@@ -722,6 +815,8 @@ app.get("/api/env-check", (req, res) => {
     environment: envStatus,
     timestamp: new Date().toISOString(),
     stripeStatus: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not configured',
+    webhookStatus: process.env.STRIPE_WEBHOOK_SECRET ? 'configured' : 'not configured',
+    webhookEndpoint: '/webhook/stripe',
     paymentReady: process.env.STRIPE_SECRET_KEY && process.env.CLIENT_URL && 
                   (process.env.STRIPE_FIRST_MONTH_PRICE_ID || process.env.STRIPE_MONTHLY_PRICE_ID) ? 
                   'ready ✅' : 'not ready ❌'
@@ -851,4 +946,193 @@ server.listen(PORT, () => {
   console.log(`✅ CORS preflight OPTIONS requests enabled for all routes`);
   console.log(`✅ Fixlo Backend v2.3.0 - API-only mode - No frontend serving`);
   console.log(`\n🧪 Test CORS with: curl -H "Origin: https://www.fixloapp.com" -X OPTIONS https://fixloapp.onrender.com/api/cors-test`);
+});
+
+// ✅ Stripe Webhook Endpoint (for payment confirmation)
+app.post('/webhook/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error("❌ Webhook error:", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  console.log(`🔔 Stripe webhook received: ${event.type}`);
+
+  // Subscription created or renewed
+  if (
+    event.type === 'checkout.session.completed' ||
+    event.type === 'invoice.payment_succeeded'
+  ) {
+    const session = event.data.object;
+    console.log('✅ Payment successful:', session.id);
+
+    // Lookup by email or customer_id
+    const email = session.customer_email;
+    const subscriptionId = session.subscription;
+
+    try {
+      const pro = await Pro.findOneAndUpdate(
+        { email },
+        {
+          stripeSubscriptionId: subscriptionId,
+          stripeCustomerId: session.customer,
+          isActive: true,
+          paymentStatus: 'active',
+          subscriptionStartDate: new Date()
+        },
+        { new: true }
+      );
+
+      if (pro) {
+        console.log(`✅ Professional activated: ${pro.name} (${pro.email})`);
+      } else {
+        console.error(`❌ Professional not found for email: ${email}`);
+      }
+    } catch (error) {
+      console.error('❌ Error activating professional:', error);
+    }
+  }
+
+  // Subscription canceled or payment failed
+  if (
+    event.type === 'customer.subscription.deleted' ||
+    event.type === 'invoice.payment_failed'
+  ) {
+    const subscription = event.data.object;
+    const subscriptionId = subscription.id;
+    console.log(`❌ Subscription issue: ${event.type} - ${subscriptionId}`);
+
+    try {
+      const pro = await Pro.findOneAndUpdate(
+        { stripeSubscriptionId: subscriptionId },
+        { 
+          isActive: false,
+          paymentStatus: event.type === 'customer.subscription.deleted' ? 'cancelled' : 'failed',
+          subscriptionEndDate: new Date()
+        },
+        { new: true }
+      );
+
+      if (pro) {
+        console.log(`❌ Professional deactivated: ${pro.name} (${pro.email})`);
+      } else {
+        console.error(`❌ Professional not found for subscription: ${subscriptionId}`);
+      }
+    } catch (error) {
+      console.error('❌ Error deactivating professional:', error);
+    }
+  }
+
+  res.sendStatus(200);
+});
+
+// ✅ Payment Success Page Data
+app.get('/api/payment-success/:sessionId', async (req, res) => {
+  const { sessionId } = req.params;
+  
+  try {
+    const professional = await Pro.findOne({ stripeSessionId: sessionId });
+    
+    if (!professional) {
+      return res.status(404).json({
+        success: false,
+        message: 'Professional not found'
+      });
+    }
+    
+    res.json({
+      success: true,
+      data: {
+        name: professional.name,
+        email: professional.email,
+        trade: professional.trade,
+        location: professional.location.address,
+        isActive: professional.isActive,
+        paymentStatus: professional.paymentStatus,
+        joinedDate: professional.joinedDate
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Error fetching payment success data:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+});
+
+// ✅ Payment Cancel Handler
+app.post('/api/payment-cancel/:professionalId', async (req, res) => {
+  const { professionalId } = req.params;
+  
+  try {
+    // Clean up pending professional record
+    await Pro.findByIdAndDelete(professionalId);
+    
+    console.log(`🗑️  Removed pending professional record: ${professionalId}`);
+    
+    res.json({
+      success: true,
+      message: 'Payment cancelled. Professional record removed.'
+    });
+    
+  } catch (error) {
+    console.error('❌ Error handling payment cancellation:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+});
+
+// ✅ Subscription Status Endpoint (for admin monitoring)
+app.get("/api/subscription-status", async (req, res) => {
+  try {
+    const activeCount = await Pro.countDocuments({ isActive: true });
+    const inactiveCount = await Pro.countDocuments({ isActive: false });
+    const totalCount = await Pro.countDocuments();
+    
+    const subscriptionStats = await Pro.aggregate([
+      {
+        $group: {
+          _id: "$paymentStatus",
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+    
+    const recentActivations = await Pro.find({ 
+      isActive: true, 
+      subscriptionStartDate: { $exists: true }
+    })
+    .sort({ subscriptionStartDate: -1 })
+    .limit(10)
+    .select('name email trade subscriptionStartDate paymentStatus');
+    
+    res.json({
+      success: true,
+      data: {
+        summary: {
+          totalProfessionals: totalCount,
+          activeProfessionals: activeCount,
+          inactiveProfessionals: inactiveCount,
+          activationRate: totalCount > 0 ? ((activeCount / totalCount) * 100).toFixed(1) : 0
+        },
+        paymentStatusBreakdown: subscriptionStats,
+        recentActivations: recentActivations
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Error getting subscription status:', error);
+    res.status(500).json({
+      success: false,
+      message: "Error retrieving subscription status"
+    });
+  }
 });

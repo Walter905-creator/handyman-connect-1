@@ -17,7 +17,8 @@ const proSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    unique: true
   },
   trade: {
     type: String,
@@ -58,7 +59,27 @@ const proSchema = new mongoose.Schema({
   },
   isActive: {
     type: Boolean,
-    default: true
+    default: false // Changed to false until payment is confirmed
+  },
+  paymentStatus: {
+    type: String,
+    enum: ['pending', 'active', 'cancelled', 'failed'],
+    default: 'pending'
+  },
+  stripeSessionId: {
+    type: String
+  },
+  stripeCustomerId: {
+    type: String
+  },
+  stripeSubscriptionId: {
+    type: String
+  },
+  subscriptionStartDate: {
+    type: Date
+  },
+  subscriptionEndDate: {
+    type: Date
   },
   joinedDate: {
     type: Date,
