@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Support - Fixlo</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .contact-support-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .support-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .support-header h1 {
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        .support-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .support-option {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        .support-option:hover {
+            border-color: #3498db;
+            transform: translateY(-5px);
+        }
+        .support-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .support-option h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .support-option p {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        .support-link {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .support-link:hover {
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            transform: translateY(-2px);
+        }
+        .redirect-info {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: #2c3e50;
+        }
+        .auto-redirect {
+            color: #7f8c8d;
+            margin-top: 30px;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="contact-support-container">
+        <div class="support-header">
+            <h1>Contact Support</h1>
+            <p>We're here to help! Choose the best way to get in touch with our team.</p>
+        </div>
+        
+        <div class="support-options">
+            <div class="support-option">
+                <div class="support-icon">📧</div>
+                <h3>Email Support</h3>
+                <p>Get personalized help from our support team</p>
+                <a href="mailto:pro4u.improvements@gmail.com" class="support-link">
+                    pro4u.improvements@gmail.com
+                </a>
+            </div>
+            
+            <div class="support-option">
+                <div class="support-icon">💬</div>
+                <h3>General Questions</h3>
+                <p>Visit our main contact section for more options</p>
+                <a href="/#contact-section" class="support-link">
+                    Contact Section
+                </a>
+            </div>
+        </div>
+        
+        <div class="redirect-info">
+            <p><strong>Quick Access:</strong> You can also reach our full contact section from the main website.</p>
+        </div>
+        
+        <div class="auto-redirect">
+            <p>You will be redirected to our main contact section in <span id="countdown">10</span> seconds.</p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-redirect after 10 seconds
+        let countdown = 10;
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown === 0) {
+                clearInterval(timer);
+                window.location.href = '/#contact-section';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
