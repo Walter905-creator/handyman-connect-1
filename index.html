@@ -748,10 +748,23 @@
         async function handleProSignup(event) {
             event.preventDefault();
             const formData = new FormData(event.target);
+            
+            // Validate age (must be 18+)
+            const dob = new Date(formData.get('dob'));
+            const age = Math.floor((Date.now() - dob.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+            
+            if (age < 18) {
+                alert('You must be 18 or older to join Fixlo as a professional.');
+                return;
+            }
+            
             const data = {
-                email: formData.get('email'),
                 name: formData.get('name'),
+                email: formData.get('email'),
                 phone: formData.get('phone'),
+                trade: formData.get('trade'),
+                location: formData.get('location'),
+                dob: formData.get('dob'),
                 role: 'professional'
             };
 
@@ -859,7 +872,29 @@
                 
                 <input type="email" id="pro-email" name="email" placeholder="Email Address" required autocomplete="email" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
                 
-                <input type="tel" id="pro-phone" name="phone" placeholder="Phone Number" required autocomplete="tel" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                <input type="tel" id="pro-phone" name="phone" placeholder="Phone Number" required autocomplete="tel" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                
+                <select id="pro-trade" name="trade" required style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; background: white;">
+                    <option value="">Select Your Trade</option>
+                    <option value="plumbing">Plumbing</option>
+                    <option value="electrical">Electrical</option>
+                    <option value="landscaping">Landscaping</option>
+                    <option value="cleaning">House Cleaning</option>
+                    <option value="junk_removal">Junk Removal</option>
+                    <option value="handyman">General Handyman</option>
+                    <option value="hvac">HVAC</option>
+                    <option value="painting">Painting</option>
+                    <option value="roofing">Roofing</option>
+                    <option value="flooring">Flooring</option>
+                    <option value="carpentry">Carpentry</option>
+                    <option value="appliance_repair">Appliance Repair</option>
+                </select>
+                
+                <input type="text" id="pro-location" name="location" placeholder="ZIP Code or City, State" required autocomplete="postal-code" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                
+                <input type="date" id="pro-dob" name="dob" required autocomplete="bday" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                
+                <label for="pro-dob" style="display: block; margin-bottom: 15px; font-size: 14px; color: #666;">Date of Birth (must be 18+)</label>
                 
                 <p style="font-size: 12px; color: #777; margin-bottom: 20px;">
                     By submitting, you agree to receive SMS notifications from Fixlo. Reply STOP to unsubscribe. Msg & data rates may apply.

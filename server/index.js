@@ -13,6 +13,10 @@ const errorHandler = require("./middleware/errorHandler");
 const requestLogger = require("./middleware/logger");
 const path = require("path");
 
+// Import models and services
+const Pro = require("./models/Pro");
+const geocodingService = require("./utils/geocoding");
+
 dotenv.config();
 
 // ✅ Define allowed origins (for production and local dev)
@@ -243,29 +247,273 @@ app.use("/api/notify", require("./routes/notify"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
 
 // ✅ Professional Signup Endpoint
-app.post("/api/pro-signup", (req, res) => {
+app.post("/api/pro-signup", async (req, res) => {
   console.log("🔧 Professional signup request:", req.body);
   
-  const { name, email, phone, role } = req.body;
+  const { name, email, phone, trade, location, dob, role } = req.body;
   
-  if (!name || !email || !phone) {
+  // Validate required fields
+  if (!name || !email || !phone || !trade || !location || !dob) {
     return res.status(400).json({ 
       success: false, 
-      message: "Name, email, and phone are required" 
+      message: "Name, email, phone, trade, location, and date of birth are required" 
     });
   }
+
+  // Validate age (must be 18+)
+  const birthDate = new Date(dob);
+  const age = Math.floor((Date.now() - birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
   
-  // TODO: Save to database and send notifications
-  console.log(`📝 New professional signup: ${name} (${email}) - ${phone}`);
-  
-  res.json({ 
-    success: true, 
-    message: "Professional signup received successfully!",
-    data: { name, email, phone, role }
-  });
+  if (age < 18) {
+    return res.status(400).json({
+      success: false,
+      message: "You must be 18 or older to join Fixlo as a professional"
+    });
+  }
+
+  try {
+    // Check if professional already exists
+    const existingPro = await Pro.findOne({ email: email.toLowerCase() });
+    if (existingPro) {
+      return res.status(409).json({
+        success: false,
+        message: "A professional with this email already exists"
+      });
+    }
+
+    // Geocode the location
+    console.log(`🗺️  Geocoding location: ${location}`);
+    const geoResult = await geocodingService.geocodeLocation(location);
+    
+    if (!geoResult.coordinates || !geocodingService.validateCoordinates(geoResult.coordinates)) {
+      console.error('❌ Invalid coordinates returned from geocoding');
+      return res.status(400).json({
+        success: false,
+        message: "Could not determine location. Please provide a valid ZIP code or address."
+      });
+    }
+
+    // Create new professional
+    const newPro = new Pro({
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      phone: phone.trim(),
+      trade: trade,
+      location: {
+        type: 'Point',
+        coordinates: geoResult.coordinates,
+        address: geoResult.address
+      },
+      dob: birthDate
+    });
+
+    // Save to database
+    await newPro.save();
+    console.log(`✅ New professional saved: ${name} (${email}) - ${trade} in ${location}`);
+
+    // TODO: Send welcome email and SMS notifications
+    // TODO: Trigger background check process
+    
+    res.json({ 
+      success: true, 
+      message: "Professional signup received successfully! Welcome to Fixlo!",
+      data: {
+        id: newPro._id,
+        name: newPro.name,
+        email: newPro.email,
+        phone: newPro.phone,
+        trade: newPro.trade,
+        location: newPro.location.address,
+        joinedDate: newPro.joinedDate
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Error saving professional:', error);
+    
+    // Handle specific MongoDB errors
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: "A professional with this email already exists"
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later."
+    });
+  }
 });
 
-// ✅ Backup Proxy Endpoint (in case of CORS issues)
+// ✅ Lead Routing Endpoint - Find nearby professionals
+app.post("/api/route-lead", async (req, res) => {
+  console.log("🎯 Lead routing request:", req.body);
+  
+  const { trade, location, customerInfo } = req.body;
+  
+  // Validate required fields
+  if (!trade || !location) {
+    return res.status(400).json({
+      success: false,
+      message: "Trade and location are required"
+    });
+  }
+
+  try {
+    // Geocode the customer location
+    console.log(`🗺️  Geocoding customer location: ${location}`);
+    const geoResult = await geocodingService.geocodeLocation(location);
+    
+    if (!geoResult.coordinates || !geocodingService.validateCoordinates(geoResult.coordinates)) {
+      return res.status(400).json({
+        success: false,
+        message: "Could not determine location. Please provide a valid ZIP code or address."
+      });
+    }
+
+    // Find nearby professionals (within 30 miles)
+    const matchedPros = await Pro.findNearbyPros(trade, geoResult.coordinates, 30);
+    
+    if (matchedPros.length === 0) {
+      console.log(`❌ No ${trade} professionals found within 30 miles of ${location}`);
+      return res.status(404).json({
+        success: false,
+        message: `No ${trade} professionals found in your area. We're working to expand our network!`
+      });
+    }
+
+    console.log(`✅ Found ${matchedPros.length} ${trade} professionals within 30 miles`);
+
+    // Calculate distances for each professional
+    const prosWithDistance = matchedPros.map(pro => {
+      const distance = geocodingService.calculateDistance(
+        geoResult.coordinates,
+        pro.location.coordinates
+      );
+      
+      return {
+        id: pro._id,
+        name: pro.name,
+        email: pro.email,
+        phone: pro.phone,
+        rating: pro.rating,
+        completedJobs: pro.completedJobs,
+        distance: Math.round(distance * 10) / 10, // Round to 1 decimal place
+        experience: pro.experience,
+        isVerified: pro.isVerified
+      };
+    });
+
+    // Sort by rating first, then by distance
+    prosWithDistance.sort((a, b) => {
+      if (a.rating !== b.rating) {
+        return b.rating - a.rating; // Higher rating first
+      }
+      return a.distance - b.distance; // Closer distance first
+    });
+
+    // TODO: Send notifications to matched professionals
+    console.log(`📞 Would notify ${prosWithDistance.length} professionals:`);
+    prosWithDistance.forEach(pro => {
+      console.log(`  - ${pro.name} (${pro.distance} miles away, ${pro.rating}⭐)`);
+    });
+
+    // TODO: Create lead record in database
+    // TODO: Send SMS/email notifications to professionals
+    // TODO: Send confirmation to customer
+
+    res.json({
+      success: true,
+      message: `Found ${prosWithDistance.length} ${trade} professionals in your area`,
+      data: {
+        trade: trade,
+        location: geoResult.address,
+        coordinates: geoResult.coordinates,
+        matchedPros: prosWithDistance,
+        searchRadius: 30 // miles
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Error routing lead:', error);
+    res.status(500).json({
+      success: false,
+      message: "Error finding professionals. Please try again later."
+    });
+  }
+});
+
+// ✅ Get Trade Statistics
+app.get("/api/trade-stats", async (req, res) => {
+  try {
+    const stats = await Pro.getTradeStats();
+    res.json({
+      success: true,
+      data: stats
+    });
+  } catch (error) {
+    console.error('❌ Error getting trade stats:', error);
+    res.status(500).json({
+      success: false,
+      message: "Error retrieving trade statistics"
+    });
+  }
+});
+
+// ✅ Get Professionals in Area (for admin/debugging)
+app.get("/api/pros-in-area", async (req, res) => {
+  const { location, radius = 30 } = req.query;
+  
+  if (!location) {
+    return res.status(400).json({
+      success: false,
+      message: "Location is required"
+    });
+  }
+
+  try {
+    const geoResult = await geocodingService.geocodeLocation(location);
+    
+    if (!geoResult.coordinates) {
+      return res.status(400).json({
+        success: false,
+        message: "Could not geocode location"
+      });
+    }
+
+    const pros = await Pro.find({
+      isActive: true,
+      location: {
+        $nearSphere: {
+          $geometry: {
+            type: 'Point',
+            coordinates: geoResult.coordinates
+          },
+          $maxDistance: radius * 1609.34 // Convert miles to meters
+        }
+      }
+    }).select('name email trade location rating completedJobs isVerified');
+
+    res.json({
+      success: true,
+      data: {
+        location: geoResult.address,
+        coordinates: geoResult.coordinates,
+        radius: radius,
+        count: pros.length,
+        professionals: pros
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Error finding pros in area:', error);
+    res.status(500).json({
+      success: false,
+      message: "Error finding professionals"
+    });
+  }
+});
 app.post("/api/pro-signup-proxy", (req, res) => {
   console.log("🔧 Proxy professional signup request:", req.body);
   
@@ -288,8 +536,8 @@ app.post("/api/pro-signup-proxy", (req, res) => {
   });
 });
 
-// ✅ Homeowner Lead Endpoint
-app.post("/api/homeowner-lead", (req, res) => {
+// ✅ Homeowner Lead Endpoint (Enhanced with Professional Matching)
+app.post("/api/homeowner-lead", async (req, res) => {
   console.log("🏠 Homeowner lead request:", req.body);
   
   const { name, phone, address, service, description } = req.body;
@@ -300,16 +548,99 @@ app.post("/api/homeowner-lead", (req, res) => {
       message: "Name, phone, and service are required" 
     });
   }
-  
-  // TODO: Save to database and notify professionals
-  console.log(`📞 New homeowner lead: ${name} (${phone}) needs ${service} at ${address}`);
-  
-  res.json({ 
-    success: true, 
-    message: "Service request received successfully!",
-    data: { name, phone, address, service, description }
-  });
+
+  try {
+    // Route the lead to find matching professionals
+    const routingResult = await findMatchingProfessionals(service, address || 'Unknown');
+    
+    // TODO: Create lead record in database
+    // TODO: Send notifications to matched professionals
+    // TODO: Send confirmation to customer
+    
+    console.log(`📞 New homeowner lead: ${name} (${phone}) needs ${service} at ${address}`);
+    
+    const responseData = {
+      success: true,
+      message: "Service request received successfully!",
+      customerData: { name, phone, address, service, description },
+      matchingInfo: routingResult
+    };
+
+    // If no professionals found, still accept the lead but inform customer
+    if (!routingResult.success) {
+      responseData.message = "Service request received! We're finding the best professionals in your area and will contact you soon.";
+    }
+
+    res.json(responseData);
+
+  } catch (error) {
+    console.error('❌ Error processing homeowner lead:', error);
+    
+    // Still accept the lead even if matching fails
+    res.json({
+      success: true,
+      message: "Service request received! We will contact you soon with available professionals.",
+      customerData: { name, phone, address, service, description },
+      matchingInfo: { success: false, message: "Professional matching will be done manually" }
+    });
+  }
 });
+
+// Helper function to find matching professionals
+async function findMatchingProfessionals(service, location) {
+  try {
+    // Map service names to trade types
+    const serviceToTrade = {
+      'plumbing': 'plumbing',
+      'electrical': 'electrical',
+      'landscaping': 'landscaping',
+      'cleaning': 'cleaning',
+      'house cleaning': 'cleaning',
+      'junk removal': 'junk_removal',
+      'handyman': 'handyman',
+      'hvac': 'hvac',
+      'heating': 'hvac',
+      'air conditioning': 'hvac',
+      'painting': 'painting',
+      'roofing': 'roofing',
+      'flooring': 'flooring',
+      'carpentry': 'carpentry',
+      'appliance repair': 'appliance_repair'
+    };
+
+    const trade = serviceToTrade[service.toLowerCase()] || 'handyman';
+    
+    // Geocode the location
+    const geoResult = await geocodingService.geocodeLocation(location);
+    
+    if (!geoResult.coordinates) {
+      return { success: false, message: "Could not determine location" };
+    }
+
+    // Find nearby professionals
+    const matchedPros = await Pro.findNearbyPros(trade, geoResult.coordinates, 30);
+    
+    return {
+      success: true,
+      trade: trade,
+      location: geoResult.address,
+      matchedCount: matchedPros.length,
+      professionals: matchedPros.slice(0, 5).map(pro => ({
+        id: pro._id,
+        name: pro.name,
+        rating: pro.rating,
+        completedJobs: pro.completedJobs,
+        distance: Math.round(
+          geocodingService.calculateDistance(geoResult.coordinates, pro.location.coordinates) * 10
+        ) / 10
+      }))
+    };
+
+  } catch (error) {
+    console.error('❌ Error finding matching professionals:', error);
+    return { success: false, message: "Error finding professionals" };
+  }
+}
 
 // ✅ Backup Proxy Endpoint for Homeowner Leads
 app.post("/api/homeowner-lead-proxy", (req, res) => {
