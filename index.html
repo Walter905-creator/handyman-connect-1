@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Logo Fix v2.0 - Cache Bust -->
+    <!-- Logo Fix v2.1 - API Error Fix & Cache Bust -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fixlo - Connect with Trusted Home Repair Professionals</title>
@@ -1131,6 +1131,7 @@
                     
                     try {
                         // Submit to your backend API
+                        console.log('Submitting to:', '/api/pro-signup');
                         const response = await fetch('/api/pro-signup', {
                             method: 'POST',
                             headers: {
@@ -1138,6 +1139,17 @@
                             },
                             body: JSON.stringify(formData)
                         });
+                        
+                        console.log('Response status:', response.status);
+                        console.log('Response headers:', response.headers);
+                        
+                        // Check if response is JSON
+                        const contentType = response.headers.get('content-type');
+                        if (!contentType || !contentType.includes('application/json')) {
+                            const text = await response.text();
+                            console.error('Non-JSON response:', text);
+                            throw new Error('Server returned non-JSON response. Status: ' + response.status);
+                        }
                         
                         const result = await response.json();
                         
@@ -1157,7 +1169,13 @@
                         }
                     } catch (error) {
                         console.error('Error:', error);
-                        alert('Network error. Please check your connection and try again.');
+                        if (error.message.includes('404')) {
+                            alert('API endpoint not found. Please check if the backend is running.');
+                        } else if (error.message.includes('JSON')) {
+                            alert('Server error. Please try again later.');
+                        } else {
+                            alert('Network error. Please check your connection and try again.');
+                        }
                     } finally {
                         // Re-enable submit button
                         submitBtn.disabled = false;
