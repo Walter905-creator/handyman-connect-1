@@ -1,7 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Logo Fix v2.1 - API Error Fix & Cache Bust -->
+    <!-- Logo Fix v2.3 - Added Google Ads Campaign Content -->
+    
+    <!-- 
+    GOOGLE ADS CAMPAIGN CONTENT - REFERENCE
+    
+    📝 SHORT HEADLINES (30 chars max):
+    1. "Find Pros Fast with Fixlo"
+    2. "Hire Trusted Contractors"
+    3. "Get Job Leads - $59.99/mo"
+    4. "Fixlo: Pro Lead Generation"
+    5. "Home Services Made Easy"
+    6. "Connect with Local Pros"
+    7. "Unlimited Job Leads"
+    8. "Grow Your Trade Business"
+    9. "Verified Home Contractors"
+    10. "Professional Services Hub"
+    
+    📝 LONG HEADLINES (90 chars max):
+    1. "Early Access: Get Unlimited Job Leads for Just $59.99/mo"
+    2. "Fixlo: Where Pros Get Hired Without Paying for Leads"
+    3. "Join Over 2,500 Pros Using Fixlo to Grow Their Business"
+    4. "Find Trusted Home Service Professionals in Your Area"
+    5. "Professional Contractors Ready to Help with Your Projects"
+    6. "Skip the Middleman - Direct Connection to Quality Pros"
+    7. "Background-Checked Professionals for All Home Services"
+    8. "Get More Customers with Fixlo's Lead Generation Platform"
+    9. "From Plumbing to HVAC - All Your Home Service Needs"
+    10. "Launch Special: Early Access Pricing Available Now"
+    
+    📝 DESCRIPTIONS (90 chars max):
+    1. "Connect with verified professionals for plumbing, electrical, HVAC & more."
+    2. "Pros get unlimited job leads. Homeowners get instant quotes. Win-win!"
+    3. "2,500+ professionals nationwide. Fast response. Secure payments."
+    4. "Early bird pricing ends soon. Join before rates increase at launch."
+    5. "Skip expensive lead fees. Get direct customer connections for $59.99/mo."
+    6. "Background-verified contractors. Mobile-first platform. 24/7 support."
+    7. "From carpentry to cleaning - find the right pro for any home project."
+    8. "Professional signup includes verification, payment processing & more."
+    9. "Homeowners post jobs free. Professionals respond within minutes."
+    10. "Launching nationwide. Be among the first to access unlimited leads."
+    
+    📝 BUSINESS NAME:
+    Fixlo
+    
+    📝 SITELINKS:
+    /pricing - View Pricing
+    /services - Our Services  
+    /join - Join as Pro
+    /contact - Contact Support
+    
+    📝 CALL TO ACTION:
+    Primary: "Get Started"
+    Secondary: "Sign Up"
+    Tertiary: "Join Now"
+    
+    📝 SEARCH THEMES:
+    - Home repair services
+    - Professional contractors
+    - Lead generation for trades
+    - Home service marketplace
+    - Contractor directory
+    - Home improvement professionals
+    - Service provider platform
+    - Trade business growth
+    - Home maintenance services
+    - Professional service finder
+    -->
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fixlo - Connect with Trusted Home Repair Professionals</title>
@@ -711,6 +778,217 @@
             box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
         }
 
+        /* Contact Section */
+        .contact-section {
+            background: #f8f9fa;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .contact-section h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .contact-section p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            min-width: 300px;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .contact-item h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .contact-item p {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .contact-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .contact-link:hover {
+            color: #5a6fd8;
+            text-decoration: underline;
+        }
+
+        /* Launch Promo Section */
+        .launch-promo {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .promo-card {
+            background: #fef3c7;
+            border: 3px solid #fbbf24;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .promo-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, rgba(251, 191, 36, 0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .promo-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .promo-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .banner-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            color: white;
+        }
+
+        .banner-icon {
+            font-size: 3rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .banner-text h3 {
+            font-size: 2rem;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .banner-text p {
+            font-size: 1.2rem;
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .promo-card h2 {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-weight: 800;
+            position: relative;
+            z-index: 1;
+        }
+
+        .promo-highlight {
+            font-size: 1.3rem;
+            color: #374151;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .promo-description {
+            font-size: 1.1rem;
+            color: #4b5563;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .promo-cta {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .promo-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(5, 150, 105, 0.4);
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+        }
+
+        .promo-cta:active {
+            transform: translateY(-1px);
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -750,6 +1028,56 @@
 
             .modal-header {
                 padding: 25px 20px;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .contact-item {
+                min-width: auto;
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .promo-card {
+                padding: 30px 20px;
+                margin: 0 20px;
+            }
+
+            .promo-card h2 {
+                font-size: 2rem;
+            }
+
+            .promo-highlight {
+                font-size: 1.1rem;
+            }
+
+            .promo-description {
+                font-size: 1rem;
+            }
+
+            .promo-cta {
+                padding: 16px 30px;
+                font-size: 1.1rem;
+            }
+
+            .banner-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .banner-icon {
+                font-size: 2.5rem;
+            }
+
+            .banner-text h3 {
+                font-size: 1.5rem;
+            }
+
+            .banner-text p {
+                font-size: 1rem;
             }
         }
     </style>
@@ -894,6 +1222,34 @@
         </div>
     </section>
 
+    <!-- Launch Promo Section -->
+    <section class="launch-promo">
+        <div class="container">
+            <div class="promo-card">
+                <div class="promo-banner">
+                    <div class="banner-content">
+                        <div class="banner-icon">🚀</div>
+                        <div class="banner-text">
+                            <h3>Fixlo Pro Launch</h3>
+                            <p>Early Access Available</p>
+                        </div>
+                    </div>
+                </div>
+                <h2>🚀 Fixlo Is Launching Soon</h2>
+                <p class="promo-highlight">
+                    Join over <strong>2,500+ trade professionals nationwide</strong> who've already signed up!
+                </p>
+                <p class="promo-description">
+                    Fixlo is the fastest-growing lead generation app built for skilled pros. Get <strong>unlimited job leads</strong> in your area for a low monthly price.
+                    Early access pricing is available <strong>only until launch next month</strong> — prices will increase after launch.
+                </p>
+                <button onclick="openModal('professionalModal')" class="promo-cta">
+                    💼 Claim Your Early Access
+                </button>
+            </div>
+        </div>
+    </section>
+
     <!-- Download Section -->
     <section id="download" class="download-section">
         <div class="container">
@@ -940,6 +1296,23 @@
             <button class="cta-button" onclick="openModal('professionalModal')">
                 Sign Up as Professional
             </button>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact-section" class="contact-section">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <p>Have questions or need support? We're here to help!</p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon">📧</div>
+                    <h3>Email Support</h3>
+                    <p>Get in touch with our team</p>
+                    <a href="mailto:pro4u.improvements@gmail.com" class="contact-link">pro4u.improvements@gmail.com</a>
+                </div>
+            </div>
         </div>
     </section>
 
