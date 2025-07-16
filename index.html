@@ -1095,6 +1095,7 @@
                     <li><a href="#pricing">Pricing</a></li>
                     <li><a href="#" onclick="openModal('professionalModal')">Join as Pro</a></li>
                     <li><a href="#contact-section">Contact</a></li>
+                    <li><a href="/sms-optin">SMS Alerts</a></li>
                 </ul>
             </nav>
         </div>
@@ -1318,6 +1319,13 @@
                     <p>Get in touch with our team</p>
                     <a href="mailto:pro4u.improvements@gmail.com" class="contact-link">pro4u.improvements@gmail.com</a>
                 </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📱</div>
+                    <h3>SMS Notifications</h3>
+                    <p>Get instant job alerts and updates via text</p>
+                    <a href="/sms-optin" class="contact-link">Enable SMS Alerts</a>
+                </div>
             </div>
         </div>
     </section>
@@ -1394,6 +1402,26 @@
                     <div class="form-group">
                         <label for="proDescription">Brief Description of Your Services (Optional)</label>
                         <textarea id="proDescription" name="proDescription" rows="4" placeholder="Tell us about your experience, specialties, and what makes you stand out..."></textarea>
+                    </div>
+                    
+                    <!-- SMS Consent Section for Twilio A2P 10DLC Compliance -->
+                    <div class="form-group">
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef; margin-bottom: 20px;">
+                            <h4 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.1rem;">📱 SMS Notifications</h4>
+                            <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 15px;">
+                                <input type="checkbox" id="smsConsent" name="smsConsent" required style="margin-top: 3px; transform: scale(1.2);">
+                                <label for="smsConsent" style="color: #333; font-size: 0.95rem; line-height: 1.4; cursor: pointer;">
+                                    <strong>I agree to receive SMS messages from Fixlo about leads, appointments, and service updates.</strong>
+                                    This includes job notifications, customer contact details, and important account updates sent to my mobile number.
+                                </label>
+                            </div>
+                            <div style="font-size: 0.85rem; color: #666; line-height: 1.4;">
+                                <p style="margin-bottom: 8px;">• Reply <strong>STOP</strong> to unsubscribe at any time</p>
+                                <p style="margin-bottom: 8px;">• Reply <strong>HELP</strong> for assistance</p>
+                                <p style="margin-bottom: 8px;">• Message and data rates may apply</p>
+                                <p style="margin-bottom: 0;">• You can manage SMS preferences in your account settings</p>
+                            </div>
+                        </div>
                     </div>
                     
                     <button type="submit" class="submit-btn">
@@ -1483,12 +1511,19 @@
                         location: document.getElementById('proLocation').value.trim(),
                         dob: document.getElementById('proDob').value,
                         experience: document.getElementById('proExperience').value,
-                        description: document.getElementById('proDescription').value.trim()
+                        description: document.getElementById('proDescription').value.trim(),
+                        smsConsent: document.getElementById('smsConsent').checked
                     };
                     
                     // Validate required fields
                     if (!formData.name || !formData.email || !formData.phone || !formData.trade || !formData.location || !formData.dob) {
                         alert('Please fill in all required fields.');
+                        return;
+                    }
+                    
+                    // Validate SMS consent
+                    if (!formData.smsConsent) {
+                        alert('Please agree to receive SMS messages to continue. This is required for job notifications.');
                         return;
                     }
                     
@@ -1535,10 +1570,10 @@
                         if (response.ok && result.success) {
                             // Success - redirect to Stripe payment
                             if (result.paymentUrl) {
-                                alert('Registration successful! Redirecting to secure payment...');
+                                alert('Registration successful! You will receive an SMS confirmation shortly. Redirecting to secure payment...');
                                 window.location.href = result.paymentUrl;
                             } else {
-                                alert('Registration successful! You will be contacted soon.');
+                                alert('Registration successful! You will receive an SMS confirmation shortly and be contacted by our team.');
                                 closeModal('professionalModal');
                                 professionalForm.reset();
                             }
