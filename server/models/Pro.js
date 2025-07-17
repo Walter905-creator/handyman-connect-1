@@ -134,9 +134,20 @@ proSchema.methods.getAge = function() {
 };
 
 proSchema.methods.updateRating = function(newRating) {
+  const previousRating = this.rating;
+  const previousJobs = this.completedJobs;
+  
   // Simple average rating calculation
   this.rating = ((this.rating * this.completedJobs) + newRating) / (this.completedJobs + 1);
   this.completedJobs += 1;
+  
+  // Return data for celebration triggering
+  return {
+    previousRating,
+    newRating: this.rating,
+    previousJobs,
+    newJobs: this.completedJobs
+  };
 };
 
 // Static methods

@@ -18,9 +18,14 @@ import SignUp from "./pages/SignUp";
 import ProSupport from "./pages/ProSupport";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ContactUs from "./pages/ContactUs";
+import RurekaCelebration from "./components/RurekaCelebration";
+import RurekaDemo from "./pages/RurekaDemo";
+import LocalRurekaDemo from "./components/LocalRurekaDemo";
 
 function App() {
   const [message, setMessage] = useState("");
+  // Demo pro ID for testing - in real app this would come from authentication
+  const [demoProId, setDemoProId] = useState("demo-pro-123");
 
   useEffect(() => {
     const API_URL = process.env.REACT_APP_API_URL || 'https://fixloapp.onrender.com';
@@ -51,9 +56,17 @@ function App() {
           <Route path="/subscribe" element={<Subscribe />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/rureka" element={<RurekaDemo />} />
+          <Route path="/rureka/demo" element={<LocalRurekaDemo />} />
         </Routes>
 
         <Footer />
+        
+        {/* Rureka Celebration System - shows celebrations for any pro interactions */}
+        <RurekaCelebration 
+          proId={demoProId} 
+          onCelebrationComplete={() => console.log('🎉 Rureka celebration completed!')}
+        />
       </div>
     </Router>
   );
