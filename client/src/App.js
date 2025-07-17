@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 
@@ -18,17 +18,16 @@ import SignUp from "./pages/SignUp";
 import ProSupport from "./pages/ProSupport";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ContactUs from "./pages/ContactUs";
+import Eureka from "./pages/Eureka";
 
 function App() {
-  const [message, setMessage] = useState("");
-
   useEffect(() => {
     const API_URL = process.env.REACT_APP_API_URL || 'https://fixloapp.onrender.com';
     
     axios
       .get(`${API_URL}/api`)
-      .then((res) => setMessage(res.data.message))
-      .catch(() => setMessage("Error connecting to backend"));
+      .then((res) => console.log('Backend connected:', res.data.message))
+      .catch(() => console.log("Error connecting to backend"));
   }, []);
 
   return (
@@ -38,6 +37,7 @@ function App() {
         
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/eureka" element={<Eureka />} />
           <Route path="/download" element={<DownloadApp />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/support" element={<Support />} />
