@@ -15,7 +15,9 @@ const path = require("path");
 
 // Import models and services
 const Pro = require("./models/Pro");
+const ServiceRequest = require("./models/ServiceRequest");
 const geocodingService = require("./utils/geocoding");
+const smsHandler = require("./utils/sms-handler");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 dotenv.config();
@@ -249,6 +251,8 @@ app.use('/api/admin', adminRateLimit, require('./routes/admin'));
 app.use('/api/auth', authRateLimit, require('./routes/auth'));
 app.use("/api/notify", require("./routes/notify"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
+app.use("/api/requests", require("./routes/requests-simple")); // Service requests (simplified for testing)
+app.use("/api/pro", require("./routes/professional")); // Professional dashboard
 
 // ✅ Professional Signup Endpoint (with Stripe Payment Integration)
 app.post("/api/pro-signup", async (req, res) => {
@@ -620,7 +624,7 @@ app.post("/api/pro-signup-proxy", (req, res) => {
   });
 });
 
-// ✅ Homeowner Lead Endpoint (Enhanced with Professional Matching)
+// ✅ Homeowner Lead Endpoint (Enhanced with ServiceRequest integration)
 app.post("/api/homeowner-lead", async (req, res) => {
   console.log("🏠 Homeowner lead request:", req.body);
   
@@ -634,26 +638,129 @@ app.post("/api/homeowner-lead", async (req, res) => {
   }
 
   try {
-    // Route the lead to find matching professionals
-    const routingResult = await findMatchingProfessionals(service, address || 'Unknown');
+    // Map service names to trade types (same logic as before)
+    const serviceToTrade = {
+      'plumbing': 'plumbing',
+      'electrical': 'electrical',
+      'landscaping': 'landscaping',
+      'cleaning': 'cleaning',
+      'house cleaning': 'cleaning',
+      'junk removal': 'junk_removal',
+      'handyman': 'handyman',
+      'hvac': 'hvac',
+      'heating': 'hvac',
+      'air conditioning': 'hvac',
+      'painting': 'painting',
+      'roofing': 'roofing',
+      'flooring': 'flooring',
+      'carpentry': 'carpentry',
+      'appliance repair': 'appliance_repair'
+    };
+
+    const serviceType = serviceToTrade[service.toLowerCase()] || 'handyman';
+    const customerAddress = address || 'Location not specified';
     
-    // TODO: Create lead record in database
-    // TODO: Send notifications to matched professionals
-    // TODO: Send confirmation to customer
+    // Geocode the customer location
+    console.log(`🗺️ Geocoding customer location: ${customerAddress}`);
+    const geoResult = await geocodingService.geocodeLocation(customerAddress);
     
-    console.log(`📞 New homeowner lead: ${name} (${phone}) needs ${service} at ${address}`);
+    if (!geoResult.coordinates || !geocodingService.validateCoordinates(geoResult.coordinates)) {
+      console.log(`⚠️ Could not geocode location: ${customerAddress}, using default handling`);
+    }
+    
+    // Create ServiceRequest record
+    const serviceRequest = new ServiceRequest({
+      customerName: name.trim(),
+      customerPhone: phone.trim(),
+      serviceType: serviceType,
+      description: description || `${service} service requested`,
+      location: geoResult.coordinates ? {
+        type: 'Point',
+        coordinates: geoResult.coordinates,
+        address: geoResult.address
+      } : {
+        type: 'Point',
+        coordinates: [-74.0, 40.7], // Default NYC coordinates if geocoding fails
+        address: customerAddress
+      },
+      source: 'web'
+    });
+    
+    await serviceRequest.save();
+    console.log(`✅ ServiceRequest created: ${serviceRequest._id}`);
+    
+    // Find and notify professionals (only if we have coordinates)
+    let matchingInfo = { success: false, message: "Location geocoding failed" };
+    let smsResults = { total: 0, successful: 0, failed: 0 };
+    
+    if (geoResult.coordinates) {
+      // Find nearby professionals - ONLY ACTIVE PROFESSIONALS
+      const matchedPros = await Pro.find({
+        trade: serviceType,
+        isActive: true,
+        location: {
+          $nearSphere: {
+            $geometry: { type: "Point", coordinates: geoResult.coordinates },
+            $maxDistance: 30 * 1609.34 // 30 miles in meters
+          }
+        }
+      }).sort({ rating: -1, completedJobs: -1 });
+      
+      console.log(`🔍 Found ${matchedPros.length} matching professionals for ${serviceType}`);
+      
+      if (matchedPros.length > 0) {
+        // Limit to top 5 professionals
+        const prosToNotify = matchedPros.slice(0, 5);
+        
+        // Add professionals to notification list
+        for (const pro of prosToNotify) {
+          serviceRequest.addNotifiedProfessional(pro._id);
+        }
+        await serviceRequest.save();
+        
+        // Send SMS notifications
+        smsResults = await smsHandler.notifyMultipleProfessionals(prosToNotify, serviceRequest);
+        console.log(`📱 SMS notification results:`, smsResults);
+        
+        matchingInfo = {
+          success: true,
+          trade: serviceType,
+          location: geoResult.address,
+          matchedCount: matchedPros.length,
+          professionals: prosToNotify.slice(0, 5).map(pro => ({
+            id: pro._id,
+            name: pro.name,
+            rating: pro.rating,
+            completedJobs: pro.completedJobs,
+            distance: Math.round(
+              geocodingService.calculateDistance(geoResult.coordinates, pro.location.coordinates) * 10
+            ) / 10
+          }))
+        };
+      } else {
+        matchingInfo = { 
+          success: false, 
+          message: `No ${serviceType} professionals found within 30 miles` 
+        };
+      }
+    }
+    
+    // Send confirmation SMS to customer
+    const customerSmsResult = await smsHandler.notifyCustomerRequestReceived(serviceRequest);
+    console.log('📱 Customer confirmation SMS:', customerSmsResult);
+    
+    console.log(`📞 New homeowner lead processed: ${name} (${phone}) needs ${service}`);
     
     const responseData = {
       success: true,
-      message: "Service request received successfully!",
-      customerData: { name, phone, address, service, description },
-      matchingInfo: routingResult
+      message: matchingInfo.success 
+        ? `Service request received! We've notified ${smsResults.successful} professionals in your area.`
+        : "Service request received! We're finding the best professionals in your area and will contact you soon.",
+      customerData: { name, phone, address: customerAddress, service, description },
+      requestId: serviceRequest._id,
+      matchingInfo: matchingInfo,
+      notificationsSent: smsResults.successful
     };
-
-    // If no professionals found, still accept the lead but inform customer
-    if (!routingResult.success) {
-      responseData.message = "Service request received! We're finding the best professionals in your area and will contact you soon.";
-    }
 
     res.json(responseData);
 
