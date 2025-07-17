@@ -251,7 +251,7 @@ app.use('/api/admin', adminRateLimit, require('./routes/admin'));
 app.use('/api/auth', authRateLimit, require('./routes/auth'));
 app.use("/api/notify", require("./routes/notify"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
-app.use("/api/requests", require("./routes/requests-simple")); // Service requests (simplified for testing)
+app.use("/api/requests", require("./routes/requests")); // Service requests
 app.use("/api/pro", require("./routes/professional")); // Professional dashboard
 
 // ✅ Professional Signup Endpoint (with Stripe Payment Integration)

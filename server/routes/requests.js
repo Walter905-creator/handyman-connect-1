@@ -145,26 +145,28 @@ router.get('/', async (req, res) => {
     if (status) filter.status = status;
     if (serviceType) filter.serviceType = serviceType.toLowerCase();
     
-    const options = {
-      page: parseInt(page),
-      limit: parseInt(limit),
-      sort: { createdAt: -1 },
-      populate: [
-        { path: 'assignedProfessional', select: 'name phone email trade rating' },
-        { path: 'notifiedProfessionals.professionalId', select: 'name phone email trade' }
-      ]
-    };
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
     
-    const result = await ServiceRequest.paginate(filter, options);
+    const [requests, total] = await Promise.all([
+      ServiceRequest.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limitNum)
+        .populate('assignedProfessional', 'name phone email trade rating')
+        .populate('notifiedProfessionals.professionalId', 'name phone email trade'),
+      ServiceRequest.countDocuments(filter)
+    ]);
     
     res.json({
       success: true,
-      data: result.docs,
+      data: requests,
       pagination: {
-        page: result.page,
-        pages: result.totalPages,
-        total: result.totalDocs,
-        limit: result.limit
+        page: pageNum,
+        pages: Math.ceil(total / limitNum),
+        total: total,
+        limit: limitNum
       }
     });
     
