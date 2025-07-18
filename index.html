@@ -1407,19 +1407,21 @@
                     <!-- SMS Consent Section for Twilio A2P 10DLC Compliance -->
                     <div class="form-group">
                         <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef; margin-bottom: 20px;">
-                            <h4 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.1rem;">📱 SMS Notifications</h4>
+                            <h4 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.1rem;">📱 SMS Notifications & Consent</h4>
                             <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 15px;">
                                 <input type="checkbox" id="smsConsent" name="smsConsent" required style="margin-top: 3px; transform: scale(1.2);">
                                 <label for="smsConsent" style="color: #333; font-size: 0.95rem; line-height: 1.4; cursor: pointer;">
-                                    <strong>I agree to receive SMS messages from Fixlo about leads, appointments, and service updates.</strong>
-                                    This includes job notifications, customer contact details, and important account updates sent to my mobile number.
+                                    <strong>I expressly consent to receive automated SMS text messages from Fixlo</strong> regarding job leads, customer inquiries, appointment scheduling, service updates, and account notifications. This includes promotional messages about new features and services.
                                 </label>
                             </div>
-                            <div style="font-size: 0.85rem; color: #666; line-height: 1.4;">
-                                <p style="margin-bottom: 8px;">• Reply <strong>STOP</strong> to unsubscribe at any time</p>
-                                <p style="margin-bottom: 8px;">• Reply <strong>HELP</strong> for assistance</p>
-                                <p style="margin-bottom: 8px;">• Message and data rates may apply</p>
-                                <p style="margin-bottom: 0;">• You can manage SMS preferences in your account settings</p>
+                            <div style="font-size: 0.85rem; color: #666; line-height: 1.4; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">
+                                <p style="margin-bottom: 8px; font-weight: 600; color: #2c3e50;">SMS Terms & Compliance:</p>
+                                <p style="margin-bottom: 8px;">• <strong>Frequency:</strong> Up to 20 messages per month (varies by job activity)</p>
+                                <p style="margin-bottom: 8px;">• <strong>To Opt-Out:</strong> Reply STOP to any message to unsubscribe immediately</p>
+                                <p style="margin-bottom: 8px;">• <strong>For Help:</strong> Reply HELP for customer support assistance</p>
+                                <p style="margin-bottom: 8px;">• <strong>Rates:</strong> Message and data rates may apply per your carrier plan</p>
+                                <p style="margin-bottom: 8px;">• <strong>Carriers:</strong> All major carriers supported (Verizon, AT&T, T-Mobile, etc.)</p>
+                                <p style="margin-bottom: 0;">• You can manage preferences in your account settings or contact support</p>
                             </div>
                         </div>
                     </div>
@@ -1430,7 +1432,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <p>By continuing, you agree to our Terms of Service and Privacy Policy. You will be redirected to Stripe for secure payment processing.</p>
+                <p>By continuing, you provide express written consent to receive automated text messages from Fixlo and agree to our Terms of Service and Privacy Policy. You will be redirected to Stripe for secure payment processing. Reply STOP to opt out of messages anytime.</p>
             </div>
         </div>
     </div>
@@ -1724,7 +1726,7 @@
                     
                     // Validate SMS consent
                     if (!formData.smsConsent) {
-                        alert('Please agree to receive SMS messages to continue. This is required for job notifications.');
+                        alert('SMS Consent Required: Please provide express written consent to receive automated text messages from Fixlo. This is required for job notifications and account updates.');
                         return;
                     }
                     
@@ -1776,10 +1778,10 @@
                         if (response.ok && result.success) {
                             // Success - redirect to Stripe payment
                             if (result.paymentUrl) {
-                                alert('Registration successful! You will receive an SMS confirmation with clear instructions shortly. Redirecting to secure payment...');
+                                alert('✅ Registration Successful!\n\nExpress SMS consent confirmed. You will receive automated text messages about job leads and account updates. Redirecting to secure payment...\n\nReply STOP to opt out anytime.');
                                 window.location.href = result.paymentUrl;
                             } else {
-                                alert('Registration successful! You will receive an SMS confirmation with clear next steps and be contacted by our team.');
+                                alert('✅ Registration Successful!\n\nSMS consent recorded. You will receive automated text messages and be contacted by our team. Reply STOP to opt out anytime.');
                                 closeModal('professionalModal');
                                 professionalForm.reset();
                             }

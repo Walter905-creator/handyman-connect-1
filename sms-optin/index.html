@@ -217,13 +217,13 @@
         <div class="message-examples">
             <h4>📄 Example SMS Messages You'll Receive:</h4>
             <div class="message-sample">
-                New lead: John needs roofing services. Contact: 1234567891. Address: 123 Wallace Rd, NC. Log in to Fixlo for details
+                FIXLO: New lead in your area! Plumbing job for John D. - 123 Main St, Your City. Login to view details & respond. Reply STOP to opt out.
             </div>
             <div class="message-sample">
-                Fixlo: You've been matched with a job nearby! Login to your dashboard to view homeowner request.
+                FIXLO: Customer match! Sarah needs electrical work. View contact info in your dashboard. Act fast to secure the job. Reply STOP to opt out.
             </div>
             <div class="message-sample">
-                Reminder: You have an unread job request from a Fixlo homeowner. Act fast to win the job.
+                FIXLO: Reminder - You have 2 unread job requests. Login to respond before they expire. Reply STOP to opt out, HELP for support.
             </div>
         </div>
         
@@ -231,8 +231,7 @@
             <div class="consent-checkbox">
                 <input type="checkbox" id="smsConsentStandalone" name="smsConsentStandalone" required>
                 <label for="smsConsentStandalone" class="consent-text">
-                    <strong>I agree to receive SMS messages from Fixlo about leads, appointments, and service updates.</strong>
-                    This includes job notifications, customer contact details, and important account updates sent to my mobile number.
+                    <strong>I expressly consent to receive automated SMS text messages from Fixlo</strong> regarding job leads, customer inquiries, appointment scheduling, service updates, and account notifications. This includes promotional messages about new features and services.
                 </label>
             </div>
             
@@ -250,19 +249,22 @@
         </form>
         
         <div class="sms-terms">
-            <h4>📋 SMS Terms & Conditions:</h4>
+            <h4>📋 SMS Terms & Compliance Information:</h4>
             <ul>
-                <li>Reply <strong>STOP</strong> to unsubscribe at any time</li>
-                <li>Reply <strong>HELP</strong> for assistance</li>
-                <li>Message and data rates may apply</li>
-                <li>You can manage SMS preferences in your account settings</li>
-                <li>We respect your privacy and will never share your number</li>
-                <li>Frequency: Up to 20 messages per month depending on job activity</li>
+                <li><strong>Frequency:</strong> Up to 20 messages per month (varies by job activity in your area)</li>
+                <li><strong>To Opt-Out:</strong> Reply STOP to any message to unsubscribe immediately</li>
+                <li><strong>For Help:</strong> Reply HELP for customer support assistance</li>
+                <li><strong>Rates:</strong> Message and data rates may apply per your carrier plan</li>
+                <li><strong>Carriers:</strong> All major carriers supported (Verizon, AT&T, T-Mobile, Sprint, etc.)</li>
+                <li><strong>Privacy:</strong> We respect your privacy and will never share your number with third parties</li>
+                <li><strong>Account Management:</strong> You can update SMS preferences in your account dashboard</li>
+                <li><strong>Support:</strong> Contact pro4u.improvements@gmail.com for technical assistance</li>
             </ul>
         </div>
         
         <div class="redirect-info">
-            <p>This page demonstrates our SMS opt-in process for Twilio A2P 10DLC compliance.</p>
+            <p>This page demonstrates our enhanced SMS consent process for full A2P 10DLC carrier compliance.</p>
+            <p>By completing this form, you provide express written consent to receive automated text messages from Fixlo.</p>
             <p><a href="../#handyman-signup" style="color: #3498db; text-decoration: none;">← Back to Professional Signup</a></p>
         </div>
     </div>
@@ -304,7 +306,7 @@
                 submitButton.disabled = true;
                 
                 setTimeout(() => {
-                    alert('Thank you! You have successfully opted in to SMS notifications. You will receive a confirmation text shortly.');
+                    alert('✅ SMS Consent Confirmed!\n\nYou have successfully provided express written consent to receive automated text messages from Fixlo. You will receive a confirmation text within 24 hours.\n\nRemember: Reply STOP to opt out anytime, HELP for support.');
                     
                     // Reset form
                     form.reset();
@@ -314,7 +316,7 @@
                     // Redirect to main site
                     setTimeout(() => {
                         window.location.href = '../#handyman-signup';
-                    }, 2000);
+                    }, 3000);
                 }, 1500);
             });
         });
