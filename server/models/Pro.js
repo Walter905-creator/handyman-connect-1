@@ -109,11 +109,21 @@ const proSchema = new mongoose.Schema({
   },
   verificationDate: Date,
   
-  // Contact preferences
+  // Contact preferences & SMS Compliance
   notificationSettings: {
     email: { type: Boolean, default: true },
     sms: { type: Boolean, default: true },
     push: { type: Boolean, default: true }
+  },
+  
+  // SMS Consent for A2P 10DLC Compliance
+  smsConsent: {
+    given: { type: Boolean, default: false },
+    dateGiven: { type: Date },
+    ipAddress: { type: String },
+    userAgent: { type: String },
+    consentText: { type: String }, // Store the exact consent text shown to user
+    optOutDate: { type: Date }
   }
 }, {
   timestamps: true

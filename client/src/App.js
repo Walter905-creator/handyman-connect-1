@@ -20,7 +20,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ContactUs from "./pages/ContactUs";
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [, setMessage] = useState("");
 
   useEffect(() => {
     const API_URL = process.env.REACT_APP_API_URL || 'https://fixloapp.onrender.com';

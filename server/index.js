@@ -254,13 +254,21 @@ app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
 app.post("/api/pro-signup", async (req, res) => {
   console.log("🔧 Professional signup request:", req.body);
   
-  const { name, email, phone, trade, location, dob, role } = req.body;
+  const { name, email, phone, trade, location, dob, role, smsConsent, smsOptIn } = req.body;
   
   // Validate required fields
   if (!name || !email || !phone || !trade || !location || !dob) {
     return res.status(400).json({ 
       success: false, 
       message: "Name, email, phone, trade, location, and date of birth are required" 
+    });
+  }
+
+  // Validate SMS consent for A2P 10DLC compliance
+  if (!smsConsent && !smsOptIn) {
+    return res.status(400).json({
+      success: false,
+      message: "Express written consent for SMS messages is required for A2P 10DLC compliance"
     });
   }
 
@@ -328,7 +336,16 @@ app.post("/api/pro-signup", async (req, res) => {
       },
       dob: birthDate,
       isActive: false, // Will be activated after payment
-      paymentStatus: 'pending'
+      paymentStatus: 'pending',
+      
+      // Record SMS Consent for A2P 10DLC Compliance
+      smsConsent: {
+        given: smsConsent || smsOptIn || false,
+        dateGiven: new Date(),
+        ipAddress: req.ip || req.connection.remoteAddress,
+        userAgent: req.headers['user-agent'],
+        consentText: 'I expressly consent to receive automated SMS text messages from Fixlo regarding job leads, customer inquiries, appointment scheduling, service updates, and account notifications.'
+      }
     });
 
     // Save to database
