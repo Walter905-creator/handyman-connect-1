@@ -19,6 +19,11 @@ import ProSupport from "./pages/ProSupport";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ContactUs from "./pages/ContactUs";
 
+// 🚀 New conversion-focused components
+import UrgencyPopup from "./components/UrgencyPopup";
+import ExitIntentModal from "./components/ExitIntentModal";
+import StickySignupBar from "./components/StickySignupBar";
+
 function App() {
   const [message, setMessage] = useState("");
 
@@ -35,6 +40,11 @@ function App() {
     <Router>
       <div style={{ fontFamily: "sans-serif" }}>
         <Navbar />
+        
+        {/* 🚀 Conversion-focused UX components */}
+        <UrgencyPopup />
+        <ExitIntentModal />
+        <StickySignupBar />
         
         <Routes>
           <Route path="/" element={<Home />} />

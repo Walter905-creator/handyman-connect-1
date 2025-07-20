@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import TradeServices from "../components/TradeServices";
+import GeoHeader from "../components/GeoHeader";
+import LiveJobFeed from "../components/LiveJobFeed";
 import fixloLogo from "../assets/logo.png";
 
 export default function Home() {
@@ -28,15 +30,7 @@ export default function Home() {
           style={{ maxWidth: "300px", marginBottom: "1rem" }}
         />
 
-        <h1
-          style={{
-            fontSize: "3rem",
-            fontWeight: "bold",
-            marginBottom: "1rem",
-          }}
-        >
-          Welcome to Fixlo
-        </h1>
+        <GeoHeader />
         <p
           style={{
             fontSize: "1.25rem",
@@ -123,6 +117,11 @@ export default function Home() {
               <p style={{ color: "#64748b" }}>{f.desc}</p>
             </div>
           ))}
+        </div>
+        
+        {/* Live Job Feed for conversion */}
+        <div style={{ maxWidth: "600px", margin: "3rem auto 0" }}>
+          <LiveJobFeed />
         </div>
       </section>
     </div>
