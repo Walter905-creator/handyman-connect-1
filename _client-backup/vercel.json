@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://handyman-connect-backend.onrender.com/api/$1"
-    }
-  ]
-}

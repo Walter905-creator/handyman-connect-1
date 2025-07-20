@@ -1,6 +1,5 @@
-# Ignore everything except static HTML files
+# Ignore everything except the client directory
 _client-disabled/
-client/
 server/
 _client-backup/
 _server-backup/
