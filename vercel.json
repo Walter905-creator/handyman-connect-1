@@ -1,25 +1,14 @@
 {
-  "version": 2,
-  "buildCommand": "",
-  "installCommand": "",
-  "builds": [
-    {
-      "src": "**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/admin",
-      "dest": "https://fixlo-backend.onrender.com/admin"
+  "buildCommand": "cd client && npm install && npm run build",
+  "outputDirectory": "client/build",
+  "rewrites": [
+    { 
+      "source": "/api/(.*)", 
+      "destination": "https://fixlo-backend.onrender.com/api/$1" 
     },
-    {
-      "src": "/api/(.*)",
-      "dest": "https://fixlo-backend.onrender.com/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+    { 
+      "source": "/(.*)", 
+      "destination": "/index.html" 
     }
   ]
 }
