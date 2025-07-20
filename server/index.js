@@ -924,10 +924,33 @@ app.get("/", (req, res) => {
   });
 });
 
-// ✅ Admin dashboard route
+// ✅ Admin dashboard route - FIXED
 app.get("/admin", (req, res) => {
   console.log('🔐 Admin dashboard accessed');
-  res.sendFile(path.join(__dirname, 'admin.html'));
+  const adminPath = path.join(__dirname, 'admin.html');
+  console.log('Admin file path:', adminPath);
+  
+  // Check if file exists first
+  const fs = require('fs');
+  if (!fs.existsSync(adminPath)) {
+    console.log('❌ Admin file not found at:', adminPath);
+    return res.status(404).json({
+      error: 'Admin file not found',
+      path: adminPath,
+      files: fs.readdirSync(__dirname)
+    });
+  }
+  
+  res.sendFile(adminPath);
+});
+
+// ✅ Simple admin test route
+app.get("/admin-test", (req, res) => {
+  res.json({
+    message: "Admin route is working!",
+    timestamp: new Date().toISOString(),
+    adminFile: require('fs').existsSync(path.join(__dirname, 'admin.html'))
+  });
 });
 
 // ✅ Socket.io connection handling
