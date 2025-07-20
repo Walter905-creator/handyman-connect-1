@@ -11,11 +11,11 @@
   "routes": [
     {
       "src": "/admin",
-      "dest": "https://fixloapp.onrender.com/admin"
+      "dest": "https://fixlo-backend.onrender.com/admin"
     },
     {
       "src": "/api/(.*)",
-      "dest": "https://fixloapp.onrender.com/api/$1"
+      "dest": "https://fixlo-backend.onrender.com/api/$1"
     },
     {
       "src": "/(.*)",
