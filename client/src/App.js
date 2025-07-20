@@ -28,6 +28,7 @@ function App() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    console.log("🔥 LIVE DEPLOY: Fixlo main loaded");
     const API_URL = process.env.REACT_APP_API_URL || 'https://fixloapp.onrender.com';
     
     axios
