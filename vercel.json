@@ -10,6 +10,10 @@
   ],
   "routes": [
     {
+      "src": "/admin",
+      "dest": "https://fixloapp.onrender.com/admin"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "https://fixloapp.onrender.com/api/$1"
     },

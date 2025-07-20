@@ -335,6 +335,215 @@ async function notifyProfessionals(serviceRequest, professionals) {
     }
 }
 
+// Admin authentication
+const ADMIN_CREDENTIALS = {
+    email: process.env.ADMIN_EMAIL || 'admin@fixloapp.com',
+    password: process.env.ADMIN_PASSWORD || 'FixloAdmin2024!'
+};
+
+// Simple JWT-like token generation (use proper JWT in production)
+function generateAdminToken(email) {
+    const timestamp = Date.now();
+    return Buffer.from(`${email}:${timestamp}`).toString('base64');
+}
+
+function verifyAdminToken(token) {
+    try {
+        const decoded = Buffer.from(token, 'base64').toString();
+        const [email, timestamp] = decoded.split(':');
+        
+        // Token expires after 24 hours
+        const tokenAge = Date.now() - parseInt(timestamp);
+        const twentyFourHours = 24 * 60 * 60 * 1000;
+        
+        if (tokenAge > twentyFourHours) {
+            return null;
+        }
+        
+        return { email, timestamp };
+    } catch (error) {
+        return null;
+    }
+}
+
+// Admin login endpoint
+app.post('/api/auth/login', (req, res) => {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+        return res.status(400).json({
+            success: false,
+            error: 'Email and password are required'
+        });
+    }
+    
+    if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
+        const token = generateAdminToken(email);
+        res.json({
+            success: true,
+            token,
+            admin: {
+                email: email,
+                role: 'admin'
+            }
+        });
+    } else {
+        res.status(401).json({
+            success: false,
+            error: 'Invalid credentials'
+        });
+    }
+});
+
+// Admin middleware
+function requireAdmin(req, res, next) {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({
+            success: false,
+            error: 'Authorization token required'
+        });
+    }
+    
+    const token = authHeader.substring(7);
+    const admin = verifyAdminToken(token);
+    
+    if (!admin) {
+        return res.status(401).json({
+            success: false,
+            error: 'Invalid or expired token'
+        });
+    }
+    
+    req.admin = admin;
+    next();
+}
+
+// Admin stats endpoint
+app.get('/api/admin/stats', requireAdmin, (req, res) => {
+    const serviceRequests = Array.from(storage.serviceRequests.values());
+    const professionals = Array.from(storage.professionals.values());
+    
+    const stats = {
+        overview: {
+            totalServiceRequests: serviceRequests.length,
+            totalProfessionals: professionals.length,
+            activeJobs: serviceRequests.filter(job => job.status === 'open').length,
+            completedJobs: serviceRequests.filter(job => job.status === 'completed').length
+        },
+        recent: {
+            serviceRequests: serviceRequests
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .slice(0, 10),
+            professionals: professionals
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .slice(0, 10)
+        },
+        analytics: {
+            requestsByService: {},
+            requestsByUrgency: {},
+            professionalsByTrade: {}
+        }
+    };
+    
+    // Calculate analytics
+    serviceRequests.forEach(req => {
+        stats.analytics.requestsByService[req.serviceType] = 
+            (stats.analytics.requestsByService[req.serviceType] || 0) + 1;
+        stats.analytics.requestsByUrgency[req.urgency] = 
+            (stats.analytics.requestsByUrgency[req.urgency] || 0) + 1;
+    });
+    
+    professionals.forEach(pro => {
+        stats.analytics.professionalsByTrade[pro.primaryTrade] = 
+            (stats.analytics.professionalsByTrade[pro.primaryTrade] || 0) + 1;
+    });
+    
+    res.json({
+        success: true,
+        stats
+    });
+});
+
+// Admin service requests endpoint
+app.get('/api/admin/service-requests', requireAdmin, (req, res) => {
+    const requests = Array.from(storage.serviceRequests.values())
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    res.json({
+        success: true,
+        requests
+    });
+});
+
+// Admin professionals endpoint
+app.get('/api/admin/professionals', requireAdmin, (req, res) => {
+    const professionals = Array.from(storage.professionals.values())
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    res.json({
+        success: true,
+        professionals
+    });
+});
+
+// Admin pros endpoint (alias for compatibility with admin.html)
+app.get('/api/admin/pros', requireAdmin, (req, res) => {
+    const professionals = Array.from(storage.professionals.values())
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    res.json({
+        success: true,
+        professionals
+    });
+});
+
+// Admin pro toggle endpoint
+app.post('/api/admin/pros/:id/toggle', requireAdmin, (req, res) => {
+    const { id } = req.params;
+    const professional = storage.professionals.get(id);
+    
+    if (!professional) {
+        return res.status(404).json({
+            success: false,
+            error: 'Professional not found'
+        });
+    }
+    
+    // Toggle active status
+    professional.isActive = !professional.isActive;
+    professional.lastUpdated = new Date().toISOString();
+    
+    storage.professionals.set(id, professional);
+    
+    res.json({
+        success: true,
+        message: `Professional ${professional.isActive ? 'activated' : 'deactivated'}`,
+        professional
+    });
+});
+
+// Admin delete pro endpoint
+app.delete('/api/admin/pros/:id', requireAdmin, (req, res) => {
+    const { id } = req.params;
+    const professional = storage.professionals.get(id);
+    
+    if (!professional) {
+        return res.status(404).json({
+            success: false,
+            error: 'Professional not found'
+        });
+    }
+    
+    storage.professionals.delete(id);
+    
+    res.json({
+        success: true,
+        message: 'Professional deleted successfully'
+    });
+});
+
 // Status endpoint
 app.get('/api/status', (req, res) => {
     res.json({
@@ -353,6 +562,10 @@ app.get('/api/status', (req, res) => {
 // Serve static files and handle routes
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
 app.get('/sms-optin', (req, res) => {

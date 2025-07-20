@@ -924,6 +924,12 @@ app.get("/", (req, res) => {
   });
 });
 
+// ✅ Admin dashboard route
+app.get("/admin", (req, res) => {
+  console.log('🔐 Admin dashboard accessed');
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
 // ✅ Socket.io connection handling
 io.on('connection', (socket) => {
   console.log('🔌 User connected:', socket.id);
