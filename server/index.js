@@ -249,6 +249,7 @@ app.use('/api/admin', adminRateLimit, require('./routes/admin'));
 app.use('/api/auth', authRateLimit, require('./routes/auth'));
 app.use("/api/notify", require("./routes/notify"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
+app.use("/api/ai", generalRateLimit, require("./routes/ai")); // AI-powered eureka discovery
 
 // ✅ Professional Signup Endpoint (with Stripe Payment Integration)
 app.post("/api/pro-signup", async (req, res) => {

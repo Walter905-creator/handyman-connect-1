@@ -34,6 +34,7 @@ export default function Navbar() {
       
       <div style={{ display: 'flex', gap: '1.5rem' }}>
         <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>Home</Link>
+        <Link to="/eureka" style={{ color: 'white', textDecoration: 'none' }}>💡 Eureka</Link>
         <Link to="/how-it-works" style={{ color: 'white', textDecoration: 'none' }}>How It Works</Link>
         <Link to="/pricing" style={{ color: 'white', textDecoration: 'none' }}>Pricing</Link>
         <Link to="/signup" style={{ color: 'white', textDecoration: 'none' }}>Sign Up</Link>
