@@ -1,3 +1,4 @@
+
 // Quick test to verify admin route and server setup
 const express = require('express');
 const path = require('path');
