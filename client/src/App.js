@@ -20,9 +20,12 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ContactUs from "./pages/ContactUs";
 
 // 🚀 New conversion-focused components
+import GeoHeader from "./components/GeoHeader";
 import UrgencyPopup from "./components/UrgencyPopup";
+import LiveJobFeed from "./components/LiveJobFeed";
 import ExitIntentModal from "./components/ExitIntentModal";
 import StickySignupBar from "./components/StickySignupBar";
+import StickyMobileCTA from "./components/StickyMobileCTA";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -43,9 +46,12 @@ function App() {
         <Navbar />
         
         {/* 🚀 Conversion-focused UX components */}
+        <GeoHeader />
         <UrgencyPopup />
+        <LiveJobFeed />
         <ExitIntentModal />
         <StickySignupBar />
+        <StickyMobileCTA />
         
         <Routes>
           <Route path="/" element={<Home />} />

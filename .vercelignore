@@ -1,19 +1,5 @@
-# Ignore everything except the client directory
-_client-disabled/
-server/
-_client-backup/
-_server-backup/
-fixlo-app/
-deployment-archive/
-website/
-docs/
-node_modules/
-.git/
-*.md
-*.sh
-*.yaml
-*.json.backup
-package*.json
-build/
-public/
-static/
+# Force deployment from /client directory only
+*
+!client/
+!vercel.json
+!.vercelignore
