@@ -3,7 +3,7 @@
   "buildCommand": "cd client && npm install && npm run build",
   "outputDirectory": "client/build",
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://fixlo-backend.onrender.com/api/$1" },
+    { "source": "/api/(.*)", "destination": "https://fixloapp.onrender.com/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

@@ -2,14 +2,21 @@ import { useEffect, useState } from 'react';
 
 export default function ExitIntentModal() {
   const [show, setShow] = useState(false);
+  const [hasShown, setHasShown] = useState(false);
 
   useEffect(() => {
+    if (hasShown) return;
+    
     const handleMouseLeave = e => {
-      if (e.clientY < 20) setShow(true);
+      if (e.clientY < 20 && !hasShown) {
+        setShow(true);
+        setHasShown(true);
+      }
     };
+    
     document.addEventListener("mouseleave", handleMouseLeave);
     return () => document.removeEventListener("mouseleave", handleMouseLeave);
-  }, []);
+  }, [hasShown]);
 
   if (!show) return null;
 
@@ -21,31 +28,29 @@ export default function ExitIntentModal() {
     }}>
       <div style={{
         background: 'white', padding: '24px', borderRadius: '12px',
-        textAlign: 'center', maxWidth: '400px'
+        textAlign: 'center', maxWidth: '400px', margin: '20px'
       }}>
-        <h2>Wait! 👋</h2>
-        <p>Get your first 3 leads for free when you sign up now!</p>
-        <button onClick={() => setShow(false)}>Close</button>
-      </div>
-    </div>
-  );
-}
-  }, [hasShown]);
-
-  if (!show) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-xl shadow-xl max-w-sm text-center">
-        <h2 className="text-xl font-bold">⚠️ Leaving already?</h2>
-        <p className="mt-2 text-gray-700">Homeowners are waiting. Sign up now and start earning with Fixlo.</p>
-        <div className="mt-4 space-y-2">
-          <a href="/pro-support" className="block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        <h2 style={{ margin: '0 0 16px 0', color: '#333' }}>⚠️ Leaving already?</h2>
+        <p style={{ margin: '0 0 20px 0', color: '#666' }}>
+          Homeowners are waiting. Sign up now and start earning with Fixlo.
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <a 
+            href="/pro-support" 
+            style={{
+              background: '#2563eb', color: 'white', padding: '12px 24px',
+              borderRadius: '6px', textDecoration: 'none', fontSize: '16px',
+              fontWeight: '500'
+            }}
+          >
             🚀 Sign Up & Start Earning
           </a>
           <button 
             onClick={() => setShow(false)} 
-            className="block w-full text-sm text-gray-500 underline hover:text-gray-700"
+            style={{
+              background: 'transparent', border: 'none', color: '#666',
+              fontSize: '14px', textDecoration: 'underline', cursor: 'pointer'
+            }}
           >
             Maybe later
           </button>

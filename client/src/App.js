@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 
@@ -28,16 +28,15 @@ import StickySignupBar from "./components/StickySignupBar";
 import StickyMobileCTA from "./components/StickyMobileCTA";
 
 function App() {
-  const [message, setMessage] = useState("");
-
   useEffect(() => {
     console.log("🔥 LIVE DEPLOY: Fixlo main loaded");
     const API_URL = process.env.REACT_APP_API_URL || 'https://fixloapp.onrender.com';
     
+    // Test backend connectivity (for monitoring)
     axios
       .get(`${API_URL}/api`)
-      .then((res) => setMessage(res.data.message))
-      .catch(() => setMessage("Error connecting to backend"));
+      .then((res) => console.log("Backend connected:", res.data.message))
+      .catch(() => console.log("Backend connection failed"));
   }, []);
 
   return (
