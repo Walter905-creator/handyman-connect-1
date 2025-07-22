@@ -1,5 +1,14 @@
-# Force deployment from /client directory only
-*
-!client/
-!vercel.json
-!.vercelignore
+# Ignore non-essential files but keep client directory
+node_modules/
+.git/
+*.md
+*.sh
+*.yaml
+build/
+server/
+_client-backup/
+_server-backup/
+fixlo-app/
+deployment-archive/
+website/
+docs/
