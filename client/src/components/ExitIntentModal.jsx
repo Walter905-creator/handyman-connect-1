@@ -14,27 +14,6 @@ export default function ExitIntentModal() {
   if (!show) return null;
 
   return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-      background: 'rgba(0,0,0,0.6)', display: 'flex',
-      alignItems: 'center', justifyContent: 'center', zIndex: 9999
-    }}>
-      <div style={{
-        background: 'white', padding: '24px', borderRadius: '12px',
-        textAlign: 'center', maxWidth: '400px'
-      }}>
-        <h2>Wait! 👋</h2>
-        <p>Get your first 3 leads for free when you sign up now!</p>
-        <button onClick={() => setShow(false)}>Close</button>
-      </div>
-    </div>
-  );
-}
-  }, [hasShown]);
-
-  if (!show) return null;
-
-  return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-xl shadow-xl max-w-sm text-center">
         <h2 className="text-xl font-bold">⚠️ Leaving already?</h2>
