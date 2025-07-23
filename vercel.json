@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "buildCommand": "cd client && npm install && npm run build",
-  "outputDirectory": "client/build",
-  "framework": null,
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
+  "installCommand": "npm install",
+  "framework": "create-react-app",
+  "rootDirectory": "client",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "https://fixlo-backend.onrender.com/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
