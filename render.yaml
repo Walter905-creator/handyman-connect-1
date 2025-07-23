@@ -1,17 +1,17 @@
 services:
   - type: web
-    name: handyman-connect
+    name: fixlo-backend
     env: node
     plan: free
-    rootDir: .
-    buildCommand: npm install && cd client && npm install && npm run build && cd ../server && npm install
-    startCommand: cd server && node index.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node index.js
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
-      - key: STRIPE_PRICE_ID
-        value: price_1Rf0cZPQ4Cetf7g6ekd8hPLb
       - key: CLIENT_URL
-        value: https://fixloapp.com
+        value: https://fixloapp.vercel.app
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://fixloapp.vercel.app,https://www.fixloapp.com,https://fixloapp.com
