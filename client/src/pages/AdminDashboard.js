@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const AdminDashboard = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // eslint-disable-line no-unused-vars
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalProfessionals: 0,
