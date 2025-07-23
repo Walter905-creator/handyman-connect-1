@@ -28,7 +28,7 @@ import StickySignupBar from "./components/StickySignupBar";
 import StickyMobileCTA from "./components/StickyMobileCTA";
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(""); // eslint-disable-line no-unused-vars
 
   useEffect(() => {
     console.log("🔥 LIVE DEPLOY: Fixlo main loaded");
