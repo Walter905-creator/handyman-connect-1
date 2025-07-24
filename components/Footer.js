@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-const Footer = () => {
+function Footer() {
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -38,12 +37,11 @@ const Footer = () => {
           <div className="footer-section">
             <h3>Quick Links</h3>
             <ul className="footer-links">
-              <li><Link to="/how-it-works">How It Works</Link></li>
-              <li><Link to="/pricing">Pricing</Link></li>
-              <li><Link to="/download">Download App</Link></li>
-              <li><Link to="/signup">Sign Up</Link></li>
-              <li><Link to="/pro-support">For Professionals</Link></li>
-              <li><Link to="/support">Customer Support</Link></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="/contact">Contact</a></li>
+              <li><a href="#">How It Works</a></li>
+              <li><a href="#">Pricing</a></li>
+              <li><a href="#">For Professionals</a></li>
             </ul>
           </div>
 
@@ -51,9 +49,9 @@ const Footer = () => {
           <div className="footer-section">
             <h3>Legal & Contact</h3>
             <ul className="footer-links">
-              <li><Link to="/contact">Contact Us</Link></li>
-              <li><Link to="/terms-of-service">Terms of Service</Link></li>
-              <li><Link to="/privacy">Privacy Policy</Link></li>
+              <li><a href="/contact">Contact Us</a></li>
+              <li><a href="#">Terms of Service</a></li>
+              <li><a href="#">Privacy Policy</a></li>
               <li><a href="mailto:support@fixloapp.com">Email Support</a></li>
               <li><a href="tel:+15551234596">Call Support</a></li>
             </ul>
@@ -64,12 +62,12 @@ const Footer = () => {
         <div className="footer-bottom">
           <p>© 2024 Fixlo. All rights reserved. | Made with ❤️ for homeowners and professionals.</p>
           <p style={{ marginTop: '0.5rem' }}>
-            🔒 Secure payments via Stripe | 🛡️ Background checks via Checkr | ⭐ Satisfaction guaranteed
+            🔒 Secure payments | 🛡️ Background checked professionals | ⭐ Satisfaction guaranteed
           </p>
         </div>
       </div>
     </footer>
   );
-};
+}
 
 export default Footer;

@@ -1,9 +1,13 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import './App.css';
 
 import Home from "./pages/Home";
+import ContactUs from "./pages/ContactUs";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+
+// Import other existing pages for full functionality
 import Subscribe from "./pages/Subscribe";
 import Terms from "./pages/Terms";
 import TermsOfService from "./pages/TermsOfService";
@@ -16,36 +20,23 @@ import Pricing from "./pages/Pricing";
 import SignUp from "./pages/SignUp";
 import ProSupport from "./pages/ProSupport";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
-import ContactUs from "./pages/ContactUs";
-
-// 🚀 New conversion-focused components
-import GeoHeader from "./components/GeoHeader";
-import UrgencyPopup from "./components/UrgencyPopup";
-import LiveJobFeed from "./components/LiveJobFeed";
-import ExitIntentModal from "./components/ExitIntentModal";
-import StickySignupBar from "./components/StickySignupBar";
-import StickyMobileCTA from "./components/StickyMobileCTA";
 
 function App() {
   useEffect(() => {
-    console.log("🔥 LIVE DEPLOY: Fixlo main loaded");
+    console.log("🚀 Fixlo Professional UI Loaded");
   }, []);
 
   return (
     <Router>
-      <div style={{ fontFamily: "sans-serif" }}>
+      <div className="App">
         <Navbar />
         
-        {/* 🚀 Conversion-focused UX components */}
-        <GeoHeader />
-        <UrgencyPopup />
-        <LiveJobFeed />
-        <ExitIntentModal />
-        <StickySignupBar />
-        <StickyMobileCTA />
-        
         <Routes>
+          {/* Main routes as specified in requirements */}
           <Route path="/" element={<Home />} />
+          <Route path="/contact" element={<ContactUs />} />
+          
+          {/* Additional existing functionality */}
           <Route path="/download" element={<DownloadApp />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/support" element={<Support />} />
@@ -55,7 +46,6 @@ function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/contact" element={<ContactUs />} />
           <Route path="/subscribe" element={<Subscribe />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/login" element={<AdminLogin />} />

@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-export default function Navbar() {
+function Navbar() {
   return (
     <nav className="navbar">
       <div className="nav-container">
-        <Link to="/" style={{ 
+        <div style={{ 
           display: 'flex', 
           alignItems: 'center', 
           textDecoration: 'none',
@@ -24,17 +23,16 @@ export default function Navbar() {
           }}>
             Fixlo
           </span>
-        </Link>
+        </div>
         
         <ul className="nav-links">
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/how-it-works">How It Works</Link></li>
-          <li><Link to="/pricing">Pricing</Link></li>
-          <li><Link to="/contact">Contact</Link></li>
-          <li><Link to="/support">Support</Link></li>
-          <li><Link to="/pro-support" className="cta-button">Join as Pro</Link></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="#" className="cta-button">Join as Pro</a></li>
         </ul>
       </div>
     </nav>
   );
 }
+
+export default Navbar;
