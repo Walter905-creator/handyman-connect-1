@@ -1,6 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm install && npm run build",
+  "rootDirectory": "client",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
   "outputDirectory": "build",
   "framework": null,
   "rewrites": [
