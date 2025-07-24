@@ -5,8 +5,7 @@ node_modules/
 *.sh
 *.yaml
 build/
-server/
-_client-backup/
+server
 _server-backup/
 fixlo-app/
 deployment-archive/
