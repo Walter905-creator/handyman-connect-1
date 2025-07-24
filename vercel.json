@@ -1,10 +1,13 @@
 {
-  "version": 2,
-  "buildCommand": "npm install && npm run build",
-  "outputDirectory": "build",
-  "framework": null,
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://fixlo-backend.onrender.com/api/$1" },
+    { "source": "/signup", "destination": "/signup.html" },
+    { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/how-it-works", "destination": "/how-it-works.html" },
+    { "source": "/support", "destination": "/support.html" },
+    { "source": "/sms-compliance", "destination": "/sms-compliance.html" },
+    { "source": "/api/(.*)", "destination": "https://fixloapp.onrender.com/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

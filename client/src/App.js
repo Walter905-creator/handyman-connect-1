@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 
@@ -26,18 +26,18 @@ import LiveJobFeed from "./components/LiveJobFeed";
 import ExitIntentModal from "./components/ExitIntentModal";
 import StickySignupBar from "./components/StickySignupBar";
 import StickyMobileCTA from "./components/StickyMobileCTA";
+import JoinNowModal from "./components/JoinNowModal";
+import StickyCTA from "./components/StickyCTA";
 
 function App() {
-  const [message, setMessage] = useState("");
-
   useEffect(() => {
     console.log("🔥 LIVE DEPLOY: Fixlo main loaded");
     const API_URL = process.env.REACT_APP_API_URL || 'https://fixloapp.onrender.com';
     
     axios
       .get(`${API_URL}/api`)
-      .then((res) => setMessage(res.data.message))
-      .catch(() => setMessage("Error connecting to backend"));
+      .then((res) => console.log("Backend connected:", res.data.message))
+      .catch(() => console.log("Error connecting to backend"));
   }, []);
 
   return (
@@ -52,6 +52,8 @@ function App() {
         <ExitIntentModal />
         <StickySignupBar />
         <StickyMobileCTA />
+        <JoinNowModal />
+        <StickyCTA />
         
         <Routes>
           <Route path="/" element={<Home />} />
