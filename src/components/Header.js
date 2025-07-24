@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/fixlo-logo.png';
 
 function Header() {
+  const navigate = useNavigate();
   return (
     <header style={{
       padding: '1rem',
@@ -19,10 +21,13 @@ function Header() {
         justifyContent: 'space-between',
         alignItems: 'center'
       }}>
-        <div style={{
+        <div 
+          onClick={() => navigate('/')}
+          style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '10px'
+          gap: '10px',
+          cursor: 'pointer'
         }}>
           <img 
             src={logo} 
@@ -47,9 +52,25 @@ function Header() {
             padding: 0,
             alignItems: 'center'
           }}>
-            <li><a href="#home" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>Home</a></li>
-            <li><a href="/terms" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>Terms</a></li>
-            <li><a href="#pricing" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>Subscribe</a></li>
+            <li><a href="/" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>Home</a></li>
+            <li><a href="/contact" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>Contact</a></li>
+            <li>
+              <button 
+                onClick={() => navigate('/signup')}
+                style={{ 
+                  background: '#28a745', 
+                  color: 'white', 
+                  border: 'none', 
+                  padding: '8px 16px', 
+                  borderRadius: '20px', 
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Get Started
+              </button>
+            </li>
           </ul>
         </nav>
       </div>

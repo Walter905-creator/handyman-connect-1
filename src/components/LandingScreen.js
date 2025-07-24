@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/fixlo-logo.png';
 
 function LandingScreen() {
+  const navigate = useNavigate();
   return (
     <section style={{
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -54,7 +56,9 @@ function LandingScreen() {
           flexWrap: 'wrap',
           marginBottom: '60px'
         }}>
-          <button style={{
+          <button 
+            onClick={() => window.open('#', '_blank')}
+            style={{
             padding: '15px 30px',
             borderRadius: '50px',
             background: '#ff6b6b',
@@ -68,7 +72,9 @@ function LandingScreen() {
             Download App
           </button>
           
-          <button style={{
+          <button 
+            onClick={() => navigate('/signup')}
+            style={{
             padding: '15px 30px',
             borderRadius: '50px',
             background: '#28a745',
@@ -82,7 +88,9 @@ function LandingScreen() {
             🔧 Join as Handyman
           </button>
           
-          <button style={{
+          <button 
+            onClick={() => navigate('/signup')}
+            style={{
             padding: '15px 30px',
             borderRadius: '50px',
             background: '#28a745',
