@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://fixlo.app/sitemap.xml
+
+# Common crawl delays (optional)
+Crawl-delay: 1
+
+# Disallow admin pages
+Disallow: /admin/
+Disallow: /api/
+
+# Allow service pages
+Allow: /services/

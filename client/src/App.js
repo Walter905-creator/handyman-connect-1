@@ -18,6 +18,7 @@ import SignUp from "./pages/SignUp";
 import ProSupport from "./pages/ProSupport";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ContactUs from "./pages/ContactUs";
+import ServiceLandingPage from "./pages/ServiceLandingPage";
 
 // 🚀 New conversion-focused components
 import GeoHeader from "./components/GeoHeader";
@@ -66,6 +67,7 @@ function App() {
           <Route path="/subscribe" element={<Subscribe />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/services/:service-in-:city" element={<ServiceLandingPage />} />
         </Routes>
 
         <Footer />
