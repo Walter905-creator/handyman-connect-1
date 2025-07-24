@@ -28,7 +28,7 @@ import StickySignupBar from "./components/StickySignupBar";
 import StickyMobileCTA from "./components/StickyMobileCTA";
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [, setMessage] = useState("");
 
   useEffect(() => {
     console.log("🔥 LIVE DEPLOY: Fixlo main loaded");
