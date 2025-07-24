@@ -1,7 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
 
-export default function Home() {
+function Home() {
   return (
     <div>
       {/* Hero Section */}
@@ -18,18 +17,18 @@ export default function Home() {
             From plumbing to electrical, handyman to HVAC - we've got you covered.
           </p>
           <div className="hero-buttons">
-            <Link to="/signup" className="btn-primary">
-              Find a Professional
-            </Link>
-            <Link to="/pro-support" className="btn-secondary">
-              Join as a Pro
-            </Link>
+            <a href="/contact" className="btn-primary">
+              Get Started
+            </a>
+            <a href="#services" className="btn-secondary">
+              View Services
+            </a>
           </div>
         </div>
       </section>
 
       {/* Services Section */}
-      <section className="services">
+      <section className="services" id="services">
         <div className="services-container">
           <h2>All Fixlo Services</h2>
           <p className="services-subtitle">
@@ -91,10 +90,6 @@ export default function Home() {
               <p>Home automation, security system installation, and smart device configuration.</p>
             </div>
           </div>
-          
-          <Link to="/how-it-works" className="btn-primary">
-            See How It Works
-          </Link>
         </div>
       </section>
 
@@ -116,9 +111,6 @@ export default function Home() {
                 <li>Satisfaction guarantee</li>
                 <li>Transparent pricing</li>
               </ul>
-              <Link to="/pricing" className="btn-primary">
-                View Pricing
-              </Link>
             </div>
             <div className="features-image">
               <div style={{
@@ -141,36 +133,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="services" style={{ background: 'white' }}>
-        <div className="services-container">
-          <h2>How It Works</h2>
-          <p className="services-subtitle">
-            Get your home projects done in three simple steps
-          </p>
-          
-          <div className="services-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
-            <div className="service-card">
-              <div className="service-icon" style={{ color: '#3b82f6' }}>1️⃣</div>
-              <h3>Tell Us What You Need</h3>
-              <p>Describe your project and we'll match you with qualified professionals in your area.</p>
-            </div>
-            
-            <div className="service-card">
-              <div className="service-icon" style={{ color: '#10b981' }}>2️⃣</div>
-              <h3>Get Matched with Pros</h3>
-              <p>Receive quotes from verified professionals and chat with them directly.</p>
-            </div>
-            
-            <div className="service-card">
-              <div className="service-icon" style={{ color: '#f59e0b' }}>3️⃣</div>
-              <h3>Get It Done</h3>
-              <p>Schedule the work, pay securely through our platform, and enjoy your completed project.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="cta-section">
         <div className="cta-container">
@@ -180,15 +142,14 @@ export default function Home() {
             Get matched with the perfect professional today.
           </p>
           <div className="hero-buttons">
-            <Link to="/signup" className="btn-primary">
-              Get Started Now
-            </Link>
-            <Link to="/contact" className="btn-secondary">
-              Contact Support
-            </Link>
+            <a href="/contact" className="btn-primary">
+              Contact Us Today
+            </a>
           </div>
         </div>
       </section>
     </div>
   );
 }
+
+export default Home;
