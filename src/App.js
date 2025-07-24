@@ -1,26 +1,22 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
-import SignupForm from './components/SignupForm';
-import ContactPage from './components/ContactPage';
-import AdminLogin from './components/AdminLogin';
-import ExitIntentModal from './components/ExitIntentModal';
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Subscribe from './pages/Subscribe';
+import Contact from './pages/Contact';
 import StickyCTA from './components/StickyCTA';
-import UrgencyPopup from './components/UrgencyPopup';
+import ExitIntentModal from './components/ExitIntentModal';
 
 function App() {
   return (
-    <Router>
+    <div className="App">
       <ExitIntentModal />
-      <UrgencyPopup />
       <StickyCTA />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<SignupForm />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/subscribe" element={<Subscribe />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
-    </Router>
+    </div>
   );
 }
 
