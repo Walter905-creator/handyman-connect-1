@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main Pages -->
+  <url><loc>https://www.fixloapp.com/</loc></url>
+  <url><loc>https://www.fixloapp.com/signup</loc></url>
+  <url><loc>https://www.fixloapp.com/contact</loc></url>
+
+  <!-- Example SEO landing pages -->
+  <url><loc>https://www.fixloapp.com/services/plumbing-in-miami</loc></url>
+  <url><loc>https://www.fixloapp.com/services/house-cleaning-in-los-angeles</loc></url>
+  <url><loc>https://www.fixloapp.com/services/junk-removal-in-chicago</loc></url>
+</urlset>
