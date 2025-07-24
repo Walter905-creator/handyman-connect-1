@@ -18,6 +18,7 @@ import SignUp from "./pages/SignUp";
 import ProSupport from "./pages/ProSupport";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ContactUs from "./pages/ContactUs";
+import SeoLandingPage from "./pages/SeoLandingPage";
 
 // 🚀 New conversion-focused components
 import GeoHeader from "./components/GeoHeader";
@@ -28,7 +29,7 @@ import StickySignupBar from "./components/StickySignupBar";
 import StickyMobileCTA from "./components/StickyMobileCTA";
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [, setMessage] = useState("");
 
   useEffect(() => {
     console.log("🔥 LIVE DEPLOY: Fixlo main loaded");
@@ -68,6 +69,7 @@ function App() {
           <Route path="/subscribe" element={<Subscribe />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/services/:serviceName-in-:cityName" element={<SeoLandingPage />} />
         </Routes>
 
         <Footer />
