@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/static/css/main.a4fdd898.css",
-    "main.js": "/static/js/main.db6b826f.js",
+    "main.js": "/static/js/main.8b194088.js",
     "static/media/logo.png": "/static/media/logo.7b28eec07b3597a47876.png",
     "static/media/fixlo-logo.svg": "/static/media/fixlo-logo.cf5557d6b10bd83665f10f06bc9e7ae8.svg",
     "index.html": "/index.html"
   },
   "entrypoints": [
     "static/css/main.a4fdd898.css",
-    "static/js/main.db6b826f.js"
+    "static/js/main.8b194088.js"
   ]
 }
