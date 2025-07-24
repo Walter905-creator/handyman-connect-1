@@ -1,7 +1,31 @@
 # Ignore non-essential files but keep client directory
 node_modules/
 .git/
-*.md
+# Keep README.md but exclude other documentation files
+ADMIN-*.md
+BACKEND-*.md
+BRANDING-*.md
+DEPLOY-*.md
+DEPLOYMENT*.md
+FIXLO-*.md
+FRESH-*.md
+FRONTEND-*.md
+LOGO-*.md
+MOBILE-*.md
+MULTIPLE-*.md
+OLD-*.md
+PUBLIC-*.md
+QUICK-*.md
+REACT-*.md
+RENDER-*.md
+STATIC-*.md
+STRIPE-*.md
+SUBSCRIPTION-*.md
+TROUBLESHOOTING.md
+URGENT-*.md
+VERCEL-*.md
+WEBSITE-*.md
+render-*.md
 *.sh
 *.yaml
 build/
