@@ -1,0 +1,31 @@
+name: Daily Sitemap Generator
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # every day at 6:00 UTC
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install deps
+        run: npm install
+
+      - name: Generate sitemap
+        run: npm run generate-sitemap
+
+      - name: Commit sitemap
+        run: |
+          git config --global user.name 'Fixlo Bot'
+          git config --global user.email 'bot@fixloapp.com'
+          git add public/sitemap.xml
+          git commit -m "🤖 Auto-update sitemap.xml" || exit 0
+          git push
