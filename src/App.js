@@ -1,33 +1,26 @@
-
 import React from 'react';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './components/Home';
+import SignupForm from './components/SignupForm';
+import ContactPage from './components/ContactPage';
+import AdminLogin from './components/AdminLogin';
+import ExitIntentModal from './components/ExitIntentModal';
+import StickyCTA from './components/StickyCTA';
+import UrgencyPopup from './components/UrgencyPopup';
 
 function App() {
   return (
-    <div>
-      <header style={{ padding: '2rem', textAlign: 'center', backgroundColor: '#f5f5f5' }}>
-        <img src="/assets/fixlo-logo.png" alt="Fixlo Logo" style={{ height: '80px' }} />
-        <h1>Welcome to Fixlo</h1>
-        <p>Your one-stop hub for home projects</p>
-      </header>
-
-      <section style={{ padding: '2rem' }}>
-        <h2>Select a Service</h2>
-        <ul>
-          <li>🚰 Plumbing</li>
-          <li>💡 Electrical</li>
-          <li>🪚 Carpentry</li>
-          <li>🧹 House Cleaning</li>
-          <li>🗑️ Junk Removal</li>
-          <li>🌿 Landscaping</li>
-          <li>🏠 Roofing</li>
-        </ul>
-      </section>
-
-      <footer style={{ padding: '2rem', backgroundColor: '#f0f0f0', textAlign: 'center' }}>
-        <p>&copy; {new Date().getFullYear()} Fixlo. All rights reserved.</p>
-      </footer>
-    </div>
+    <Router>
+      <ExitIntentModal />
+      <UrgencyPopup />
+      <StickyCTA />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<SignupForm />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+      </Routes>
+    </Router>
   );
 }
 
