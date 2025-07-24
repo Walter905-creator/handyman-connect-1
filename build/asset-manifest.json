@@ -1,0 +1,11 @@
+{
+  "files": {
+    "main.js": "/static/js/main.e0d90780.js",
+    "static/media/fixlo-logo.png": "/static/media/fixlo-logo.7b28eec07b3597a47876.png",
+    "index.html": "/index.html",
+    "main.e0d90780.js.map": "/static/js/main.e0d90780.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.e0d90780.js"
+  ]
+}
