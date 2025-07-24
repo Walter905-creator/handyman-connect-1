@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react';
 
 export default function ExitIntentModal() {
   const [show, setShow] = useState(false);
+  const [hasShown, setHasShown] = useState(false);
 
   useEffect(() => {
     const handleMouseLeave = e => {
-      if (e.clientY < 20) setShow(true);
+      if (e.clientY < 20 && !hasShown) {
+        setShow(true);
+        setHasShown(true);
+      }
     };
     document.addEventListener("mouseleave", handleMouseLeave);
     return () => document.removeEventListener("mouseleave", handleMouseLeave);
-  }, []);
+  }, [hasShown]);
 
   if (!show) return null;
 
@@ -23,29 +27,29 @@ export default function ExitIntentModal() {
         background: 'white', padding: '24px', borderRadius: '12px',
         textAlign: 'center', maxWidth: '400px'
       }}>
-        <h2>Wait! 👋</h2>
-        <p>Get your first 3 leads for free when you sign up now!</p>
-        <button onClick={() => setShow(false)}>Close</button>
-      </div>
-    </div>
-  );
-}
-  }, [hasShown]);
-
-  if (!show) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-xl shadow-xl max-w-sm text-center">
-        <h2 className="text-xl font-bold">⚠️ Leaving already?</h2>
-        <p className="mt-2 text-gray-700">Homeowners are waiting. Sign up now and start earning with Fixlo.</p>
-        <div className="mt-4 space-y-2">
-          <a href="/pro-support" className="block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        <h2>⚠️ Leaving already?</h2>
+        <p>Homeowners are waiting. Sign up now and start earning with Fixlo.</p>
+        <div style={{ marginTop: '16px' }}>
+          <a href="/pro-support" style={{
+            display: 'block',
+            backgroundColor: '#2563eb',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            textDecoration: 'none',
+            marginBottom: '8px'
+          }}>
             🚀 Sign Up & Start Earning
           </a>
           <button 
             onClick={() => setShow(false)} 
-            className="block w-full text-sm text-gray-500 underline hover:text-gray-700"
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#6b7280',
+              textDecoration: 'underline',
+              cursor: 'pointer'
+            }}
           >
             Maybe later
           </button>
