@@ -4,6 +4,7 @@ import './App.css';
 import UrgencyPopup from './components/UrgencyPopup';
 import ExitIntentModal from './components/ExitIntentModal';
 import StickyCTA from './components/StickyCTA';
+import ServiceSelector from './components/ServiceSelector';
 
 function App() {
   return (
@@ -20,17 +21,7 @@ function App() {
 
         <section className="services">
           <h2>Select a Service</h2>
-          <div className="service-buttons">
-            <button>🚰 Plumbing</button>
-            <button>💡 Electrical</button>
-            <button>🪚 Carpentry</button>
-            <button>🧹 House Cleaning</button>
-            <button>🗑️ Junk Removal</button>
-            <button>🌿 Landscaping</button>
-            <button>🏠 Roofing</button>
-            <button>❄️ HVAC</button>
-            <button>🎨 Painting</button>
-          </div>
+          <ServiceSelector />
         </section>
 
         <footer className="footer">
