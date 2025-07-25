@@ -16,22 +16,20 @@ const services = [
 export default function ServiceSelector() {
   const [selectedService, setSelectedService] = useState(null);
 
-  const handleSelect = (service) => {
-    setSelectedService(service);
-  };
-
-  const handleClose = () => setSelectedService(null);
+  const openModal = (service) => setSelectedService(service);
+  const closeModal = () => setSelectedService(null);
 
   return (
     <div>
-      <div className="service-buttons">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {services.map(service => (
           <button
             key={service.name}
-            onClick={() => handleSelect(service)}
+            onClick={() => openModal(service)}
+            className="border border-gray-300 p-4 rounded-lg text-center hover:bg-blue-100 transition"
           >
-            <span style={{ fontSize: '1.5rem', marginRight: '8px' }}>{service.icon}</span>
-            {service.name}
+            <div className="text-3xl mb-2">{service.icon}</div>
+            <div>{service.name}</div>
           </button>
         ))}
       </div>
@@ -39,7 +37,7 @@ export default function ServiceSelector() {
       {selectedService && (
         <ServiceRequestModal
           service={selectedService}
-          onClose={handleClose}
+          onClose={closeModal}
         />
       )}
     </div>
