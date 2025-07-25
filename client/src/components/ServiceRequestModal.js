@@ -1,16 +1,10 @@
 import React from 'react';
 
-const ServiceRequestModal = ({ service, onClose }) => {
+export default function ServiceRequestModal({ service, onClose }) {
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
-  };
-
-  const handleDownloadApp = () => {
-    // This would typically redirect to app store
-    alert(`Download the Fixlo app to request ${service.name} service!`);
-    onClose();
   };
 
   return (
@@ -36,75 +30,64 @@ const ServiceRequestModal = ({ service, onClose }) => {
         maxWidth: '28rem',
         width: '100%',
         margin: '0 1rem',
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        textAlign: 'center',
       }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>
-            {service.emoji}
-          </div>
-          <h2 style={{ 
-            fontSize: '1.5rem', 
-            fontWeight: 'bold', 
-            marginBottom: '1rem' 
-          }}>
-            {service.name} Service
-          </h2>
-          <p style={{ 
-            color: '#6b7280', 
-            marginBottom: '1.5rem' 
-          }}>
-            Ready to get your {service.name.toLowerCase()} project started? Download the Fixlo app to connect with verified professionals in your area.
-          </p>
-          
-          <div style={{ 
-            display: 'flex', 
-            gap: '0.75rem', 
-            justifyContent: 'center' 
-          }}>
-            <button
-              onClick={handleDownloadApp}
-              style={{
-                backgroundColor: '#2563eb',
-                color: 'white',
-                padding: '0.5rem 1.5rem',
-                borderRadius: '0.5rem',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'background-color 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#1d4ed8';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = '#2563eb';
-              }}
-            >
-              Download App
-            </button>
-            <button
-              onClick={onClose}
-              style={{
-                backgroundColor: '#d1d5db',
-                color: '#374151',
-                padding: '0.5rem 1.5rem',
-                borderRadius: '0.5rem',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'background-color 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#9ca3af';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = '#d1d5db';
-              }}
-            >
-              Close
-            </button>
-          </div>
-        </div>
+        <h2 style={{ 
+          fontSize: '1.25rem', 
+          fontWeight: 'bold', 
+          marginBottom: '1rem' 
+        }}>
+          {service.name} Service
+        </h2>
+        <p style={{ 
+          marginBottom: '1rem' 
+        }}>
+          Sign up now to claim jobs in your area and start earning with Fixlo.
+        </p>
+        
+        <a
+          href="/signup"
+          style={{
+            display: 'inline-block',
+            backgroundColor: '#2563eb',
+            color: 'white',
+            padding: '0.5rem 1.5rem',
+            borderRadius: '0.375rem',
+            textDecoration: 'none',
+            marginBottom: '1rem',
+            transition: 'background-color 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = '#1d4ed8';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = '#2563eb';
+          }}
+        >
+          🚀 Sign Up & Start Earning
+        </a>
+        
+        <button
+          onClick={onClose}
+          style={{
+            display: 'block',
+            margin: '0 auto',
+            marginTop: '1rem',
+            fontSize: '0.875rem',
+            color: '#6b7280',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            textDecoration: 'underline',
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.textDecoration = 'underline';
+          }}
+        >
+          Close
+        </button>
       </div>
     </div>
   );
-};
-
-export default ServiceRequestModal;
+}
