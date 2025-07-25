@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import TradeServices from "../components/TradeServices";
+import TradeServices from "./TradeServices";
 import GeoHeader from "../components/GeoHeader";
 import LiveJobFeed from "../components/LiveJobFeed";
 import fixloLogo from "../assets/logo.png";
