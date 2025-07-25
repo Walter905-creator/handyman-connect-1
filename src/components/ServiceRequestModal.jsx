@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 export default function ServiceRequestModal({ service, onClose }) {
   const [submitted, setSubmitted] = useState(false);
 
+  if (!service) return null; // Safety check
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
