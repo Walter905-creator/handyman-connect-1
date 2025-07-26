@@ -251,6 +251,82 @@ app.use("/api/notify", require("./routes/notify"));
 app.use("/api/stripe", require("./routes/stripe")); // Stripe subscription
 app.use("/api/subscribe", require("./routes/subscribe")); // Subscription form handler
 
+// ✅ Simple Subscribe Endpoint for PricingPage.jsx
+app.post("/api/subscribe", async (req, res) => {
+  try {
+    console.log("🔔 Subscription request received:", req.body);
+    
+    // Verify Stripe is initialized
+    if (!stripe) {
+      console.error('❌ Stripe not initialized - missing STRIPE_SECRET_KEY');
+      return res.status(500).json({ 
+        error: 'Payment system not configured',
+        message: 'Stripe integration is not properly set up'
+      });
+    }
+
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({
+        error: 'Email is required'
+      });
+    }
+
+    // Check required environment variables
+    const clientUrl = process.env.CLIENT_URL || 'https://www.fixloapp.com';
+    
+    // Get price ID from environment variables
+    const priceId = process.env.STRIPE_FIRST_MONTH_PRICE_ID || 
+                   process.env.STRIPE_MONTHLY_PRICE_ID || 
+                   process.env.STRIPE_PRICE_ID;
+    
+    if (!priceId) {
+      console.error('❌ No Stripe price ID found in environment variables');
+      return res.status(500).json({ 
+        error: 'Payment configuration error',
+        message: 'Subscription pricing not configured'
+      });
+    }
+
+    console.log(`💰 Creating subscription checkout session for ${email}`);
+    console.log(`🔗 Using client URL: ${clientUrl}`);
+
+    // Create Stripe checkout session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: 'subscription',
+      customer_email: email,
+      success_url: `${clientUrl}/payment-success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${clientUrl}/payment-cancel.html`,
+      metadata: {
+        service: 'fixlo-pro-subscription',
+        email: email,
+        timestamp: new Date().toISOString()
+      }
+    });
+
+    console.log(`✅ Subscription checkout session created: ${session.id}`);
+    res.json({ 
+      success: true,
+      url: session.url,
+      sessionId: session.id
+    });
+
+  } catch (error) {
+    console.error('❌ Error creating subscription checkout session:', error.message);
+    res.status(500).json({ 
+      error: 'Payment processing error',
+      message: error.message 
+    });
+  }
+});
+
 // ✅ Professional Signup Endpoint (with Stripe Payment Integration)
 app.post("/api/pro-signup", async (req, res) => {
   console.log("🔧 Professional signup request:", req.body);
