@@ -14,6 +14,7 @@ import DownloadApp from "./pages/DownloadApp";
 import HowItWorks from "./pages/HowItWorks";
 import Support from "./pages/Support";
 import Pricing from "./pages/Pricing";
+import PricingPage from "./pages/PricingPage";
 import SignUp from "./pages/SignUp";
 import ProSupport from "./pages/ProSupport";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -57,6 +58,7 @@ function App() {
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/support" element={<Support />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/pro-pricing" element={<PricingPage />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/pro-support" element={<ProSupport />} />
           <Route path="/terms" element={<Terms />} />
