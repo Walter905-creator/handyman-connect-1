@@ -1,89 +1,73 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function ServiceRequestModal({ service, onClose }) {
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
+  const [submitted, setSubmitted] = useState(false);
+  const [optIn, setOptIn] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!optIn) {
+      alert("Please check the box to receive SMS updates.");
+      return;
     }
+
+    // You'd handle the actual submission logic here
+    setSubmitted(true);
   };
 
   return (
-    <div 
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1000,
-      }}
-      onClick={handleBackdropClick}
-    >
-      <div style={{
-        backgroundColor: 'white',
-        borderRadius: '0.5rem',
-        padding: '1.5rem',
-        maxWidth: '28rem',
-        width: '100%',
-        margin: '0 1rem',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        textAlign: 'center',
-      }}>
-        <h2 style={{ 
-          fontSize: '1.25rem', 
-          fontWeight: 'bold', 
-          marginBottom: '1rem' 
-        }}>
-          {service.name} Service
-        </h2>
-        <p style={{ 
-          marginBottom: '1rem' 
-        }}>
-          Sign up now to claim jobs in your area and start earning with Fixlo.
-        </p>
-        
-        <a
-          href="/signup"
-          style={{
-            display: 'inline-block',
-            backgroundColor: '#2563eb',
-            color: 'white',
-            padding: '0.5rem 1.5rem',
-            borderRadius: '0.375rem',
-            textDecoration: 'none',
-            marginBottom: '1rem',
-            transition: 'background-color 0.3s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = '#1d4ed8';
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = '#2563eb';
-          }}
-        >
-          🚀 Sign Up & Start Earning
-        </a>
-        
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg max-w-md w-full shadow-xl">
+        <h2 className="text-xl font-bold mb-4">Request {service.name}</h2>
+
+        {submitted ? (
+          <p className="text-green-600 text-center">
+            ✅ Thanks! We received your {service.name} request.
+          </p>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="text"
+              placeholder="Your Name"
+              required
+              className="w-full border border-gray-300 p-2 rounded"
+            />
+            <input
+              type="tel"
+              placeholder="Your Phone Number"
+              required
+              className="w-full border border-gray-300 p-2 rounded"
+            />
+            <textarea
+              placeholder="Describe your project"
+              required
+              className="w-full border border-gray-300 p-2 rounded"
+            />
+            <label className="flex items-start space-x-2 text-sm text-gray-700">
+              <input
+                type="checkbox"
+                checked={optIn}
+                onChange={(e) => setOptIn(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                I agree to receive SMS updates related to job leads, appointments, and service updates.
+                Reply STOP to unsubscribe.
+              </span>
+            </label>
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
+            >
+              Request {service.name}
+            </button>
+          </form>
+        )}
+
         <button
           onClick={onClose}
-          style={{
-            display: 'block',
-            margin: '0 auto',
-            marginTop: '1rem',
-            fontSize: '0.875rem',
-            color: '#6b7280',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            textDecoration: 'underline',
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.textDecoration = 'underline';
-          }}
+          className="text-sm text-gray-600 mt-4 block mx-auto"
         >
           Close
         </button>
