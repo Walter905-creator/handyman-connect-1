@@ -18,6 +18,7 @@ import SignUp from "./pages/SignUp";
 import ProSupport from "./pages/ProSupport";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ContactUs from "./pages/ContactUs";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 // 🚀 New conversion-focused components
 import GeoHeader from "./components/GeoHeader";
@@ -64,6 +65,7 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/subscribe" element={<Subscribe />} />
+          <Route path="/success" element={<PaymentSuccess />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/login" element={<AdminLogin />} />
         </Routes>
